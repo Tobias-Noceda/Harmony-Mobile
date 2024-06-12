@@ -13,7 +13,7 @@
         android:theme="@style/Theme.HarmonyMobile"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="ar.edu.itba.harmony_mobile.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.HarmonyMobile">
             <intent-filter>
