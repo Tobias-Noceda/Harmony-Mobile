@@ -4,6 +4,8 @@
     <string name="rooms">Cuartos</string>
     <string name="devices">Dispositivos</string>
     <string name="routines">Rutinas</string>
+    <string name="houses">Casas</string>
+    <string name="selected_house">Casa Elegida</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

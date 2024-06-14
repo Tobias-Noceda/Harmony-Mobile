@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
@@ -24,8 +25,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.R
@@ -56,14 +59,18 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                     ) {
                         Button(
                             onClick = onButtonClick,
-                            modifier = Modifier.width(120.dp)
+                            modifier = Modifier
+                                .width(120.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                text = "Button Text",
+                                text = stringResource(id = R.string.selected_house),
                                 style = MaterialTheme.typography.bodySmall,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.widthIn(max = 60.dp)
+                                modifier = Modifier
+                                    .widthIn(max = 60.dp)
                             )
                             Icon(
                                 Icons.Default.KeyboardArrowDown,
