@@ -3,10 +3,12 @@ package ar.edu.itba.harmony_mobile
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +16,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,8 +31,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
@@ -64,7 +71,7 @@ fun CustomTopSheet(
     onDismiss: () -> Unit,
     padding: PaddingValues,
     houses: List<String>,
-    maxHeight: Dp = 600.dp
+    maxHeight: Dp = 700.dp
 ) {
     val animationOffset by animateDpAsState(
         targetValue = if (visible) 0.dp else (-maxHeight),
@@ -78,7 +85,15 @@ fun CustomTopSheet(
             .padding(padding)
             .heightIn(max = maxHeight)
             .offset(y = animationOffset)
-            .shadow(elevation = 16.dp, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .border(
+                width = 1.dp,
+                color = Color.Black.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+            )
+            .shadow(
+                elevation = 16.dp,
+                shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+            )
             .background(
                 MaterialTheme.colorScheme.secondary,
                 shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
@@ -93,17 +108,31 @@ fun CustomTopSheet(
             )
     ) {
         if (visible) {
-            Row(
+            Column(
                 modifier = Modifier.padding(16.dp)
-            ) {
-                for (house in houses) {
-                    Button(
-                        onClick = { /* Acción al hacer clic en el botón */ },
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    ) {
-                        Text(text = house)
+            ){
+                Text(
+                    text = "Houses",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Row {
+                    for (house in houses) {
+                        Button(
+                            onClick = { /* Acción al hacer clic en el botón */ },
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        ) {
+                            Text(text = house)
+                        }
                     }
                 }
+                Icon(
+                   Icons.Default.KeyboardArrowUp,
+                    contentDescription = null,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+
+                )
             }
         }
     }
