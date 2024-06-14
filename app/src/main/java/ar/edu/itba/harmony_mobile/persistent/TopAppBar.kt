@@ -1,4 +1,4 @@
-package ar.edu.itba.harmony_mobile
+package ar.edu.itba.harmony_mobile.persistent
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import ar.edu.itba.harmony_mobile.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
