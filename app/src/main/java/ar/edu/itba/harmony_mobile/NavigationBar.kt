@@ -12,8 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import ar.edu.itba.harmony_mobile.ui.theme.*
 
-@Composable
+@Composable @Preview
 fun HarmonyNavigationBar(modifier: Modifier = Modifier) {
     NavigationBar (
         containerColor = MaterialTheme.colorScheme.secondary,
@@ -22,26 +24,29 @@ fun HarmonyNavigationBar(modifier: Modifier = Modifier) {
     ) {
         NavigationBarItem(
             label = {
-                Text(stringResource(R.string.rooms))
+                Text(stringResource(R.string.rooms), color = primary)
             },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.LocationOn,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = primary
                 )
             },
             selected = true,
-            onClick = {}
+            onClick = {},
+            
         )
         NavigationBarItem(
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.List,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = primary
                 )
             },
             label = {
-                Text(stringResource(R.string.devices))
+                Text(stringResource(R.string.devices), color = primary)
             },
             selected = false,
             onClick = {}
@@ -50,11 +55,12 @@ fun HarmonyNavigationBar(modifier: Modifier = Modifier) {
             icon = {
                 Icon(
                     imageVector = Icons.Default.DateRange,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = primary
                 )
             },
             label = {
-                Text(stringResource(R.string.routines))
+                Text(stringResource(R.string.routines), color = primary)
             },
             selected = false,
             onClick = {}
