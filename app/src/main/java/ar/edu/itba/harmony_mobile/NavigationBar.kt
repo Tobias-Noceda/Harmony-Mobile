@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,15 +25,16 @@ fun HarmonyNavigationBar(modifier: Modifier = Modifier) {
     ) {
         NavigationBarItem(
             label = {
-                Text(stringResource(R.string.rooms), color = primary)
+                Text(stringResource(R.string.rooms))
             },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.LocationOn,
                     contentDescription = null,
-                    tint = primary
                 )
             },
+            colors = NavigationBarItemColors(primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
+                disabled),
             selected = true,
             onClick = {},
             
@@ -42,12 +44,13 @@ fun HarmonyNavigationBar(modifier: Modifier = Modifier) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.List,
                     contentDescription = null,
-                    tint = primary
                 )
             },
             label = {
-                Text(stringResource(R.string.devices), color = primary)
+                Text(stringResource(R.string.devices))
             },
+            colors = NavigationBarItemColors(primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
+                disabled),
             selected = false,
             onClick = {}
         )
@@ -56,12 +59,13 @@ fun HarmonyNavigationBar(modifier: Modifier = Modifier) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = null,
-                    tint = primary
                 )
             },
             label = {
-                Text(stringResource(R.string.routines), color = primary)
+                Text(stringResource(R.string.routines))
             },
+            colors = NavigationBarItemColors(primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
+                disabled),
             selected = false,
             onClick = {}
         )
