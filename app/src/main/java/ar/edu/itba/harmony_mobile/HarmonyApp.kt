@@ -37,6 +37,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ar.edu.itba.harmony_mobile.persistent.HarmonyNavigationBar
+import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
+import ar.edu.itba.harmony_mobile.screens.DevicesScreen
+import ar.edu.itba.harmony_mobile.screens.RoomsScreen
+import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,14 +51,21 @@ fun HarmonyApp() {
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
+    val currentScreen = remember { mutableStateOf("devices") }
     HarmonyTheme {
+
+
         Scaffold(
             topBar = { HarmonyTopAppBar(onButtonClick = {
                 showBottomSheet = !showBottomSheet
             }) },
-            bottomBar = { HarmonyNavigationBar() }
+            bottomBar = { HarmonyNavigationBar(currentScreen = currentScreen) },
         ) { padding ->
-            RoomsScreen(Modifier.padding(padding))
+            when(currentScreen.value){
+                "rooms" -> RoomsScreen(Modifier.padding(padding))
+                "devices" -> DevicesScreen(Modifier.padding(padding))
+                "routines" -> RoutinesScreen(Modifier.padding(padding))
+            }
 
             CustomTopSheet(
                 visible = showBottomSheet,
