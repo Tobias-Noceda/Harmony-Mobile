@@ -33,7 +33,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.R
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
@@ -91,15 +90,6 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                                     .fillMaxHeight()
                                     .padding(horizontal = 4.dp, vertical = 1.dp)
                             )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            // Esto es un espacio invisible para mantener la alineación
                         }
                     }
                 }

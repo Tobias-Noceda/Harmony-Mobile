@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -18,9 +19,13 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,48 +35,52 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.persistent.HarmonyNavigationBar
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
-import ar.edu.itba.harmony_mobile.screens.DevicesScreen
-import ar.edu.itba.harmony_mobile.screens.RoomsScreen
-import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
-import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 
+enum class AppDestinations(
+    @StringRes val label: Int,
+    val icon: ImageVector,
+    @StringRes val contentDescription: Int
+) {
+    ROOMS(R.string.rooms, Icons.Default.LocationOn, R.string.rooms),
+    DEVICES(R.string.devices, Icons.AutoMirrored.Filled.List, R.string.devices),
+    ROUTINES(R.string.routines, Icons.Default.DateRange, R.string.routines)
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
+@Preview
 fun HarmonyApp() {
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val currentScreen = remember { mutableStateOf("devices") }
-    HarmonyTheme {
+    val currentDestination = rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
 
-
-        Scaffold(
-            topBar = { HarmonyTopAppBar(onButtonClick = {
+    Scaffold(
+        topBar = {
+            HarmonyTopAppBar(onButtonClick = {
                 showBottomSheet = !showBottomSheet
-            }) },
-            bottomBar = { HarmonyNavigationBar(currentScreen = currentScreen) },
-        ) { padding ->
-            when(currentScreen.value){
-                "rooms" -> RoomsScreen(Modifier.padding(padding))
-                "devices" -> DevicesScreen(Modifier.padding(padding))
-                "routines" -> RoutinesScreen(Modifier.padding(padding))
-            }
-
-            CustomTopSheet(
-                visible = showBottomSheet,
-                onDismiss = { showBottomSheet = false },
-                padding = padding,
-                houses = listOf("House1", "House2")
-            )
-        }
+            })
+        },
+    ) { padding ->
+        HarmonyNavigationBar(currentDestination = currentDestination)
+        CustomTopSheet(
+            visible = showBottomSheet,
+            onDismiss = { showBottomSheet = false },
+            padding = padding,
+            houses = listOf("House1", "House2")
+        )
     }
 }
 
@@ -123,7 +132,7 @@ fun CustomTopSheet(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.houses),
                     color = MaterialTheme.colorScheme.primary,
