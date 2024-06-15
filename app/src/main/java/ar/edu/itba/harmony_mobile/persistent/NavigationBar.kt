@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -43,7 +44,7 @@ fun HarmonyNavigationBar(modifier: Modifier = Modifier, currentDestination: Muta
             if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
                 NavigationSuiteType.NavigationBar
             } else {
-                NavigationSuiteType.NavigationRail
+                NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
             }
         },
         modifier = Modifier.shadow(16.dp),
