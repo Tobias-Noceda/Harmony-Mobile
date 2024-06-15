@@ -21,11 +21,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +45,6 @@ import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HarmonyApp() {
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -76,6 +75,7 @@ fun HarmonyApp() {
     }
 }
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun CustomTopSheet(
     visible: Boolean,
