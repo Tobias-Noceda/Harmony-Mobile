@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,8 +45,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.persistent.HarmonyNavigationBar
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
 
@@ -85,7 +88,6 @@ fun HarmonyApp() {
     }
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun CustomTopSheet(
     visible: Boolean,
@@ -129,29 +131,67 @@ fun CustomTopSheet(
             )
     ) {
         if (visible) {
+            val adaptiveInfo = currentWindowAdaptiveInfo()
+            val columns = with (adaptiveInfo) {
+                if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                    2
+                } else {
+                    3
+                }
+            }
+            val allHouses = houses + "Personal Devices"
+            val chunkedHouse = allHouses.chunked(columns)
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(8.dp)
                     .fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(R.string.houses),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
-                Row {
-                    for (house in houses) {
-                        Button(
-                            onClick = { /* Acción al hacer clic en el botón */ },
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        ) {
-                            Icon(
-                                Icons.Default.Home,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                            Text(text = house)
+                for (houseChunk in chunkedHouse) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                    ) {
+                        for (house in houseChunk) {
+                            Button(
+                                onClick = { /* Acción al hacer clic en el botón */ },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .weight(1f),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Row (
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start
+                                ) {
+                                    Icon(
+                                        Icons.Default.Home,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                    Text(
+                                        text = house,
+                                        minLines = if ( columns == 2 ) 2 else 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                        }
+                        if (houseChunk.size != columns) {
+                            for (i in 0 until (columns - houseChunk.size)) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .weight(1f)
+                                ) {}
+                            }
                         }
                     }
                 }
