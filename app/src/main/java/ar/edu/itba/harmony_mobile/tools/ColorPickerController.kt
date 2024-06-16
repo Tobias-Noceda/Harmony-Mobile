@@ -127,12 +127,6 @@ class ColorPickerController {
     wheelBitmap = imageBitmap
   }
 
-  /** Set a color for the wheel. */
-   fun setWheelColor(color: Color) {
-    wheelPaint.color = color
-    reviseTick.intValue++
-  }
-
   /** Enable or unable color selection. */
    fun setEnabled(enabled: Boolean) {
     this.enabled.value = enabled

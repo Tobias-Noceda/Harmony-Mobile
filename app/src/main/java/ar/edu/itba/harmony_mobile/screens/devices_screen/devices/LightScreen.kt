@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Switch
@@ -29,7 +28,6 @@ import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
 import ar.edu.itba.harmony_mobile.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun LightScreen() {
@@ -112,19 +110,21 @@ fun LightScreen() {
                 Button(
                     onClick = {},
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonColors(lightColor, lightColor, disabled, disabled),
+                    colors = ButtonColors(lightColor, lightColor, lightColor.desaturate(0f), lightColor.desaturate(0f)),
                     enabled = colorMode,
                     border = BorderStroke(2.dp, primary)
                 ) {}
             }
-            Box(modifier = Modifier.padding(2.dp)) {
-                HsvColorPicker(
-                    modifier = Modifier.fillMaxHeight(0.7f),
-                    controller = colorController,
-                    onColorChanged = {
-                        lightColor = it.color
-                        /*MANDAR A LA API*/
-                    })
+            if(colorMode) {
+                Box(modifier = Modifier.padding(2.dp)) {
+                    HsvColorPicker(
+                        modifier = Modifier.fillMaxHeight(0.7f),
+                        controller = colorController,
+                        onColorChanged = {
+                            lightColor = it.color
+                            /*MANDAR A LA API*/
+                        })
+                }
             }
         }
         Box(contentAlignment = Alignment.Center) {
