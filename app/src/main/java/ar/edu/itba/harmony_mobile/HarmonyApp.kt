@@ -73,8 +73,9 @@ fun HarmonyApp() {
                 showBottomSheet = !showBottomSheet
             })
         },
+        bottomBar = { HarmonyNavigationBar(currentDestination = currentDestination) }
     ) { padding ->
-        HarmonyNavigationBar(currentDestination = currentDestination)
+
         CustomTopSheet(
             visible = showBottomSheet,
             onDismiss = { showBottomSheet = false },

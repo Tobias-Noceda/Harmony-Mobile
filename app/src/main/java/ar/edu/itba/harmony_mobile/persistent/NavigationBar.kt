@@ -23,7 +23,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.*
 
 
 @Composable
-fun HarmonyNavigationBar(modifier: Modifier = Modifier, currentDestination: MutableState<AppDestinations>) {
+fun HarmonyNavigationBar(currentDestination: MutableState<AppDestinations>) {
 
     val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
