@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
-
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
@@ -30,11 +30,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.window.core.layout.WindowWidthSizeClass
+import ar.edu.itba.harmony_mobile.R
+
 
 @Composable
 @Preview
 fun LightScreen() {
-    var lightName by rememberSaveable { mutableStateOf("Light Name") }
+    val lightName by rememberSaveable { mutableStateOf("Light Name") }
     var lightBrightness by rememberSaveable { mutableFloatStateOf(75f) }
     var lightStatus by rememberSaveable { mutableStateOf(true) }
     var colorMode by rememberSaveable { mutableStateOf(true) }
@@ -60,10 +62,11 @@ fun LightScreen() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = if (lightStatus) {
-                    "Status: On"
+                text = stringResource(id = R.string.status) + " " + if (colorMode) {
+                    stringResource(id = R.string.on)
                 } else {
-                    "Status: Off"
+                    stringResource(id = R.string.off)
+
                 }, color = primary, fontSize = 20.sp, fontWeight = FontWeight.Normal
             )
             Switch(
@@ -87,10 +90,10 @@ fun LightScreen() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = if (colorMode) {
-                    "Color mode: On"
+                text = stringResource(id = R.string.color_mode) + " " + if (colorMode) {
+                    stringResource(id = R.string.on)
                 } else {
-                    "Color mode: Off"
+                    stringResource(id = R.string.off)
                 }, color = primary, fontSize = 20.sp, fontWeight = FontWeight.Normal
             )
             Switch(
@@ -116,7 +119,7 @@ fun LightScreen() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Color:",
+                    text = stringResource(id = R.string.color),
                     color = primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
@@ -128,12 +131,13 @@ fun LightScreen() {
                 ) {}
             }
             if (colorMode) {
-                Column (modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center){
+                Column(
+                    modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center
+                ) {
                     HsvColorPicker(modifier = Modifier.padding(0.dp),
                         controller = colorController,
                         onColorChanged = {
-                            lightColor = it.color
-                            /*MANDAR A LA API*/
+                            lightColor = it.color/*MANDAR A LA API*/
                         })
                 }
             }
@@ -145,13 +149,12 @@ fun LightScreen() {
         Box(contentAlignment = Alignment.Center) {
             Column {
                 Text(
-                    text = "Brightness: ${lightBrightness.toInt()}",
+                    text = stringResource(R.string.brightness) + " " + "${lightBrightness.toInt()}",
                     color = primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
                 )
-                Slider(
-                    value = lightBrightness,
+                Slider(value = lightBrightness,
                     onValueChange = { lightBrightness = it },
                     onValueChangeFinished = {/*MANDAR A LA API*/ },
                     valueRange = 0f..100f,
@@ -172,7 +175,6 @@ fun LightScreen() {
             }
         }
     }
-
 
     Box(
         modifier = Modifier
@@ -199,8 +201,7 @@ fun LightScreen() {
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth(0.5f),
+                            modifier = Modifier.fillMaxWidth(0.5f),
                             verticalArrangement = Arrangement.spacedBy(15.dp)
                         ) {
                             lightSwitch()

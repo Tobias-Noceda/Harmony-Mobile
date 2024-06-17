@@ -7,6 +7,13 @@
     <string name="houses">Casas</string>
     <string name="selected_house">Casa Elegida</string>
 
+    <string name="status">Estado:</string>
+    <string name="on">Prendido</string>
+    <string name="off">Apagado</string>
+    <string name="color_mode">Modo color:</string>
+    <string name="color">Color:</string>
+    <string name="brightness">Brillo:</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
