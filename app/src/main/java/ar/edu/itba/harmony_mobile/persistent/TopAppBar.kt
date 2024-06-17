@@ -67,7 +67,7 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                         Button(
                             onClick = onButtonClick,
                             modifier = Modifier
-                                .width(if(isCompact) 120.dp else 200.dp)
+                                .width(if(isCompact) 160.dp else 200.dp)
                                 .clip(RoundedCornerShape(12.dp)),
                             shape = RoundedCornerShape(8.dp),
                         ) {
@@ -76,12 +76,12 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.selected_house),
+                                    text = stringResource(id = R.string.personal_devices),
                                     style = MaterialTheme.typography.bodySmall,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier
-                                        .widthIn(max = if (isCompact) 60.dp else 120.dp),
+                                        .widthIn(max = if (isCompact) 80.dp else 120.dp),
                                     textAlign = TextAlign.Left
                                 )
                                 Spacer(modifier = Modifier.weight(1f))

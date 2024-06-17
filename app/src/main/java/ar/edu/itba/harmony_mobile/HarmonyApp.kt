@@ -2,8 +2,6 @@ package ar.edu.itba.harmony_mobile
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -64,7 +61,6 @@ import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
-import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 enum class AppDestinations(
     @StringRes val label: Int,
@@ -84,12 +80,10 @@ fun HarmonyApp() {
 
     val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
-            primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
-            disabled
+            primary, secondary, secondary, secondary, secondary, disabled, disabled
         ),
         navigationRailItemColors = NavigationRailItemDefaults.colors(
-            primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
-            disabled
+            primary, secondary, secondary, secondary, secondary, disabled, disabled
         ),
     )
 
@@ -100,8 +94,8 @@ fun HarmonyApp() {
         layoutType = layoutType,
         modifier = Modifier.shadow(16.dp),
         navigationSuiteColors = NavigationSuiteDefaults.colors(
-            navigationBarContainerColor = secondary,
-            navigationRailContainerColor = secondary,
+            navigationBarContainerColor = primary,
+            navigationRailContainerColor = primary,
         ),
         navigationSuiteItems = {
             AppDestinations.entries.forEach {
@@ -150,18 +144,11 @@ fun CustomTopSheet(
     houses: List<String>,
     maxHeight: Dp = 700.dp
 ) {
-    val animationOffset by animateDpAsState(
-        targetValue = if (visible) 0.dp else (-maxHeight),
-        animationSpec = tween(durationMillis = 300),
-        label = ""
-    )
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(padding)
             .heightIn(max = maxHeight)
-            .offset(y = animationOffset)
             .border(
                 width = 1.dp,
                 color = Color.Black.copy(alpha = 0.3f),
@@ -193,7 +180,7 @@ fun CustomTopSheet(
                     3
                 }
             }
-            val allHouses = houses + "Personal Devices"
+            val allHouses = houses + stringResource(id = R.string.personal_devices)
             val chunkedHouse = allHouses.chunked(columns)
             Column(
                 modifier = Modifier
@@ -233,7 +220,8 @@ fun CustomTopSheet(
                                     Text(
                                         text = house,
                                         minLines = if ( columns == 2 ) 2 else 1,
-                                        overflow = TextOverflow.Ellipsis
+                                        overflow = TextOverflow.Ellipsis,
+                                        style = MaterialTheme.typography.bodySmall
                                     )
                                 }
                             }
