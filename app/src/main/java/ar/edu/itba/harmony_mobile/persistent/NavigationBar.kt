@@ -19,7 +19,10 @@ import ar.edu.itba.harmony_mobile.AppDestinations
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
 import ar.edu.itba.harmony_mobile.screens.devices_screen.DevicesScreen
-import ar.edu.itba.harmony_mobile.ui.theme.*
+import ar.edu.itba.harmony_mobile.ui.theme.disabled
+import ar.edu.itba.harmony_mobile.ui.theme.primary
+import ar.edu.itba.harmony_mobile.ui.theme.secondary
+import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
 @Composable
@@ -37,16 +40,16 @@ fun HarmonyNavigationBar(currentDestination: MutableState<AppDestinations>) {
     )
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-
+    val layoutType = with(adaptiveInfo){
+        if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM) {
+            NavigationSuiteType.NavigationRail
+        } else {
+            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+        }
+    }
 
     NavigationSuiteScaffold(
-        layoutType = with(adaptiveInfo){
-            if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
-                NavigationSuiteType.NavigationBar
-            } else {
-                NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
-            }
-        },
+        layoutType = layoutType,
         modifier = Modifier.shadow(16.dp),
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContainerColor = secondary,
