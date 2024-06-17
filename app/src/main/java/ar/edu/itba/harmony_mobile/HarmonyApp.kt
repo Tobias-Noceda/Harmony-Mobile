@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -55,7 +56,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
-import ar.edu.itba.harmony_mobile.screens.devices_screen.DevicesScreen
+import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
 import ar.edu.itba.harmony_mobile.ui.theme.primary
@@ -134,6 +135,7 @@ fun HarmonyApp() {
     }
 }
 
+@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun CustomTopSheet(
     visible: Boolean,
