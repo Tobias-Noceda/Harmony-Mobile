@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -28,9 +29,14 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,9 +55,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
-import ar.edu.itba.harmony_mobile.persistent.HarmonyNavigationBar
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
+import ar.edu.itba.harmony_mobile.screens.RoomsScreen
+import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
+import ar.edu.itba.harmony_mobile.screens.devices_screen.DevicesScreen
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
+import ar.edu.itba.harmony_mobile.ui.theme.disabled
+import ar.edu.itba.harmony_mobile.ui.theme.primary
+import ar.edu.itba.harmony_mobile.ui.theme.secondary
+import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 enum class AppDestinations(
     @StringRes val label: Int,
@@ -69,19 +81,66 @@ fun HarmonyApp() {
 
     val currentDestination = rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
 
-    Scaffold(
-        topBar = {
-            HarmonyTopAppBar(onButtonClick = {
-                showBottomSheet = !showBottomSheet
-            })
-        },
-        bottomBar = { HarmonyNavigationBar(currentDestination = currentDestination) }
-    ) { padding ->
+    val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
+        navigationBarItemColors = NavigationBarItemDefaults.colors(
+            primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
+            disabled
+        ),
+        navigationRailItemColors = NavigationRailItemDefaults.colors(
+            primary, primary, tertiary.copy(0.5f), primary, primary, disabled,
+            disabled
+        ),
+    )
 
+    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val layoutType = with(adaptiveInfo){
+        if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM) {
+            NavigationSuiteType.NavigationRail
+        } else {
+            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+        }
+    }
+
+    NavigationSuiteScaffold(
+        layoutType = layoutType,
+        modifier = Modifier.shadow(16.dp),
+        navigationSuiteColors = NavigationSuiteDefaults.colors(
+            navigationBarContainerColor = secondary,
+            navigationRailContainerColor = secondary,
+        ),
+        navigationSuiteItems = {
+            AppDestinations.entries.forEach {
+                item(
+                    icon = {
+                        Icon(
+                            it.icon,
+                            contentDescription = stringResource(it.contentDescription)
+                        )
+                    },
+                    label = { Text(stringResource(it.label)) },
+                    selected = it == currentDestination.value,
+                    colors = myNavigationSuiteItemColors,
+                    onClick = { currentDestination.value = it }
+                )
+            }
+        }
+    ) {
+        HarmonyTopAppBar(onButtonClick = { showBottomSheet = !showBottomSheet })
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp)
+        ) {
+            when (currentDestination.value) {
+                AppDestinations.ROOMS -> RoomsScreen()
+                AppDestinations.DEVICES -> DevicesScreen()
+                AppDestinations.ROUTINES -> RoutinesScreen()
+            }
+        }
         CustomTopSheet(
             visible = showBottomSheet,
             onDismiss = { showBottomSheet = false },
-            padding = padding,
+            padding = PaddingValues(top = 80.dp),
             houses = listOf("House1", "House2")
         )
     }
