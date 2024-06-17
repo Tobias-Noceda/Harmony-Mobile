@@ -1,10 +1,9 @@
-package ar.edu.itba.harmony_mobile.screens
+package ar.edu.itba.harmony_mobile
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.ui.graphics.vector.ImageVector
-import ar.edu.itba.harmony_mobile.R
 
 enum class DeviceTypes(
     @StringRes val type: Int,
