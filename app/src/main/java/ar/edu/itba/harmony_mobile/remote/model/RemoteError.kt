@@ -1,4 +1,4 @@
-package ar.edu.itba.example.api.remote.model
+package ar.edu.itba.harmony_mobile.remote.model
 
 import com.google.gson.annotations.SerializedName
 
