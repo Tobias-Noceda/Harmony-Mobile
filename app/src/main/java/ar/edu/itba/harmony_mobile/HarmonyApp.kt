@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -254,6 +255,7 @@ fun CustomTopSheet(
                         .align(Alignment.CenterHorizontally)
                         .height(24.dp)
                         .padding(top = 6.dp)
+                        .clickable { onDismiss() }
                 )
             }
         }

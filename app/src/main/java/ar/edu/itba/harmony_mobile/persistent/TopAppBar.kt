@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -22,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,13 +32,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
+    val screenType = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val isCompact = screenType == WindowWidthSizeClass.COMPACT
+
     Column {
         TopAppBar(
             modifier = Modifier.height(80.dp),
@@ -59,22 +67,29 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                         Button(
                             onClick = onButtonClick,
                             modifier = Modifier
-                                .width(120.dp)
+                                .width(if(isCompact) 120.dp else 200.dp)
                                 .clip(RoundedCornerShape(12.dp)),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
                         ) {
-                            Text(
-                                text = stringResource(id = R.string.selected_house),
-                                style = MaterialTheme.typography.bodySmall,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                                    .widthIn(max = 60.dp)
-                            )
-                            Icon(
-                                Icons.Default.KeyboardArrowDown,
-                                contentDescription = null
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.selected_house),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        .widthIn(max = if (isCompact) 60.dp else 120.dp),
+                                    textAlign = TextAlign.Left
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                Icon(
+                                    Icons.Default.KeyboardArrowDown,
+                                    contentDescription = null
+                                )
+                            }
                         }
 
                         Box(
