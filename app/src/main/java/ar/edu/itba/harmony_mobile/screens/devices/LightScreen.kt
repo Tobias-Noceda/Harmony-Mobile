@@ -32,12 +32,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
+import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 
-@Preview(device = Devices.PHONE, showBackground = true )
+@Preview(device = Devices.PHONE, showBackground = true)
 @Composable
-fun LightPreview(){
+fun LightPreview() {
     LightScreen()
 }
 
@@ -142,7 +143,9 @@ fun LightScreen() {
             }
             if (colorMode) {
                 with(adaptiveInfo) {
-                    if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
+                    if (windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT
+                        && windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
+                    ) {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.Center
@@ -150,7 +153,8 @@ fun LightScreen() {
                             HsvColorPicker(modifier = Modifier.padding(0.dp),
                                 controller = colorController,
                                 onColorChanged = {
-                                    lightColor = it.color/*MANDAR A LA API*/
+                                    lightColor = it.color
+                                    /*MANDAR A LA API*/
                                 })
                         }
                     } else {
@@ -330,12 +334,13 @@ fun LightScreen() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(scState)
         ) {
 
             lightTitle()
             with(adaptiveInfo) {
-                if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+                    || (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM && windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.EXPANDED)
+                ) {
                     Column(
                         modifier = Modifier.padding(10.dp),
                         verticalArrangement = Arrangement.spacedBy(25.dp)
@@ -347,7 +352,13 @@ fun LightScreen() {
                     }
                 } else {
                     Row(
-                        modifier = Modifier.padding(10.dp),
+                        modifier = if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT) {
+                            Modifier
+                                .padding(10.dp)
+                                .verticalScroll(scState)
+                        } else {
+                            Modifier.padding(10.dp)
+                        },
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Column(
