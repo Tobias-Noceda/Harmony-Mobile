@@ -36,7 +36,6 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -93,13 +92,7 @@ fun HarmonyApp() {
     )
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    val layoutType = with(adaptiveInfo){
-        if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM) {
-            NavigationSuiteType.NavigationRail
-        } else {
-            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
-        }
-    }
+    val layoutType = NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
 
     NavigationSuiteScaffold(
         layoutType = layoutType,
