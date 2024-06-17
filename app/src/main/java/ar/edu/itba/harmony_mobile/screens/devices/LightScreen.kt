@@ -1,4 +1,4 @@
-package ar.edu.itba.harmony_mobile.screens.devices_screen.devices
+package ar.edu.itba.harmony_mobile.screens.devices
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
