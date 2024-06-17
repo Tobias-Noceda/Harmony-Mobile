@@ -3,6 +3,7 @@ package ar.edu.itba.harmony_mobile.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
 import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
 
 @Composable
