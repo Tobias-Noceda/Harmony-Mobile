@@ -54,9 +54,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
+import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
-import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
 import ar.edu.itba.harmony_mobile.ui.theme.primary
@@ -115,16 +115,14 @@ fun HarmonyApp() {
         }
     ) {
         HarmonyTopAppBar(onButtonClick = { showBottomSheet = !showBottomSheet })
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 80.dp)
-        ) {
-            when (currentDestination.value) {
-                AppDestinations.ROOMS -> RoomsScreen()
-                AppDestinations.DEVICES -> DevicesScreen()
-                AppDestinations.ROUTINES -> RoutinesScreen()
-            }
+        val screenModifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)
+
+        when (currentDestination.value) {
+            AppDestinations.ROOMS -> RoomsScreen(screenModifier)
+            AppDestinations.DEVICES -> DevicesScreen(screenModifier)
+            AppDestinations.ROUTINES -> RoutinesScreen(screenModifier)
         }
         CustomTopSheet(
             visible = showBottomSheet,
