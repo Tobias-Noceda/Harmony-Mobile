@@ -5,7 +5,7 @@
     <string name="devices">Devices</string>
     <string name="routines">Routines</string>
     <string name="houses">Houses</string>
-    <string name="selected_house">Selected House</string>
+    <string name="personal_devices">Personal Devices</string>
 
     <string name="status">Status:</string>
     <string name="on">On</string>
