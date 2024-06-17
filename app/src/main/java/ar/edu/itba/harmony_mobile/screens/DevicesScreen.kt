@@ -1,4 +1,4 @@
-package ar.edu.itba.harmony_mobile.screens.devices_screen
+package ar.edu.itba.harmony_mobile.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
