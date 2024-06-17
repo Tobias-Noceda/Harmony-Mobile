@@ -34,7 +34,7 @@ fun BlindsPreview() {
     BlindsScreen()
 }
 
-enum class moveState {
+enum class MoveState {
     STILL, OPENING, CLOSING
 }
 
@@ -44,7 +44,7 @@ fun BlindsScreen() {
     var blindsLimit by rememberSaveable { mutableFloatStateOf(75f) }
     var blindsStatus by rememberSaveable { mutableFloatStateOf(0f) }
 
-    var isMoving by rememberSaveable { mutableStateOf(moveState.STILL) }
+    var isMoving by rememberSaveable { mutableStateOf(MoveState.STILL) }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
 
@@ -60,9 +60,9 @@ fun BlindsScreen() {
         Text(
             text = "${stringResource(id = R.string.status)} ${blindsStatus.toInt()}% ${
                 when (isMoving) {
-                    moveState.STILL -> ""
-                    moveState.OPENING -> "- " + stringResource(id = R.string.opening)
-                    moveState.CLOSING -> "- " + stringResource(id = R.string.closing)
+                    MoveState.STILL -> ""
+                    MoveState.OPENING -> "- " + stringResource(id = R.string.opening)
+                    MoveState.CLOSING -> "- " + stringResource(id = R.string.closing)
                 }
             }",
             fontSize = 20.sp,
@@ -84,7 +84,7 @@ fun BlindsScreen() {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = isMoving == moveState.STILL && blindsStatus > 0f,
+            enabled = isMoving == MoveState.STILL && blindsStatus > 0f,
             border = BorderStroke(2.dp, primary)
         ) {
             Text(text = stringResource(id = R.string.open))
@@ -106,7 +106,7 @@ fun BlindsScreen() {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = isMoving == moveState.STILL && blindsStatus < blindsLimit,
+            enabled = isMoving == MoveState.STILL && blindsStatus < blindsLimit,
             border = BorderStroke(2.dp, primary)
         ) {
             Text(text = stringResource(id = R.string.close))
