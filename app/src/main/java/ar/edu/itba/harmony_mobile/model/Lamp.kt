@@ -7,11 +7,11 @@ import ar.edu.itba.harmony_mobile.remote.model.RemoteLampState
 class Lamp(
     id: String?,
     name: String,
-    val room: Room?,
+    room: Room?,
     val status: Status,
     val color: String,
     val brightness: Int
-) : Device(id, name, DeviceType.LAMP) {
+) : Device(id, name, room,DeviceType.LAMP) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteLampState> {
         val state = RemoteLampState()

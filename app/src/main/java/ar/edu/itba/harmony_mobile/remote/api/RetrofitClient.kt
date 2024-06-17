@@ -30,6 +30,10 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 object RetrofitClient {
+    val homeService: HomeService by lazy {
+        retrofit.create(HomeService::class.java)
+    }
+
     val roomService: RoomService by lazy {
         retrofit.create(RoomService::class.java)
     }
