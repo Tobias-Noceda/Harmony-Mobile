@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 class RoomRepository(
     private val remoteDataSource: RoomRemoteDataSource
 ) {
-    private var rooms: Flow<List<Room>> = remoteDataSource.rooms
+    val rooms: Flow<List<Room>> = remoteDataSource.rooms
         .map { it.map { jt -> jt.asModel() } }
 
 

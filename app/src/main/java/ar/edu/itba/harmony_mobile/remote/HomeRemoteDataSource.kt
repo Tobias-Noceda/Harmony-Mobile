@@ -12,35 +12,35 @@ class HomeRemoteDataSource(
 
     val homes: Flow<List<RemoteHome>> = flow {
         while (true) {
-            val devices = handleApiResponse {
+            val homes = handleApiResponse {
                 homeService.getHomes()
             }
-            emit(devices)
+            emit(homes)
             delay(DELAY)
         }
     }
 
-    suspend fun getHome(deviceId: String): RemoteHome {
+    suspend fun getHome(homeId: String): RemoteHome {
         return handleApiResponse {
-            homeService.getHome(deviceId)
+            homeService.getHome(homeId)
         }
     }
 
-    suspend fun addHome(device: RemoteHome): RemoteHome {
+    suspend fun addHome(home: RemoteHome): RemoteHome {
         return handleApiResponse {
-            homeService.addHome(device)
+            homeService.addHome(home)
         }
     }
 
-    suspend fun modifyHome(device: RemoteHome): Boolean {
+    suspend fun modifyHome(home: RemoteHome): Boolean {
         return handleApiResponse {
-            homeService.modifyHome(device.id!!, device)
+            homeService.modifyHome(home.id!!, home)
         }
     }
 
-    suspend fun deleteHome(deviceId: String): Boolean {
+    suspend fun deleteHome(homeId: String): Boolean {
         return handleApiResponse {
-            homeService.deleteHome(deviceId)
+            homeService.deleteHome(homeId)
         }
     }
 
