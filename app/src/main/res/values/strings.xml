@@ -7,6 +7,13 @@
     <string name="houses">Houses</string>
     <string name="selected_house">Selected House</string>
 
+    <string name="status">Status:</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="color_mode">Color mode:</string>
+    <string name="color">Color:</string>
+    <string name="brightness">Brightness:</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
