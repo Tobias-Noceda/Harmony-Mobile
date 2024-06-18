@@ -54,10 +54,10 @@ class ViewModelFactory(
             isAssignableFrom(RoomsViewModel::class.java) ->
                 RoomsViewModel(roomRepository)
 
-            isAssignableFrom(RoomsViewModel::class.java) ->
+            isAssignableFrom(HomesViewModel::class.java) ->
                 HomesViewModel(homeRepository)
 
-            isAssignableFrom(RoomsViewModel::class.java) ->
+            isAssignableFrom(RoutinesViewModel::class.java) ->
                 RoutinesViewModel(routineRepository)
 
             isAssignableFrom(DevicesViewModel::class.java) ->
