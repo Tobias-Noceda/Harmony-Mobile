@@ -1,13 +1,10 @@
-package ar.edu.itba.harmony_mobile.ui.routines
+package ar.edu.itba.harmony_mobile.ui.rooms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.harmony_mobile.DataSourceException
-import ar.edu.itba.harmony_mobile.model.Room
-import ar.edu.itba.harmony_mobile.repository.RoomRepository
-import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
+import ar.edu.itba.harmony_mobile.repository.RoutineRepository
 import ar.edu.itba.harmony_mobile.model.Error
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,22 +13,22 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RoomsViewModel(
-    private val repository: RoomRepository
+class RoutinesViewModel(
+    private val repository: RoutineRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RoomsUiState())
+    private val _uiState = MutableStateFlow(RoutinesUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         collectOnViewModelScope(
-            repository.rooms
-        ) { state, response -> state.copy(rooms = response) }
+            repository.routines
+        ) { state, response -> state.copy(routines = response) }
     }
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
-        updateState: (RoomsUiState, T) -> RoomsUiState
+        updateState: (RoutinesUiState, T) -> RoutinesUiState
     ) = viewModelScope.launch {
         flow
             .distinctUntilChanged()
