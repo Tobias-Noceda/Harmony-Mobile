@@ -15,7 +15,9 @@ import ar.edu.itba.harmony_mobile.repository.RoomRepository
 import ar.edu.itba.harmony_mobile.repository.RoutineRepository
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.LampViewModel
+import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsViewModel
+import ar.edu.itba.harmony_mobile.ui.rooms.RoutinesViewModel
 
 @Composable
 fun getViewModelFactory(defaultArgs: Bundle? = null): ViewModelFactory {
@@ -51,6 +53,12 @@ class ViewModelFactory(
         when {
             isAssignableFrom(RoomsViewModel::class.java) ->
                 RoomsViewModel(roomRepository)
+
+            isAssignableFrom(RoomsViewModel::class.java) ->
+                HomesViewModel(homeRepository)
+
+            isAssignableFrom(RoomsViewModel::class.java) ->
+                RoutinesViewModel(routineRepository)
 
             isAssignableFrom(DevicesViewModel::class.java) ->
                 DevicesViewModel(deviceRepository)
