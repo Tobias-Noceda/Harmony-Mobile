@@ -63,6 +63,7 @@ class DeviceRemoteDataSource(
                 val h: RemoteHome;
                 val r: RemoteRoom;
                 if (jt.room?.home == null) {
+                    jt.room = personalDevicesRoom
                     h = personalDevicesHome
                     r = personalDevicesRoom
                 } else {
