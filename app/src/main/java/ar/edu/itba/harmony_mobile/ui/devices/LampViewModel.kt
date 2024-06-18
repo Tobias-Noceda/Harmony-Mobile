@@ -22,12 +22,6 @@ class LampViewModel(
     private val _uiState = MutableStateFlow(LampUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        collectOnViewModelScope(
-            repository.currentDevice
-        ) { state, response -> state.copy(currentDevice = response as Lamp?) }
-    }
-
     fun turnOn() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_ON_ACTION) },
         { state, _ -> state }
