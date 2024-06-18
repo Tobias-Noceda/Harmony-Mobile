@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile
 
 import android.annotation.SuppressLint
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,8 +21,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.LocationOn
@@ -47,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -65,12 +65,13 @@ import ar.edu.itba.harmony_mobile.ui.theme.secondary
 
 enum class AppDestinations(
     @StringRes val label: Int,
-    val icon: ImageVector,
+    val icon: ImageVector?,
+    @DrawableRes val drawable: Int?,
     @StringRes val contentDescription: Int
 ) {
-    ROOMS(R.string.rooms, Icons.Default.LocationOn, R.string.rooms),
-    DEVICES(R.string.devices, Icons.AutoMirrored.Filled.List, R.string.devices),
-    ROUTINES(R.string.routines, Icons.Default.DateRange, R.string.routines)
+    ROOMS(R.string.rooms, Icons.Default.LocationOn, null, R.string.rooms),
+    DEVICES(R.string.devices, null, R.drawable.devices, R.string.devices),
+    ROUTINES(R.string.routines, null, R.drawable.calendar, R.string.routines)
 }
 
 @Composable
@@ -103,10 +104,17 @@ fun HarmonyApp() {
             AppDestinations.entries.forEach {
                 item(
                     icon = {
-                        Icon(
-                            it.icon,
-                            contentDescription = stringResource(it.contentDescription)
-                        )
+                        if (it.drawable == null) {
+                            Icon(
+                                it.icon!!,
+                                contentDescription = stringResource(it.contentDescription)
+                            )
+                        } else {
+                            Icon(
+                                painterResource(id = it.drawable),
+                                contentDescription = null
+                            )
+                        }
                     },
                     label = { Text(stringResource(it.label)) },
                     selected = it == currentDestination.value,
@@ -211,12 +219,21 @@ fun CustomTopSheet(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
                                 ) {
-                                    Icon(
-                                        Icons.Default.Home,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.padding(end = 8.dp)
-                                    )
+                                    if (house == stringResource(id = R.string.personal_devices)) {
+                                        Icon(
+                                            painterResource(id = R.drawable.persona_devices),
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                    } else {
+                                        Icon(
+                                            Icons.Default.Home,
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                    }
                                     Text(
                                         text = house,
                                         minLines = if ( columns == 2 ) 2 else 1,

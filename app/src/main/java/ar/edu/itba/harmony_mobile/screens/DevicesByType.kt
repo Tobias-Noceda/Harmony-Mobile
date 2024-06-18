@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -103,7 +104,7 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                type.icon,
+                                painterResource(id = type.icon),
                                 contentDescription = null,
                                 modifier = Modifier.height(60.dp)
                             )
@@ -142,7 +143,7 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        type.icon,
+                                        painterResource(id = type.icon),
                                         contentDescription = null,
                                         modifier = Modifier.height(60.dp)
                                     )
