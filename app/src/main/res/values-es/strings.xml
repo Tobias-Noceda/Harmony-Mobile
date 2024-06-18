@@ -68,4 +68,6 @@
     <string name="close">Cerrar</string>
     <string name="opening">Abriendo</string>
     <string name="closing">Cerrando</string>
+    <string name="amount">Cantidad:</string>
+    <string name="dispense">Dispensar</string>
 </resources>
