@@ -1,8 +1,7 @@
-package ar.edu.itba.harmony_mobile.remote.model
+package ar.edu.itba.harmony_mobile.remote.model.devices
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRefrigeratorState
-import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 
 class RemoteRefrigerator : RemoteDevice<RemoteRefrigeratorState>() {
 

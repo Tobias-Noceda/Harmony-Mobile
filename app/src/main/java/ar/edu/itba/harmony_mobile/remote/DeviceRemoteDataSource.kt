@@ -1,7 +1,7 @@
 package ar.edu.itba.harmony_mobile.remote
 
 import ar.edu.itba.harmony_mobile.remote.api.DeviceService
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,6 +16,13 @@ class DeviceRemoteDataSource(
                 deviceService.getDevices()
             }
             emit(devices)
+            delay(DELAY)
+        }
+    }
+
+    val devicesByRoomByHome: Flow<List<RemoteDevice<*>>> = flow {
+        while (true) {
+            val devicesByRoomByHome = List<>
             delay(DELAY)
         }
     }

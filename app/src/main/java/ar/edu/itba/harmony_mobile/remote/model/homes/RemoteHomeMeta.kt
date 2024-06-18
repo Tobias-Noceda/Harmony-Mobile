@@ -1,8 +1,8 @@
-package ar.edu.itba.harmony_mobile.remote.model
+package ar.edu.itba.harmony_mobile.remote.model.homes
 
 import com.google.gson.annotations.SerializedName
 
-class RemoteRoomMeta {
+class RemoteHomeMeta {
     @SerializedName("size")
     lateinit var size: String
 
