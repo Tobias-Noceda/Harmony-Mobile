@@ -1,8 +1,8 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteLamp
-import ar.edu.itba.harmony_mobile.remote.model.RemoteLampState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLamp
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLampState
 
 class Lamp(
     id: String?,

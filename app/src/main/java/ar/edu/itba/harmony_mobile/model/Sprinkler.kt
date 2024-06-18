@@ -1,8 +1,8 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteSprinklerState
-import ar.edu.itba.harmony_mobile.remote.model.RemoteSprinkler
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinklerState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinkler
 
 class Sprinkler(
     id: String?,

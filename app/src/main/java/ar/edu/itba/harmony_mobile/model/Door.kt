@@ -1,8 +1,8 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDoor
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDoorState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoor
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoorState
 
 class Door(
     id: String?,

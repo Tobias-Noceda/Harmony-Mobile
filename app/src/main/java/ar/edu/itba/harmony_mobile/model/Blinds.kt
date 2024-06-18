@@ -1,8 +1,8 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteBlinds
-import ar.edu.itba.harmony_mobile.remote.model.RemoteBlindsState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlinds
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlindsState
 
 class Blinds(
     id: String?,
