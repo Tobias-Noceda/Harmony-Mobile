@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,35 +32,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
-import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesScreen(modifier: Modifier, currentHouse: Int, state: DeviceTypes? = null) {
+fun DevicesByType(type: DeviceTypes, currentHouse: Int, onBackCalled: () -> Unit) {
+    var currentName by rememberSaveable { mutableStateOf("") }
 
-    var currentDestination by rememberSaveable { mutableStateOf(state) }
+    BackHandler(onBack = onBackCalled)
 
-    Box(modifier = modifier) {
-        if (currentDestination == null) {
-            DevicesList(
-                currentHouse = currentHouse,
-                onDeviceClick = { deviceType ->
-                    currentDestination = deviceType
-                }
-            )
-        } else {
-            DevicesByType(currentDestination!!, currentHouse) { currentDestination = null }
-        }
+    if (currentName == "") {
+        TypeList(
+            type,
+            onDeviceClick = { deviceName ->
+                currentName = deviceName
+            }
+        )
+    } else {
+        LightScreen(currentName) { currentName = "" }
     }
 }
 
 @Composable
-fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
+fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = stringResource(id = R.string.devices),
+            text = stringResource(id = type.type),
             modifier = Modifier.padding(
                 start = 12.dp,
                 top = 12.dp,
@@ -72,6 +72,9 @@ fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
         val widthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
         val isCompact = widthClass == WindowWidthSizeClass.COMPACT
 
+        val deviceIds = listOf(0, 1, 2, 3, 4)
+        val deviceNames = listOf("CeilingLamp", "BedsideLamp", "FootLamp", "CeilingLamp2", "BarLight")
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,11 +84,11 @@ fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
                 .verticalScroll(scState)
         ) {
             if(isCompact) {
-                for (deviceType in DeviceTypes.entries) {
+                for (id in deviceIds) {
                     Button(
                         modifier = Modifier.padding(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        onClick = { onDeviceClick(deviceType) },
+                        onClick = { onDeviceClick(deviceNames[id]) },
                         colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
                         elevation = ButtonDefaults.buttonElevation(8.dp),
                         border = BorderStroke(
@@ -100,12 +103,12 @@ fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                deviceType.icon,
+                                type.icon,
                                 contentDescription = null,
                                 modifier = Modifier.height(60.dp)
                             )
                             Text(
-                                text = stringResource(id = deviceType.type),
+                                text = deviceNames[id],
                                 textAlign = TextAlign.Left,
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(start = 16.dp)
@@ -114,17 +117,17 @@ fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
                     }
                 }
             } else {
-                val chunkedTypes = DeviceTypes.entries.chunked(2)
+                val chunkedDevices = deviceIds.chunked(2)
 
-                for (chunk in chunkedTypes) {
+                for (chunk in chunkedDevices) {
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        for (deviceType in chunk) {
+                        for (id in chunk) {
                             Button(
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(4.dp),
                                 shape = RoundedCornerShape(8.dp),
-                                onClick = { onDeviceClick(deviceType) },
+                                onClick = { onDeviceClick(deviceNames[id]) },
                                 colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
                                 elevation = ButtonDefaults.buttonElevation(8.dp),
                                 border = BorderStroke(
@@ -139,17 +142,24 @@ fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        deviceType.icon,
+                                        type.icon,
                                         contentDescription = null,
                                         modifier = Modifier.height(60.dp)
                                     )
                                     Text(
-                                        text = stringResource(id = deviceType.type),
+                                        text = deviceNames[id],
                                         textAlign = TextAlign.Left,
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(start = 16.dp)
                                     )
                                 }
+                            }
+                            if(chunk.size != 2) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .weight(1f)
+                                ) {}
                             }
                         }
                     }

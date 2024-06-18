@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Harmony</string>
-    <string name="rooms">Rooms</string>
-    <string name="devices">Devices</string>
+    <string name="rooms">By rooms</string>
+    <string name="devices">Device types</string>
     <string name="routines">Routines</string>
     <string name="houses">Houses</string>
     <string name="personal_devices">Personal Devices</string>

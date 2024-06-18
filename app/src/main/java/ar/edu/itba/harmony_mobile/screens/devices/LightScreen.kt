@@ -52,8 +52,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 //}
 
 @Composable
-fun LightScreen(onBackCalled: () -> Unit) {
-    val lightName by rememberSaveable { mutableStateOf("Light Name") }
+fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
     var lightBrightness by rememberSaveable { mutableFloatStateOf(75f) }
     var lightStatus by rememberSaveable { mutableStateOf(true) }
     var colorMode by rememberSaveable { mutableStateOf(true) }
@@ -68,7 +67,7 @@ fun LightScreen(onBackCalled: () -> Unit) {
     @Composable
     fun lightTitle() {
         Text(
-            text = lightName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
 
     }

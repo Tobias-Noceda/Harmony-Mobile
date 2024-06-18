@@ -37,6 +37,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -77,6 +78,7 @@ fun HarmonyApp() {
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val currentDestination = rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
+    var currentHouseId by rememberSaveable { mutableIntStateOf(0) }
 
     val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
@@ -121,7 +123,7 @@ fun HarmonyApp() {
 
         when (currentDestination.value) {
             AppDestinations.ROOMS -> RoomsScreen(screenModifier)
-            AppDestinations.DEVICES -> DevicesScreen(screenModifier)
+            AppDestinations.DEVICES -> DevicesScreen(screenModifier, currentHouseId)
             AppDestinations.ROUTINES -> RoutinesScreen(screenModifier)
         }
         CustomTopSheet(
