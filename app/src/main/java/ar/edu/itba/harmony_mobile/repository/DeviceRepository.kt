@@ -13,8 +13,6 @@ class DeviceRepository(
         remoteDataSource.devices
             .map { it.map { jt -> jt.asModel() } }
 
-    val currentDevice = devices.map { it.firstOrNull { jt -> jt is Lamp } }
-
     suspend fun getDevice(deviceId: String): Device {
         return remoteDataSource.getDevice(deviceId).asModel()
     }
