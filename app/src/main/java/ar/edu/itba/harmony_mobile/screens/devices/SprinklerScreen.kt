@@ -45,9 +45,7 @@ enum class UnitToDispense(val text: String) {
 }
 
 @Composable
-fun SprinklerScreen(onBackCalled: () -> Unit) {
-
-    val sprinklerName by rememberSaveable { mutableStateOf("Sprinkler Name") }
+fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
 
     val dropDownOptions = UnitToDispense.entries.toList()
     var selectedUnitToDispense by rememberSaveable { mutableStateOf(UnitToDispense.LITRES) }
@@ -63,7 +61,7 @@ fun SprinklerScreen(onBackCalled: () -> Unit) {
     @Composable
     fun blindsTitle() {
         Text(
-            text = sprinklerName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
