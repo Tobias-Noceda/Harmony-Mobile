@@ -48,8 +48,7 @@ enum class MoveState {
 }
 
 @Composable
-fun BlindsScreen(onBackCalled: () -> Unit) {
-    val blindsName by rememberSaveable { mutableStateOf("Blinds Name") }
+fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
     var blindsLimit by rememberSaveable { mutableFloatStateOf(75f) }
     var blindsStatus by rememberSaveable { mutableFloatStateOf(0f) }
 
@@ -60,7 +59,7 @@ fun BlindsScreen(onBackCalled: () -> Unit) {
     @Composable
     fun blindsTitle() {
         Text(
-            text = blindsName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
