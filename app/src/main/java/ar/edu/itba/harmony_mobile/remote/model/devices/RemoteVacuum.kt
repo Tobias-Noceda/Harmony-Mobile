@@ -1,8 +1,7 @@
-package ar.edu.itba.harmony_mobile.remote.model
+package ar.edu.itba.harmony_mobile.remote.model.devices
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteVacuumState
-import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 import ar.edu.itba.harmony_mobile.model.Vacuum
+import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 
 class RemoteVacuum : RemoteDevice<RemoteVacuumState>() {
 

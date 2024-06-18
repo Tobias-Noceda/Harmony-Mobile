@@ -1,8 +1,8 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRefrigerator
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRefrigeratorState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteRefrigerator
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteRefrigeratorState
 
 class Refrigerator(
     id: String?,

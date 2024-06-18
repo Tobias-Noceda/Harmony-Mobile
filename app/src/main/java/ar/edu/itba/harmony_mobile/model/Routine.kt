@@ -1,9 +1,7 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteHome
-import ar.edu.itba.harmony_mobile.remote.model.RemoteHomeMeta
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRoutine
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRoutineMeta
+import ar.edu.itba.harmony_mobile.remote.model.routines.RemoteRoutine
+import ar.edu.itba.harmony_mobile.remote.model.routines.RemoteRoutineMeta
 
 class Routine(
     var id: String? = null,

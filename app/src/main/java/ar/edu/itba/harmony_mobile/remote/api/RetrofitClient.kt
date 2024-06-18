@@ -1,6 +1,6 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

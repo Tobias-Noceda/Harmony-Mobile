@@ -1,13 +1,10 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
 import ar.edu.itba.harmony_mobile.remote.model.RemoteResult
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRoutine
+import ar.edu.itba.harmony_mobile.remote.model.routines.RemoteRoutine
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface RoutineService {

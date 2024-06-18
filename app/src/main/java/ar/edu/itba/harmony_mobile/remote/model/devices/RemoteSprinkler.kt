@@ -1,8 +1,7 @@
-package ar.edu.itba.harmony_mobile.remote.model
+package ar.edu.itba.harmony_mobile.remote.model.devices
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteSprinkler
-import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 
 class RemoteSprinkler : RemoteDevice<RemoteSprinklerState>() {
 
