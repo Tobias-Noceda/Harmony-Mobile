@@ -38,7 +38,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesScreen(modifier: Modifier, currentHouse: Int, state: DeviceTypes? = null) {
+fun DevicesScreen(modifier: Modifier, currentHouse: String, state: DeviceTypes? = null) {
 
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
@@ -57,7 +57,7 @@ fun DevicesScreen(modifier: Modifier, currentHouse: Int, state: DeviceTypes? = n
 }
 
 @Composable
-fun DevicesList(currentHouse: Int, onDeviceClick: (DeviceTypes) -> Unit) {
+fun DevicesList(currentHouse: String, onDeviceClick: (DeviceTypes) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(id = R.string.devices),

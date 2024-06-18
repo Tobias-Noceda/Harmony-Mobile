@@ -45,7 +45,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesByType(type: DeviceTypes, currentHouse: Int, onBackCalled: () -> Unit) {
+fun DevicesByType(type: DeviceTypes, currentHouse: String, onBackCalled: () -> Unit) {
     var currentName by rememberSaveable { mutableStateOf("") }
 
     BackHandler(onBack = onBackCalled)

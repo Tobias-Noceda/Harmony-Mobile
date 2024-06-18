@@ -36,7 +36,6 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -78,8 +77,8 @@ enum class AppDestinations(
 fun HarmonyApp() {
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val currentDestination = rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
-    var currentHouseId by rememberSaveable { mutableIntStateOf(0) }
+    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
+    var currentHouseId by rememberSaveable { mutableStateOf("0") }
 
     val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
@@ -117,9 +116,9 @@ fun HarmonyApp() {
                         }
                     },
                     label = { Text(stringResource(it.label)) },
-                    selected = it == currentDestination.value,
+                    selected = it == currentDestination,
                     colors = myNavigationSuiteItemColors,
-                    onClick = { currentDestination.value = it }
+                    onClick = { currentDestination = it }
                 )
             }
         }
@@ -129,14 +128,19 @@ fun HarmonyApp() {
             .fillMaxSize()
             .padding(top = 80.dp)
 
-        when (currentDestination.value) {
-            AppDestinations.ROOMS -> RoomsScreen(screenModifier)
+        when (currentDestination) {
+            AppDestinations.ROOMS -> RoomsScreen(screenModifier, currentHouseId)
             AppDestinations.DEVICES -> DevicesScreen(screenModifier, currentHouseId)
             AppDestinations.ROUTINES -> RoutinesScreen(screenModifier)
         }
         CustomTopSheet(
             visible = showBottomSheet,
             onDismiss = { showBottomSheet = false },
+            onButtonClick = { houseId ->
+                currentHouseId = houseId
+                currentDestination = AppDestinations.ROOMS
+                showBottomSheet = false
+            },
             padding = PaddingValues(top = 80.dp),
             houses = listOf("House1", "House2")
         )
@@ -148,6 +152,7 @@ fun HarmonyApp() {
 fun CustomTopSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
+    onButtonClick: (String) -> Unit,
     padding: PaddingValues,
     houses: List<String>,
     maxHeight: Dp = 700.dp
