@@ -1,7 +1,13 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -9,37 +15,40 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import ar.edu.itba.harmony_mobile.ui.theme.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.ui.theme.darken
+import ar.edu.itba.harmony_mobile.ui.theme.desaturate
+import ar.edu.itba.harmony_mobile.ui.theme.disabled
+import ar.edu.itba.harmony_mobile.ui.theme.primary
+import ar.edu.itba.harmony_mobile.ui.theme.secondary
+import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
-@Preview(device = Devices.PHONE, showBackground = true)
-@Composable
-fun BlindsPreview() {
-    BlindsScreen()
-}
+// @Preview(device = Devices.PHONE, showBackground = true)
+// @Composable
+// fun BlindsPreview() {
+//     BlindsScreen()
+// }
 
 enum class MoveState {
     STILL, OPENING, CLOSING
 }
 
 @Composable
-fun BlindsScreen() {
+fun BlindsScreen(onBackCalled: () -> Unit) {
     val blindsName by rememberSaveable { mutableStateOf("Blinds Name") }
     var blindsLimit by rememberSaveable { mutableFloatStateOf(75f) }
     var blindsStatus by rememberSaveable { mutableFloatStateOf(0f) }
@@ -47,7 +56,7 @@ fun BlindsScreen() {
     var isMoving by rememberSaveable { mutableStateOf(MoveState.STILL) }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-
+    BackHandler(onBack = onBackCalled)
     @Composable
     fun blindsTitle() {
         Text(

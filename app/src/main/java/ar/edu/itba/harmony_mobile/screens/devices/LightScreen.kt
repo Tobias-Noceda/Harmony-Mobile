@@ -1,7 +1,14 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -13,49 +20,50 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
-import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
-import ar.edu.itba.harmony_mobile.ui.theme.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
+import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
+import ar.edu.itba.harmony_mobile.ui.theme.darken
+import ar.edu.itba.harmony_mobile.ui.theme.desaturate
+import ar.edu.itba.harmony_mobile.ui.theme.disabled
+import ar.edu.itba.harmony_mobile.ui.theme.primary
+import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
-@Preview(device = Devices.PHONE, showBackground = true)
-@Composable
-fun LightPreview() {
-    LightScreen()
-}
+// @Preview(device = Devices.PHONE, showBackground = true)
+// @Composable
+// fun LightPreview() {
+//    LightScreen()
+//}
 
 @Composable
-fun LightScreen() {
+fun LightScreen(onBackCalled: () -> Unit) {
     val lightName by rememberSaveable { mutableStateOf("Light Name") }
     var lightBrightness by rememberSaveable { mutableFloatStateOf(75f) }
     var lightStatus by rememberSaveable { mutableStateOf(true) }
     var colorMode by rememberSaveable { mutableStateOf(true) }
     var lightColor by remember { mutableStateOf(Color.Red) }
 
-
     val colorController = rememberColorPickerController()
-
     val scState = rememberScrollState(0)
-
     val adaptiveInfo = currentWindowAdaptiveInfo()
+
+    BackHandler(onBack = onBackCalled)
 
     @Composable
     fun lightTitle() {

@@ -39,7 +39,8 @@ import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesScreen(modifier: Modifier = Modifier, state: DeviceTypes? = null) {
+fun DevicesScreen(modifier: Modifier, state: DeviceTypes? = null) {
+
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
     Box(modifier = modifier) {
@@ -51,12 +52,12 @@ fun DevicesScreen(modifier: Modifier = Modifier, state: DeviceTypes? = null) {
             )
         } else {
             when (currentDestination) {
-                DeviceTypes.LIGHTS -> LightScreen()
-                DeviceTypes.DOORS -> LightScreen()
-                DeviceTypes.REFRIS -> LightScreen()
-                DeviceTypes.VACUUMS -> LightScreen()
-                DeviceTypes.SPRINKLERS -> LightScreen()
-                DeviceTypes.BLINDS -> BlindsScreen()
+                DeviceTypes.LIGHTS -> LightScreen { currentDestination = null }
+                DeviceTypes.DOORS -> LightScreen { currentDestination = null }
+                DeviceTypes.REFRIS -> LightScreen { currentDestination = null }
+                DeviceTypes.VACUUMS -> LightScreen { currentDestination = null }
+                DeviceTypes.SPRINKLERS -> LightScreen { currentDestination = null }
+                DeviceTypes.BLINDS -> BlindsScreen { currentDestination = null }
                 else -> {
                     currentDestination = null
                 }
@@ -135,7 +136,12 @@ fun DevicesList(onDeviceClick: (DeviceTypes) -> Unit) {
                                     .padding(4.dp),
                                 shape = RoundedCornerShape(8.dp),
                                 onClick = { onDeviceClick(deviceType) },
-                                colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White)
+                                colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
+                                elevation = ButtonDefaults.buttonElevation(8.dp),
+                                border = BorderStroke(
+                                    width = 1.dp,
+                                    color = Color.Black.copy(alpha = 0.3f)
+                                )
                             ) {
                                 Row (
                                     modifier = Modifier
