@@ -4,11 +4,11 @@ import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHome
 import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHomeMeta
 
 class Home(
-        var id: String? = null,
-        var name: String,
-        var rooms: List<Room>?,
-        var size: String,
-        var color: String
+    var id: String? = null,
+    var name: String,
+    var rooms: List<Room>,
+    var size: String,
+    var color: String
 ) {
 
     fun asRemoteModel(): RemoteHome {
@@ -19,7 +19,7 @@ class Home(
         val model = RemoteHome()
         model.id = id
         model.name = name
-        model.rooms = rooms?.map { it.asRemoteModel() }
+        model.rooms = rooms.map { it.asRemoteModel() }.toMutableSet()
         model.meta = meta
 
         return model

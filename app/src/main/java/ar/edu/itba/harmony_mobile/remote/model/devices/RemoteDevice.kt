@@ -30,5 +30,18 @@ abstract class RemoteDevice<T> where T : Any {
         this.state = state
     }
 
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
     abstract fun asModel(): Device
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RemoteDevice<*>
+
+        return id == other.id
+    }
 }

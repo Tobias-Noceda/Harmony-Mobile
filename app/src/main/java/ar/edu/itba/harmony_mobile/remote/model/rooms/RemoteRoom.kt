@@ -16,7 +16,7 @@ class RemoteRoom {
     var home: RemoteHome? = null
 
     @SerializedName("devices")
-    var devices: List<RemoteDevice<*>>? = null
+    var devices: MutableSet<RemoteDevice<*>> = HashSet()
 
     @SerializedName("meta")
     lateinit var meta: RemoteRoomMeta
@@ -26,9 +26,22 @@ class RemoteRoom {
             id = id,
             name = name,
             home = home?.asModel(),
-            devices = devices?.map { it.asModel() },
+            devices = devices.map { it.asModel() },
             size = meta.size,
             color = meta.color
         )
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RemoteRoom
+
+        return id == other.id
     }
 }

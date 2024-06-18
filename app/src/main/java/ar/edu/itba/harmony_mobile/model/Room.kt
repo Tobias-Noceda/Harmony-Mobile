@@ -7,7 +7,7 @@ class Room(
     var id: String? = null,
     var name: String,
     var home: Home?,
-    var devices: List<Device>?,
+    var devices: List<Device>,
     var size: String,
     var color: String
 ) {
@@ -20,7 +20,7 @@ class Room(
         val model = RemoteRoom()
         model.id = id
         model.name = name
-        model.devices = devices?.map { it.asRemoteModel() }
+        model.devices = devices.map { it.asRemoteModel() }.toMutableSet()
         model.home = home?.asRemoteModel()
         model.meta = meta
 

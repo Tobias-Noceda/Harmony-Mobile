@@ -12,7 +12,7 @@ class RemoteHome {
     lateinit var name: String
 
     @SerializedName("rooms")
-    var rooms: List<RemoteRoom>? = null
+    var rooms: MutableSet<RemoteRoom> = HashSet()
 
     @SerializedName("meta")
     lateinit var meta: RemoteHomeMeta
@@ -22,9 +22,22 @@ class RemoteHome {
         return Home(
             id = id,
             name = name,
-            rooms = rooms?.map { it.asModel() },
+            rooms = rooms.map { it.asModel() },
             size = meta.size,
             color = meta.color
         )
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RemoteHome
+
+        return id == other.id
     }
 }
