@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -35,6 +36,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaul
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,11 +54,15 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
+import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
 import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
+import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
 import ar.edu.itba.harmony_mobile.ui.theme.primary
@@ -74,8 +80,10 @@ enum class AppDestinations(
 }
 
 @Composable
-fun HarmonyApp() {
+fun HarmonyApp(hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory())) {
     var showBottomSheet by remember { mutableStateOf(false) }
+
+    val houseState by hViewModel.uiState.collectAsState()
 
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
     var currentHouseId by rememberSaveable { mutableStateOf("0") }
@@ -142,7 +150,7 @@ fun HarmonyApp() {
                 showBottomSheet = false
             },
             padding = PaddingValues(top = 80.dp),
-            houses = listOf("House1", "House2")
+            houses = houseState.homes
         )
     }
 }
@@ -154,9 +162,10 @@ fun CustomTopSheet(
     onDismiss: () -> Unit,
     onButtonClick: (String) -> Unit,
     padding: PaddingValues,
-    houses: List<String>,
+    houses: List<Home>,
     maxHeight: Dp = 700.dp
 ) {
+    Log.i("Tobi", houses.toString())
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -193,8 +202,7 @@ fun CustomTopSheet(
                     3
                 }
             }
-            val allHouses = houses + stringResource(id = R.string.personal_devices)
-            val chunkedHouse = allHouses.chunked(columns)
+            val chunkedHouse = houses.chunked(columns)
             Column(
                 modifier = Modifier
                     .padding(8.dp)
@@ -224,7 +232,7 @@ fun CustomTopSheet(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
                                 ) {
-                                    if (house == stringResource(id = R.string.personal_devices)) {
+                                    if (house.id == "0") {
                                         Icon(
                                             painterResource(id = R.drawable.persona_devices),
                                             contentDescription = null,
@@ -240,7 +248,7 @@ fun CustomTopSheet(
                                         )
                                     }
                                     Text(
-                                        text = house,
+                                        text = house.name,
                                         minLines = if ( columns == 2 ) 2 else 1,
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.bodySmall

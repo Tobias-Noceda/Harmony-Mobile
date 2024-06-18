@@ -7,7 +7,6 @@ import ar.edu.itba.harmony_mobile.remote.RoomRemoteDataSource
 import ar.edu.itba.harmony_mobile.remote.RoutineRemoteDataSource
 import ar.edu.itba.harmony_mobile.remote.api.RetrofitClient
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
-import ar.edu.itba.harmony_mobile.remote.repository.RoomRepository
 import ar.edu.itba.harmony_mobile.repository.HomeRepository
 import ar.edu.itba.harmony_mobile.repository.RoomRepository
 import ar.edu.itba.harmony_mobile.repository.RoutineRepository

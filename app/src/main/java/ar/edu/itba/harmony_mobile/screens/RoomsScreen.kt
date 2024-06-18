@@ -51,6 +51,7 @@ fun RoomsScreen(modifier: Modifier, currentHouse: String, state: String = "") {
             )
         } else {
             BackHandler(onBack = { currentDestination = "" })
+            EmptyScreen("No devices in room: $currentDestination")
             // RoomScreen()
         }
     }
