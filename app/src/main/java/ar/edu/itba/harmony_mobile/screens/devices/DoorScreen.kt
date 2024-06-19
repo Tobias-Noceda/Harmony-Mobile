@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -80,7 +82,8 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
                 checkedTrackColor = tertiary.copy(0.5f),
                 uncheckedThumbColor = primary,
                 uncheckedTrackColor = primary.copy(0.5f),
-            )
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
     }
 
@@ -100,6 +103,7 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = when (state) {
@@ -124,34 +128,34 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
     }
 
     @Composable
-    fun stateIcons(modifier: Modifier) {
-        Row(modifier = modifier) {
-            Box(
-                modifier = Modifier.fillMaxWidth(0.5f)
-            ) {
-                Icon(
-                    painter =
-                    when (state) {
-                        DoorState.OPEN -> painterResource(id = R.drawable.door_open)
-                        else -> painterResource(id = R.drawable.door)
-                    },
-                    contentDescription = "",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            Box(
-                modifier = Modifier.fillMaxWidth(0.5f)
-            ) {
-                Icon(
-                    painter =
-                    when (state) {
-                        DoorState.LOCKED -> painterResource(id = R.drawable.lock)
-                        else -> painterResource(id = R.drawable.lock_open)
-                    },
-                    contentDescription = "",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+    fun stateIcons() {
+        Box(
+        ) {
+            Icon(
+                painter =
+                when (state) {
+                    DoorState.OPEN -> painterResource(id = R.drawable.door_open)
+                    else -> painterResource(id = R.drawable.door)
+                },
+                contentDescription = "",
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(60.dp)
+            )
+        }
+        Box(
+        ) {
+            Icon(
+                painter =
+                when (state) {
+                    DoorState.LOCKED -> painterResource(id = R.drawable.lock)
+                    else -> painterResource(id = R.drawable.lock_open)
+                },
+                contentDescription = "",
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(60.dp)
+            )
         }
     }
 
@@ -192,7 +196,8 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
                                 openSwitch()
                             }
                         } else {
-                            Column {
+                            Column (modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally){
                                 openText()
                                 openSwitch()
                             }
@@ -207,8 +212,14 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     stateText()
-                    Box(modifier = Modifier.fillMaxWidth(0.5f)) {
-                        stateIcons(modifier = Modifier.fillMaxWidth())
+                    with(adaptiveInfo) {
+                        if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT) {
+                            Row {
+                                stateIcons()
+                            }
+                        } else {
+                            stateIcons()
+                        }
                     }
                 }
             }
