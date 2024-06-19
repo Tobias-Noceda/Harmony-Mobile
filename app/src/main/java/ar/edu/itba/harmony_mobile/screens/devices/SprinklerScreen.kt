@@ -70,9 +70,9 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
         Text(
             text = "${stringResource(id = R.string.status)} ${
                 if (open) {
-                    stringResource(id = R.string.on)
+                    stringResource(id = R.string.opened)
                 } else {
-                    stringResource(id = R.string.off)
+                    stringResource(id = R.string.closed)
                 }
             }",
             fontSize = 20.sp,

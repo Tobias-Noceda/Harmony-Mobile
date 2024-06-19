@@ -1,7 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -93,7 +92,6 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
                 secondary.desaturate(0f)
             ),
             enabled = isMoving == MoveState.STILL && blindsStatus > 0f,
-            border = BorderStroke(2.dp, primary)
         ) {
             Text(text = stringResource(id = R.string.open))
         }
@@ -115,7 +113,6 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
                 secondary.desaturate(0f)
             ),
             enabled = isMoving == MoveState.STILL && blindsStatus < blindsLimit,
-            border = BorderStroke(2.dp, primary)
         ) {
             Text(text = stringResource(id = R.string.close))
         }

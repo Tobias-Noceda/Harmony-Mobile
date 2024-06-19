@@ -70,4 +70,9 @@
     <string name="closing">Closing</string>
     <string name="amount">Amount:</string>
     <string name="dispense">Dispense</string>
+    <string name="opened">Open</string>
+    <string name="closed">Closed</string>
+    <string name="locked">Locked</string>
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
 </resources>
