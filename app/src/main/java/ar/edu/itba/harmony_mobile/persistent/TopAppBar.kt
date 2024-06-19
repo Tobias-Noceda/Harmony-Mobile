@@ -96,14 +96,14 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.CenterEnd
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.logo),
                                 contentDescription = "Harmony Logo",
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .padding(horizontal = 4.dp, vertical = 1.dp)
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }
                     }
