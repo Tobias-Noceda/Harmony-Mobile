@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
+import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
 import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
 import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.BlindsCard
@@ -68,7 +69,7 @@ fun RoomScreen(homeId: String, roomId: String, onBackCalled: () -> Unit) {
     } else {
         when(currentDeviceType) {
             DeviceTypes.LIGHTS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
-            DeviceTypes.DOORS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
+            DeviceTypes.DOORS -> DoorScreen(deviceName = currentDevice) { currentDevice = "" }
             DeviceTypes.REFRIS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
             DeviceTypes.VACUUMS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
             DeviceTypes.SPRINKLERS -> SprinklerScreen(deviceName = currentDevice) { currentDevice = "" }
