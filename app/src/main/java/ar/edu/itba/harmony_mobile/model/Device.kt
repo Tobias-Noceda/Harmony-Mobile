@@ -9,4 +9,7 @@ abstract class Device(
     val type: DeviceType
 ) {
     abstract fun asRemoteModel(): RemoteDevice<*>
+    override fun toString(): String {
+        return "{Device;id:${id};name:${name};Room:${room?.name}"
+    }
 }

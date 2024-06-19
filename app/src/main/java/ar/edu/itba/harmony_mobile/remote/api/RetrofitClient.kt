@@ -12,7 +12,7 @@ import java.util.Date
 private const val API_URL = "http://localhost:8080/api/" // if you are not using an emulator
 
 private val httpLoggingInterceptor = HttpLoggingInterceptor()
-    .setLevel(HttpLoggingInterceptor.Level.BODY)
+    .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
 private val okHttpClient = OkHttpClient.Builder()
     .addInterceptor(httpLoggingInterceptor)

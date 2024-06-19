@@ -15,7 +15,7 @@ class RemoteHome {
     var rooms: MutableSet<RemoteRoom> = HashSet()
 
     @SerializedName("meta")
-    lateinit var meta: RemoteHomeMeta
+    var meta: RemoteHomeMeta? = null
 
 
     fun asModel(): Home {
@@ -23,8 +23,8 @@ class RemoteHome {
             id = id,
             name = name,
             rooms = rooms.map { it.asModel() },
-            size = meta.size,
-            color = meta.color
+            size = meta?.size,
+            color = meta?.color
         )
     }
 
@@ -39,5 +39,9 @@ class RemoteHome {
         other as RemoteHome
 
         return id == other.id
+    }
+
+    override fun toString(): String {
+        return "{RemoteHome;id:${id};name:${name};Rooms:${rooms.fold("") { acc, room -> "${acc}${room.toString()};" }}}"
     }
 }
