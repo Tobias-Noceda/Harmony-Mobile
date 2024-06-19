@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 class RemoteHomeMeta {
     @SerializedName("size")
-    lateinit var size: String
+    var size: String? = null
 
     @SerializedName("color")
-    lateinit var color: String
+    var color: String? = null
 }

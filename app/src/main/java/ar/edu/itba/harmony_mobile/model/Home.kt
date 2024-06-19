@@ -7,8 +7,8 @@ class Home(
     var id: String? = null,
     var name: String,
     var rooms: List<Room>,
-    var size: String,
-    var color: String
+    var size: String? = null,
+    var color: String? = null
 ) {
 
     fun asRemoteModel(): RemoteHome {
@@ -23,5 +23,9 @@ class Home(
         model.meta = meta
 
         return model
+    }
+
+    override fun toString(): String {
+        return "{Home;id:${id};name:${name};rooms:${rooms.fold("") { acc, room -> "${acc}${room.toString()};" }}}"
     }
 }
