@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -36,12 +37,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 
-enum class UnitToDispense(val text: String) {
-    MILLILITRES("Millilitres"),
-    DECILITRES("Decilitres"),
-    LITRES("Litres"),
-    HECTOLITRES("Hectolitres"),
-    KILOLITRES("Kilolitres");
+enum class UnitToDispense(@StringRes val textId: Int) {
+    MILLILITRES(R.string.mL),
+    DECILITRES(R.string.dL),
+    LITRES(R.string.L),
+    HECTOLITRES(R.string.hL),
+    KILOLITRES(R.string.kL);
 }
 
 @Composable
@@ -181,7 +182,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                                     .fillMaxWidth(0.5f)
                                     .fillMaxHeight(0.75f)
                             ) {
-                                Text(selectedUnitToDispense.text)
+                                Text(stringResource(selectedUnitToDispense.textId))
                                 Icon(
                                     imageVector = when (isExpanded) {
                                         false -> Icons.Default.KeyboardArrowDown
@@ -205,7 +206,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                                             isExpanded = false
                                         },
                                         text = {
-                                            Text(item.text, color = secondary)
+                                            Text(stringResource(item.textId), color = secondary)
                                         },
                                     )
                                 }
@@ -268,7 +269,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(selectedUnitToDispense.text)
+                        Text(stringResource(selectedUnitToDispense.textId))
                         Icon(
                             imageVector = when (isExpanded) {
                                 false -> Icons.Default.KeyboardArrowDown
@@ -292,7 +293,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                                     isExpanded = false
                                 },
                                 text = {
-                                    Text(item.text, color = secondary)
+                                    Text(stringResource(item.textId), color = secondary)
                                 },
                             )
                         }

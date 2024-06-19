@@ -75,4 +75,14 @@
     <string name="locked">Trabado</string>
     <string name="lock">Trabar</string>
     <string name="unlock">Destrabar</string>
+    <string name="default_mode">Normal</string>
+    <string name="vacation_mode">Vacaciones</string>
+    <string name="party_mode">Fiesta</string>
+    <string name="mL">Mililitros</string>
+    <string name="dL">Decilitros</string>
+    <string name="L">Litros</string>
+    <string name="hL">HectoLitros</string>
+    <string name="kL">Kilolitros</string>
+    <string name="fridge">Refrigerador</string>
+    <string name="freezer">Congelador</string>
 </resources>
