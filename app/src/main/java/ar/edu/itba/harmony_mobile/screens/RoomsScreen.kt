@@ -1,6 +1,5 @@
 package ar.edu.itba.harmony_mobile.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,9 +49,11 @@ fun RoomsScreen(modifier: Modifier, currentHouse: String, state: String = "") {
                 }
             )
         } else {
-            BackHandler(onBack = { currentDestination = "" })
-            EmptyScreen("No devices in room: $currentDestination")
-            // RoomScreen()
+            // if(currentDestination.isEmpty) {
+            //     BackHandler(onBack = { currentDestination = "" })
+            //     EmptyScreen("No devices in house: $currentDestination")
+            // } else {
+            RoomScreen(currentHouse, currentDestination) { currentDestination = "" }
         }
     }
 }

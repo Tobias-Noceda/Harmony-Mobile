@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
@@ -45,33 +44,48 @@ import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
+
 @Composable
-fun DevicesByType(type: DeviceTypes, currentHouse: String, onBackCalled: () -> Unit) {
-    var currentName by rememberSaveable { mutableStateOf("") }
+fun RoomScreen(homeId: String, roomId: String, onBackCalled: () -> Unit) {
+    var currentDevice by rememberSaveable { mutableStateOf("") }
+    var currentDeviceType by rememberSaveable { mutableStateOf(DeviceTypes.DOORS) }
 
     BackHandler(onBack = onBackCalled)
 
-    if (currentName == "") {
-        TypeList(
-            type,
-            onDeviceClick = { deviceName ->
-                currentName = deviceName
+    if(currentDevice == "") {
+        RoomDevices(
+            roomName = "LivingRoom",
+            deviceList = listOf("FrontDoor", "FootLamp", "VacuumCleaner"),
+            deviceTypes = listOf(DeviceTypes.DOORS, DeviceTypes.LIGHTS, DeviceTypes.VACUUMS),
+            onDeviceClick = { device, type ->
+                run {
+                    currentDevice = device
+                    currentDeviceType = type
+                }
             }
         )
     } else {
-        when(type) {
-            DeviceTypes.LIGHTS -> LightScreen(currentName) { currentName = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
-            else -> BlindsScreen(currentName) { currentName = "" }
+        when(currentDeviceType) {
+            DeviceTypes.LIGHTS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
+            DeviceTypes.DOORS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
+            DeviceTypes.REFRIS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
+            DeviceTypes.VACUUMS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(deviceName = currentDevice) { currentDevice = "" }
+            else -> BlindsScreen(deviceName = currentDevice) { currentDevice = "" }
         }
     }
 }
 
 @Composable
-fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
+fun RoomDevices(
+    roomName: String,
+    deviceList: List<String>,
+    deviceTypes: List<DeviceTypes>,
+    onDeviceClick: (String, DeviceTypes) -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = stringResource(id = type.type),
+            text = roomName,
             modifier = Modifier.padding(
                 start = 12.dp,
                 top = 12.dp,
@@ -84,12 +98,7 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
         val widthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
         val isCompact = widthClass == WindowWidthSizeClass.COMPACT
         val isExpanded = widthClass == WindowWidthSizeClass.EXPANDED
-        val modifier = Modifier
-            .weight(1f)
-            .padding(4.dp)
-
-        val deviceIds = listOf(0, 1, 2, 3, 4)
-        val deviceNames = listOf("CeilingLamp", "BedsideLamp", "FootLamp", "CeilingLamp2", "BarLight")
+        val modifier = Modifier.weight(1f).padding(4.dp)
 
         Column(
             modifier = Modifier
@@ -100,11 +109,11 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                 .verticalScroll(scState)
         ) {
             if(isCompact) {
-                for (id in deviceIds) {
+                for (id in deviceList.indices) {
                     Button(
                         modifier = Modifier.padding(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        onClick = { onDeviceClick(deviceNames[id]) },
+                        onClick = { onDeviceClick(deviceList[id], deviceTypes[id]) },
                         colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
                         elevation = ButtonDefaults.buttonElevation(8.dp),
                         border = BorderStroke(
@@ -119,12 +128,12 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painterResource(id = type.icon),
+                                painterResource(id = deviceTypes[id].icon),
                                 contentDescription = null,
                                 modifier = Modifier.height(60.dp)
                             )
                             Text(
-                                text = deviceNames[id],
+                                text = deviceList[id],
                                 textAlign = TextAlign.Left,
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(start = 16.dp)
@@ -133,31 +142,31 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                     }
                 }
             } else if (isExpanded) {
-                val chunkedDevices = deviceIds.chunked(2)
+                val chunkedDevices = deviceList.indices.chunked(2)
 
                 for (chunk in chunkedDevices) {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         for (id in chunk) {
-                            when(type) {
-                                DeviceTypes.LIGHTS -> LightCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
-                                DeviceTypes.DOORS -> DoorCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
-                                DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
-                                DeviceTypes.VACUUMS -> VacuumCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
-                                DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
-                                else -> BlindsCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
+                            when(deviceTypes[id]) {
+                                DeviceTypes.LIGHTS -> LightCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                                DeviceTypes.DOORS -> DoorCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                                DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                                DeviceTypes.VACUUMS -> VacuumCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                                DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                                else -> BlindsCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
                             }
                         }
                     }
                 }
             } else {
-                for (id in deviceIds) {
-                    when(type) {
-                        DeviceTypes.LIGHTS -> LightCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
-                        DeviceTypes.DOORS -> DoorCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
-                        DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
-                        DeviceTypes.VACUUMS -> VacuumCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
-                        DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
-                        else -> BlindsCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
+                for (id in deviceList.indices) {
+                    when(deviceTypes[id]) {
+                        DeviceTypes.LIGHTS -> LightCard(name = deviceList[id]) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                        DeviceTypes.DOORS -> DoorCard(name = deviceList[id]) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                        DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceList[id]) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                        DeviceTypes.VACUUMS -> VacuumCard(name = deviceList[id]) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                        DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id]) { onDeviceClick(deviceList[id], deviceTypes[id]) }
+                        else -> BlindsCard(name = deviceList[id]) { onDeviceClick(deviceList[id], deviceTypes[id]) }
                     }
                 }
             }

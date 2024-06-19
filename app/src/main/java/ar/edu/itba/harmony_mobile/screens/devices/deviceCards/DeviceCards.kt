@@ -1,10 +1,10 @@
 package ar.edu.itba.harmony_mobile.screens.devices.deviceCards
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,13 +31,12 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 fun MyCard(
     name: String,
     type: DeviceTypes,
+    modifier: Modifier,
     content: @Composable () -> Unit,
     onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(4.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(8.dp),
         onClick = { onClick() },
         colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
@@ -70,14 +69,16 @@ fun MyCard(
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
-fun LightCard(name: String, onClick: () -> Unit) {
+fun LightCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "On"
     val brightness = 75
 
     MyCard(
         name = name,
         type = DeviceTypes.LIGHTS,
+        modifier = modifier,
         content = {
             Column {
                 Text(
@@ -98,13 +99,15 @@ fun LightCard(name: String, onClick: () -> Unit) {
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
-fun DoorCard(name: String, onClick: () -> Unit) {
+fun DoorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "Closed"
     val lock = "Locked"
     MyCard(
         name = name,
         type = DeviceTypes.DOORS,
+        modifier = modifier,
         content = {
             Column {
                 Text(
@@ -124,14 +127,16 @@ fun DoorCard(name: String, onClick: () -> Unit) {
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
-fun RefrigeratorCard(name: String, onClick: () -> Unit) {
+fun RefrigeratorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val fridgeTemp = 2
     val freezerTemp = -8
 
     MyCard(
         name = name,
-        type = DeviceTypes.LIGHTS,
+        type = DeviceTypes.REFRIS,
+        modifier = modifier,
         content = {
             Column {
                 Text(
@@ -150,13 +155,15 @@ fun RefrigeratorCard(name: String, onClick: () -> Unit) {
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
-fun VacuumCard(name: String, onClick: () -> Unit) {
+fun VacuumCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "On" // Docked also possible
     val battery = 75
     MyCard(
         name = name,
-        type = DeviceTypes.LIGHTS,
+        type = DeviceTypes.VACUUMS,
+        modifier = modifier,
         content = {
             Column {
                 Text(
@@ -175,12 +182,14 @@ fun VacuumCard(name: String, onClick: () -> Unit) {
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
-fun SprinklerCard(name: String, onClick: () -> Unit) {
+fun SprinklerCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "On"
     MyCard(
         name = name,
-        type = DeviceTypes.LIGHTS,
+        type = DeviceTypes.SPRINKLERS,
+        modifier = modifier,
         content = {
             Column {
                 Text(
@@ -194,13 +203,15 @@ fun SprinklerCard(name: String, onClick: () -> Unit) {
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
-fun BlindsCard(name: String, onClick: () -> Unit) {
+fun BlindsCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "Closed"
     val maxLevel = 75
     MyCard(
         name = name,
-        type = DeviceTypes.LIGHTS,
+        type = DeviceTypes.BLINDS,
+        modifier = modifier,
         content = {
             Column {
                 Text(
