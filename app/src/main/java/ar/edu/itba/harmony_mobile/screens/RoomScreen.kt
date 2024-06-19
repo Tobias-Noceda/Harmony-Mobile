@@ -2,6 +2,7 @@ package ar.edu.itba.harmony_mobile.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -155,6 +156,13 @@ fun RoomDevices(
                                 DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
                                 else -> BlindsCard(name = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id], deviceTypes[id]) }
                             }
+                        }
+                        if(chunk.size != 2) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .weight(1f)
+                            ) {}
                         }
                     }
                 }

@@ -150,6 +150,13 @@ fun RoomsList(currentHouse: String, onDeviceClick: (String) -> Unit) {
                                 }
                             }
                         }
+                        if(chunk.size != 2) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .weight(1f)
+                            ) {}
+                        }
                     }
                 }
             }
