@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Slider
@@ -84,7 +83,6 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
                 blindsStatus = 0f
 //                isMoving = moveState.OPENING //Lo comento xq todavia la API no devuelve cuando termine de moverse
             },
-            shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
                 tertiary,
                 secondary,
@@ -105,7 +103,6 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
 //                isMoving = moveState.CLOSING  //Lo comento xq todavia la API no devuelve cuando termine de moverse
 
             },
-            shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
                 tertiary,
                 secondary,

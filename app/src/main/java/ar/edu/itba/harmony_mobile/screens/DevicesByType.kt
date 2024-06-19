@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
+import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
 import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
 import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.BlindsCard
@@ -62,6 +63,7 @@ fun DevicesByType(type: DeviceTypes, currentHouse: String, onBackCalled: () -> U
         when(type) {
             DeviceTypes.LIGHTS -> LightScreen(currentName) { currentName = "" }
             DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
+            DeviceTypes.DOORS -> DoorScreen(currentName) { currentName = "" }
             else -> BlindsScreen(currentName) { currentName = "" }
         }
     }
