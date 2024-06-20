@@ -7,7 +7,10 @@ class RemoteVacuumState {
     @SerializedName("status")
     lateinit var status: String
 
-    @SerializedName("targetRoom")
+    @SerializedName("mode")
+    lateinit var mode: String
+
+    @SerializedName("location")
     var targetRoom: RemoteRoom? = null
 
     @SerializedName("battery")

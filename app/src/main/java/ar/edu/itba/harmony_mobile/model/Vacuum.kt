@@ -9,15 +9,17 @@ class Vacuum(
     name: String,
     room: Room?,
     val status: Status,
+    val mode: String,
     val targetRoom: Room?,
     val battery: Int,
-) : Device(id, name, room,DeviceType.VACUUM) {
+) : Device(id, name, room, DeviceType.VACUUM) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteVacuumState> {
         val state = RemoteVacuumState()
         state.status = Status.asRemoteModel(status)
         state.targetRoom = targetRoom?.asRemoteModel()
         state.battery = battery
+        state.mode = mode
 
         val model = RemoteVacuum()
         model.id = id

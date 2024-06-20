@@ -11,6 +11,7 @@ class RemoteVacuum : RemoteDevice<RemoteVacuumState>() {
             name = name,
             room = room?.asModel(),
             status = RemoteStatus.asModel(state.status),
+            mode = state.mode,
             targetRoom = state.targetRoom?.asModel(),
             battery = state.battery
         )

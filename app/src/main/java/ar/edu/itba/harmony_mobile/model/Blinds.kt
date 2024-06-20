@@ -10,12 +10,14 @@ class Blinds(
     room: Room?,
     val status: Status,
     val currentLevel: Int,
+    val level: Int,
 ) : Device(id, name, room,DeviceType.BLINDS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteBlindsState> {
         val state = RemoteBlindsState()
         state.status = Status.asRemoteModel(status)
         state.currentLevel = currentLevel
+        state.level = level
 
         val model = RemoteBlinds()
         model.id = id

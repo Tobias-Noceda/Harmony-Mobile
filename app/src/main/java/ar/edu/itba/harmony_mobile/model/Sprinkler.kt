@@ -9,11 +9,17 @@ class Sprinkler(
     name: String,
     room: Room?,
     val status: Status,
+    val quantity: Int=0,
+    val dispensedQuantity: Int = 0,
+    val unit : String
 ) : Device(id, name, room,DeviceType.SPRINKLER) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteSprinklerState> {
         val state = RemoteSprinklerState()
         state.status = Status.asRemoteModel(status)
+        state.quantity=quantity
+        state.dispensedQuantity=dispensedQuantity
+        state.unit=unit
 
         val model = RemoteSprinkler()
         model.id = id
