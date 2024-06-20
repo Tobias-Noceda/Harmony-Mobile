@@ -77,9 +77,7 @@ fun DevicesList(currentHouse: String, onDeviceClick: (DeviceTypes) -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 6.dp,
-                )
+                .padding(horizontal = 6.dp,)
                 .verticalScroll(scState)
         ) {
             if(isCompact) {

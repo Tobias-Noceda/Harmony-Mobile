@@ -139,7 +139,7 @@ fun HarmonyApp(hViewModel: HomesViewModel = viewModel(factory = getViewModelFact
         when (currentDestination) {
             AppDestinations.ROOMS -> RoomsScreen(screenModifier, currentHouseId)
             AppDestinations.DEVICES -> DevicesScreen(screenModifier, currentHouseId)
-            AppDestinations.ROUTINES -> RoutinesScreen(screenModifier)
+            AppDestinations.ROUTINES -> RoutinesScreen(screenModifier, currentHouseId)
         }
         CustomTopSheet(
             visible = showBottomSheet,
