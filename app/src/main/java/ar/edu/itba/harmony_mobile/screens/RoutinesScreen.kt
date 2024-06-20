@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
@@ -56,7 +57,7 @@ val routines = listOf(
 )
 
 @Composable
-fun RoutinesScreen(modifier: Modifier = Modifier, currentHouse: String) {
+fun RoutinesScreen(modifier: Modifier = Modifier, currentHouse: Home) {
 
     var inList by rememberSaveable { mutableStateOf(false) }
     var showingRoutine by rememberSaveable { mutableStateOf("") }
@@ -74,7 +75,7 @@ fun RoutinesScreen(modifier: Modifier = Modifier, currentHouse: String) {
 }
 
 @Composable
-fun RoutinesList(currentHouse: String, onNav: (String) -> Unit) {
+fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
 
     val scState = rememberScrollState(0)
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass

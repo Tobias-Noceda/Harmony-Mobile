@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -46,58 +47,69 @@ fun RoutineView(routineName: String, onBack: () -> Unit) {
     val scState = rememberScrollState(0)
 
     BackHandler(onBack = onBack)
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = 6.dp,
-            )
-            .verticalScroll(scState),
-        horizontalAlignment = Alignment.Start
+    Column(modifier = Modifier
+        .fillMaxHeight()
+        .padding(8.dp)
     ) {
-        var text: String
-        for (action in actions) {
-            text = "• $action"
-            Text(
-                text = text,
-                color = Color.Black,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 8.dp)
+        Text(
+            text = routineName,
+            modifier = Modifier.padding(bottom = 12.dp),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = 6.dp,
+                )
+                .verticalScroll(scState),
+            horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            val running  = stringResource(id = R.string.running)
-            val context = LocalContext.current
-            Button(
+            var text: String
+            for (action in actions) {
+                text = "• $action"
+                Text(
+                    text = text,
+                    color = Color.Black,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(2.dp)
+                )
+            }
+            Row(
                 modifier = Modifier
-                    .padding(end = 8.dp, top = 20.dp)
-                    .wrapContentWidth(),
-                shape = CircleShape,
-                onClick = {
-                    Toast.makeText(
-                        context,
-                        "$running $routineName",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                },
-                colors = ButtonColors(primary, secondary, tertiary, tertiary)
+                    .fillMaxWidth()
+                    .padding(end = 8.dp)
             ) {
-                Row {
-                    Text(
-                        text = stringResource(id = R.string.run),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Icon(
-                        Icons.Outlined.PlayArrow,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(start = 8.dp)
-                    )
+                Spacer(modifier = Modifier.weight(1f))
+                val running = stringResource(id = R.string.running)
+                val context = LocalContext.current
+                Button(
+                    modifier = Modifier
+                        .padding(end = 8.dp, top = 20.dp)
+                        .wrapContentWidth(),
+                    shape = CircleShape,
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "$running $routineName",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    colors = ButtonColors(primary, secondary, tertiary, tertiary)
+                ) {
+                    Row {
+                        Text(
+                            text = stringResource(id = R.string.run),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Icon(
+                            Icons.Outlined.PlayArrow,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(start = 8.dp)
+                        )
+                    }
                 }
             }
         }

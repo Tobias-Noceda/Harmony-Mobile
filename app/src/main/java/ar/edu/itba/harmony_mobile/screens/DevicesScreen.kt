@@ -34,12 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesScreen(modifier: Modifier, currentHouse: String, state: DeviceTypes? = null) {
+fun DevicesScreen(modifier: Modifier, currentHouse: Home, state: DeviceTypes? = null) {
 
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
@@ -58,7 +59,7 @@ fun DevicesScreen(modifier: Modifier, currentHouse: String, state: DeviceTypes? 
 }
 
 @Composable
-fun DevicesList(currentHouse: String, onDeviceClick: (DeviceTypes) -> Unit) {
+fun DevicesList(currentHouse: Home, onDeviceClick: (DeviceTypes) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(id = R.string.devices),

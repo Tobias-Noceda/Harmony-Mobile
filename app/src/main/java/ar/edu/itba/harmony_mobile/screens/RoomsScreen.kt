@@ -31,12 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun RoomsScreen(modifier: Modifier, currentHouse: String, state: String = "") {
+fun RoomsScreen(modifier: Modifier, currentHouse: Home, state: String = "") {
 
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
@@ -59,7 +60,7 @@ fun RoomsScreen(modifier: Modifier, currentHouse: String, state: String = "") {
 }
 
 @Composable
-fun RoomsList(currentHouse: String, onDeviceClick: (String) -> Unit) {
+fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(id = R.string.rooms),

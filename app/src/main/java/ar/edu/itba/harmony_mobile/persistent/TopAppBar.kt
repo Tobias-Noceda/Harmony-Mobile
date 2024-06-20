@@ -37,10 +37,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Home
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
+fun HarmonyTopAppBar(currentHome: Home,onButtonClick: () -> Unit) {
     val screenType = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val isCompact = screenType == WindowWidthSizeClass.COMPACT
 
@@ -76,7 +77,7 @@ fun HarmonyTopAppBar(onButtonClick: () -> Unit) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.personal_devices),
+                                    text = if (currentHome.id == "0") stringResource(id = R.string.personal_devices) else currentHome.name,
                                     style = MaterialTheme.typography.bodySmall,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,

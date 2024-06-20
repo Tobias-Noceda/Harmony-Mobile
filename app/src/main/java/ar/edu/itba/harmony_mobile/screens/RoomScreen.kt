@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
 import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
 import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
@@ -48,7 +49,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
 @Composable
-fun RoomScreen(homeId: String, roomId: String, onBackCalled: () -> Unit) {
+fun RoomScreen(home: Home, roomId: String, onBackCalled: () -> Unit) {
     var currentDevice by rememberSaveable { mutableStateOf("") }
     var currentDeviceType by rememberSaveable { mutableStateOf(DeviceTypes.DOORS) }
 
