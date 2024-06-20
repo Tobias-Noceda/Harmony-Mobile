@@ -8,4 +8,7 @@ class RemoteBlindsState {
 
     @SerializedName("currentLevel")
     var currentLevel: Int = 0
+
+    @SerializedName("level")
+    var level: Int = 0
 }

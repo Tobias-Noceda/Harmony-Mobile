@@ -11,7 +11,8 @@ class RemoteBlinds : RemoteDevice<RemoteBlindsState>() {
             name = name,
             room = room?.asModel(),
             status = RemoteStatus.asModel(state.status),
-            currentLevel = state.currentLevel
+            currentLevel = state.currentLevel,
+            level = state.level
         )
     }
 }

@@ -11,6 +11,9 @@ class RemoteSprinkler : RemoteDevice<RemoteSprinklerState>() {
             name = name,
             room = room?.asModel(),
             status = RemoteStatus.asModel(state.status),
+            quantity = state.quantity,
+            dispensedQuantity = state.dispensedQuantity,
+            unit = state.unit
         )
     }
 }
