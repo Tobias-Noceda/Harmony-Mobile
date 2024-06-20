@@ -17,10 +17,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,35 +26,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Door
+import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
-enum class DoorState {
-    OPEN, CLOSED, LOCKED
-}
-
 @Composable
-fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
-    var state by rememberSaveable { mutableStateOf(DoorState.CLOSED) }
-
+fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
 
     @Composable
     fun doorTitle() {
         Text(
-            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
     @Composable
     fun openText() {
         Text(
-            text = when (state) {
-                DoorState.OPEN -> stringResource(id = R.string.close)
+            text = when (device.status) {
+                Status.OPEN -> stringResource(id = R.string.close)
                 else -> stringResource(id = R.string.open)
             },
             fontSize = 20.sp,
@@ -69,14 +61,15 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun openSwitch() {
         Switch(
-            checked = state != DoorState.OPEN,
+            checked = device.status != Status.OPEN,
             onCheckedChange = {
-                state = when (state) {
-                    DoorState.OPEN -> DoorState.CLOSED
-                    else -> DoorState.OPEN
-                }
+                /* TODO ACTUALIZAR CON API
+                device.status = when (device.status) {
+                    Status.OPEN -> Status.CLOSED
+                    else -> Status.OPEN
+                }*/
             },
-            enabled = state != DoorState.LOCKED,
+            enabled = !device.lock,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = tertiary,
                 checkedTrackColor = tertiary.copy(0.5f),
@@ -91,12 +84,11 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
     fun lockButton() {
         Button(
             onClick = {
-                state = when (state) {
-                    DoorState.LOCKED -> DoorState.CLOSED
-                    else -> DoorState.LOCKED
-                }
+                /* TODO ACTUALIZAR CON API
+                    device.lock = !device.lock
+                */
             },
-            enabled = state != DoorState.OPEN,
+            enabled = device.status != Status.OPEN,
             colors = ButtonColors(
                 tertiary,
                 secondary,
@@ -106,8 +98,8 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = when (state) {
-                    DoorState.LOCKED -> stringResource(id = R.string.unlock)
+                text = when (device.lock) {
+                    true -> stringResource(id = R.string.unlock)
                     else -> stringResource(id = R.string.lock)
                 }
             )
@@ -118,10 +110,14 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
     fun stateText() {
         Text(
             text = "${stringResource(id = R.string.status)} ${
-                when (state) {
-                    DoorState.OPEN -> stringResource(id = R.string.opened)
-                    DoorState.CLOSED -> stringResource(id = R.string.closed)
-                    DoorState.LOCKED -> stringResource(id = R.string.locked)
+                if(device.lock){
+                    stringResource(id = R.string.locked)
+                } else{
+                    when (device.status) {
+                        Status.OPEN -> stringResource(id = R.string.opened)
+                        Status.CLOSED -> stringResource(id = R.string.closed)
+                        else -> "WTF"
+                    }
                 }
             }"
         )
@@ -133,8 +129,8 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
         ) {
             Icon(
                 painter =
-                when (state) {
-                    DoorState.OPEN -> painterResource(id = R.drawable.door_open)
+                when (device.status) {
+                    Status.OPEN -> painterResource(id = R.drawable.door_open)
                     else -> painterResource(id = R.drawable.door)
                 },
                 contentDescription = "",
@@ -147,8 +143,8 @@ fun DoorScreen(deviceName: String, onBackCalled: () -> Unit) {
         ) {
             Icon(
                 painter =
-                when (state) {
-                    DoorState.LOCKED -> painterResource(id = R.drawable.lock)
+                when (device.lock) {
+                    true -> painterResource(id = R.drawable.lock)
                     else -> painterResource(id = R.drawable.lock_open)
                 },
                 contentDescription = "",

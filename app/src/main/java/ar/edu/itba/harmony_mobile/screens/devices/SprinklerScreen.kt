@@ -36,6 +36,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.model.Status
 
 enum class UnitToDispense(@StringRes val textId: Int) {
     MILLILITRES(R.string.mL),
@@ -46,15 +48,11 @@ enum class UnitToDispense(@StringRes val textId: Int) {
 }
 
 @Composable
-fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
+fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
 
     val dropDownOptions = UnitToDispense.entries.toList()
     var selectedUnitToDispense by rememberSaveable { mutableStateOf(UnitToDispense.LITRES) }
-
     var selectedAmountToDispense by rememberSaveable { mutableIntStateOf(1) }
-
-    var open by rememberSaveable { mutableStateOf(false) }
-    var isDispensing by rememberSaveable { mutableStateOf(false) }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
@@ -62,7 +60,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun blindsTitle() {
         Text(
-            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
@@ -70,7 +68,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
     fun blindsStatusText() {
         Text(
             text = "${stringResource(id = R.string.status)} ${
-                if (open) {
+                if (device.status == Status.OPEN) {
                     stringResource(id = R.string.opened)
                 } else {
                     stringResource(id = R.string.closed)
@@ -84,8 +82,8 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun openButton() {
         Button(
-            onClick = { /*SEND TO API*/
-                open = true
+            onClick = {
+                      /*TODO SEND TO API*/
             },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
@@ -94,7 +92,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = !open,
+            enabled = device.status != Status.OPEN,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -107,8 +105,8 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun closeButton() {
         Button(
-            onClick = { /*SEND TO API*/
-                open = false
+            onClick = {
+                  /*TODO SEND TO API*/
             },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
@@ -117,7 +115,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = open && !isDispensing,
+            enabled = device.status != Status.OPEN /*TODO && !dispensing*/,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -213,7 +211,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                             }
                         }
                         Button(
-                            onClick = { /*SEND TO API*/
+                            onClick = { /*TODO SEND TO API*/
                                 //DISPENSE
                             },
                             shape = RoundedCornerShape(8.dp),
@@ -223,7 +221,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                                 tertiary.desaturate(0f),
                                 secondary.desaturate(0f)
                             ),
-                            enabled = !isDispensing,
+                            //TODO enabled = !isDispensing,
                             elevation = ButtonDefaults.buttonElevation(
                                 defaultElevation = 5.dp,
                                 disabledElevation = (-5).dp
@@ -300,7 +298,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                     }
                 }
                 Button(
-                    onClick = { /*SEND TO API*/
+                    onClick = { /*TODO SEND TO API*/
                         //DISPENSE
                     },
                     shape = RoundedCornerShape(8.dp),
@@ -310,7 +308,7 @@ fun SprinklerScreen(deviceName: String, onBackCalled: () -> Unit) {
                         tertiary.desaturate(0f),
                         secondary.desaturate(0f)
                     ),
-                    enabled = !isDispensing,
+                    //TODO enabled = !isDispensing,
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 5.dp,
                         disabledElevation = (-5).dp

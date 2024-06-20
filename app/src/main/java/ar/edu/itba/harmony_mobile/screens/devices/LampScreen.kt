@@ -23,8 +23,6 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
 import ar.edu.itba.harmony_mobile.ui.theme.darken
@@ -52,22 +52,19 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 //}
 
 @Composable
-fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
-    var lightBrightness by rememberSaveable { mutableFloatStateOf(75f) }
-    var lightStatus by rememberSaveable { mutableStateOf(true) }
-    var colorMode by rememberSaveable { mutableStateOf(true) }
-    var lightColor by remember { mutableStateOf(Color.Red) }
-
+fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
     val colorController = rememberColorPickerController()
     val scState = rememberScrollState(0)
     val adaptiveInfo = currentWindowAdaptiveInfo()
+
+    var lightBrightness by rememberSaveable{ mutableFloatStateOf(75f) }
 
     BackHandler(onBack = onBackCalled)
 
     @Composable
     fun lightTitle() {
         Text(
-            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
 
     }
@@ -80,7 +77,7 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = stringResource(id = R.string.status) + " " + if (lightStatus) {
+                text = stringResource(id = R.string.status) + " " + if (device.status == Status.ON) {
                     stringResource(id = R.string.on)
                 } else {
                     stringResource(id = R.string.off)
@@ -88,36 +85,8 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
                 }, color = primary, fontSize = 20.sp, fontWeight = FontWeight.Normal
             )
             Switch(
-                checked = lightStatus, onCheckedChange = {
-                    lightStatus = it
-                }, colors = SwitchDefaults.colors(
-                    checkedThumbColor = tertiary,
-                    checkedTrackColor = tertiary.copy(0.5f),
-                    uncheckedThumbColor = primary,
-                    uncheckedTrackColor = primary.copy(0.5f),
-                )
-            )
-        }
-    }
-
-    @Composable
-    fun colorSwitch() {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id = R.string.color_mode) + " " + if (colorMode) {
-                    stringResource(id = R.string.on)
-                } else {
-                    stringResource(id = R.string.off)
-                }, color = primary, fontSize = 20.sp, fontWeight = FontWeight.Normal
-            )
-            Switch(
-                checked = colorMode, onCheckedChange = {
-                    colorMode = it
-                    colorController.setEnabled(colorMode)
+                checked = device.status == Status.ON, onCheckedChange = {
+                    /*TODO device.status == Status.ON = it*/
                 }, colors = SwitchDefaults.colors(
                     checkedThumbColor = tertiary,
                     checkedTrackColor = tertiary.copy(0.5f),
@@ -133,7 +102,7 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -144,156 +113,149 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
                 )
                 Button(
                     onClick = {}, shape = RoundedCornerShape(8.dp), colors = ButtonColors(
-                        lightColor, lightColor, lightColor.desaturate(0f), lightColor.desaturate(0f)
-                    ), enabled = colorMode, border = BorderStroke(2.dp, primary)
+                        device.color, device.color, device.color.desaturate(0f), device.color.desaturate(0f)
+                    ), border = BorderStroke(2.dp, primary)
                 ) {}
             }
-            if (colorMode) {
-                with(adaptiveInfo) {
-                    if (windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT
-                        && windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
+            with(adaptiveInfo) {
+                if (windowSizeClass.windowHeightSizeClass != WindowHeightSizeClass.COMPACT
+                    && windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Column(
+                        HsvColorPicker(modifier = Modifier.padding(0.dp),
+                            controller = colorController,
+                            onColorChanged = {
+                                //TODO device.color = it.color
+                                /*MANDAR A LA API*/
+                            })
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.Center
+                            horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            HsvColorPicker(modifier = Modifier.padding(0.dp),
-                                controller = colorController,
-                                onColorChanged = {
-                                    lightColor = it.color
-                                    /*MANDAR A LA API*/
-                                })
+                            Button(
+                                onClick = { /*TODO device.color = Color.Red*/ },
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonColors(
+                                    Color.Red,
+                                    Color.Red,
+                                    device.color.desaturate(0f),
+                                    device.color.desaturate(0f)
+                                ),
+                                border = BorderStroke(
+                                    2.dp,
+                                    if (device.color == Color.Red) {
+                                        tertiary
+                                    } else {
+                                        primary
+                                    }
+                                )
+                            ) {}
+                            Button(
+                                onClick = { /*TODO device.color = Color.Blue */},
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonColors(
+                                    Color.Blue,
+                                    Color.Blue,
+                                    device.color.desaturate(0f),
+                                    device.color.desaturate(0f)
+                                ),
+                                border = BorderStroke(
+                                    2.dp,
+                                    if (device.color == Color.Blue) {
+                                        tertiary
+                                    } else {
+                                        primary
+                                    }
+                                )
+                            ) {}
+                            Button(
+                                onClick = { /*TODO device.color = Color.Green*/ },
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonColors(
+                                    Color.Green,
+                                    Color.Green,
+                                    device.color.desaturate(0f),
+                                    device.color.desaturate(0f)
+                                ),
+                                border = BorderStroke(
+                                    2.dp,
+                                    if (device.color == Color.Green) {
+                                        tertiary
+                                    } else {
+                                        primary
+                                    }
+                                )
+                            ) {}
                         }
-                    } else {
-                        Column(
-                            modifier = Modifier.fillMaxHeight(),
-                            verticalArrangement = Arrangement.spacedBy(20.dp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceAround
-                            ) {
-                                Button(
-                                    onClick = { lightColor = Color.Red },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonColors(
-                                        Color.Red,
-                                        Color.Red,
-                                        lightColor.desaturate(0f),
-                                        lightColor.desaturate(0f)
-                                    ),
-                                    enabled = colorMode,
-                                    border = BorderStroke(
-                                        2.dp,
-                                        if (lightColor == Color.Red) {
-                                            tertiary
-                                        } else {
-                                            primary
-                                        }
-                                    )
-                                ) {}
-                                Button(
-                                    onClick = { lightColor = Color.Blue },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonColors(
-                                        Color.Blue,
-                                        Color.Blue,
-                                        lightColor.desaturate(0f),
-                                        lightColor.desaturate(0f)
-                                    ),
-                                    enabled = colorMode,
-                                    border = BorderStroke(
-                                        2.dp,
-                                        if (lightColor == Color.Blue) {
-                                            tertiary
-                                        } else {
-                                            primary
-                                        }
-                                    )
-                                ) {}
-                                Button(
-                                    onClick = { lightColor = Color.Green },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonColors(
-                                        Color.Green,
-                                        Color.Green,
-                                        lightColor.desaturate(0f),
-                                        lightColor.desaturate(0f)
-                                    ),
-                                    enabled = colorMode,
-                                    border = BorderStroke(
-                                        2.dp,
-                                        if (lightColor == Color.Green) {
-                                            tertiary
-                                        } else {
-                                            primary
-                                        }
-                                    )
-                                ) {}
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceAround
-                            ) {
-                                Button(
-                                    onClick = { lightColor = Color.Yellow },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonColors(
-                                        Color.Yellow,
-                                        Color.Yellow,
-                                        lightColor.desaturate(0f),
-                                        lightColor.desaturate(0f)
-                                    ),
-                                    enabled = colorMode,
-                                    border = BorderStroke(
-                                        2.dp,
-                                        if (lightColor == Color.Yellow) {
-                                            tertiary
-                                        } else {
-                                            primary
-                                        }
-                                    )
-                                ) {}
-                                Button(
-                                    onClick = { lightColor = Color.Cyan },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonColors(
-                                        Color.Cyan,
-                                        Color.Cyan,
-                                        lightColor.desaturate(0f),
-                                        lightColor.desaturate(0f)
-                                    ),
-                                    enabled = colorMode,
-                                    border = BorderStroke(
-                                        2.dp,
-                                        if (lightColor == Color.Cyan) {
-                                            tertiary
-                                        } else {
-                                            primary
-                                        }
-                                    )
-                                ) {}
-                                Button(
-                                    onClick = { lightColor = Color.Magenta },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonColors(
-                                        Color.Magenta,
-                                        Color.Magenta,
-                                        lightColor.desaturate(0f),
-                                        lightColor.desaturate(0f)
-                                    ),
-                                    enabled = colorMode,
-                                    border = BorderStroke(
-                                        2.dp,
-                                        if (lightColor == Color.Magenta) {
-                                            tertiary
-                                        } else {
-                                            primary
-                                        }
-                                    )
-                                ) {}
-                            }
+                            Button(
+                                onClick = { /* TODO device.color = Color.Yellow*/ },
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonColors(
+                                    Color.Yellow,
+                                    Color.Yellow,
+                                    device.color.desaturate(0f),
+                                    device.color.desaturate(0f)
+                                ),
+                                border = BorderStroke(
+                                    2.dp,
+                                    if (device.color == Color.Yellow) {
+                                        tertiary
+                                    } else {
+                                        primary
+                                    }
+                                )
+                            ) {}
+                            Button(
+                                onClick = { /*TODO device.color = Color.Cyan */},
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonColors(
+                                    Color.Cyan,
+                                    Color.Cyan,
+                                    device.color.desaturate(0f),
+                                    device.color.desaturate(0f)
+                                ),
+                                border = BorderStroke(
+                                    2.dp,
+                                    if (device.color == Color.Cyan) {
+                                        tertiary
+                                    } else {
+                                        primary
+                                    }
+                                )
+                            ) {}
+                            Button(
+                                onClick = { /*TODO device.color = Color.Magenta */},
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonColors(
+                                    Color.Magenta,
+                                    Color.Magenta,
+                                    device.color.desaturate(0f),
+                                    device.color.desaturate(0f)
+                                ),
+                                border = BorderStroke(
+                                    2.dp,
+                                    if (device.color == Color.Magenta) {
+                                        tertiary
+                                    } else {
+                                        primary
+                                    }
+                                )
+                            ) {}
                         }
+
                     }
                 }
             }
@@ -305,7 +267,7 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
         Box(contentAlignment = Alignment.Center) {
             Column {
                 Text(
-                    text = stringResource(R.string.brightness) + " " + "${lightBrightness.toInt()}",
+                    text = stringResource(R.string.brightness) + " " + "${lightBrightness}",
                     color = primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
@@ -313,7 +275,7 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
                 Slider(
                     value = lightBrightness,
                     onValueChange = { lightBrightness = it },
-                    onValueChangeFinished = {/*MANDAR A LA API*/ },
+                    onValueChangeFinished = {/*TODO MANDAR A LA API*/ },
                     valueRange = 0f..100f,
                     colors = SliderColors(
                         tertiary.darken(0.9f),
@@ -327,7 +289,7 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
                         disabled.darken(0.75f),
                         Color.Transparent
                     ),
-                    enabled = lightStatus
+                    enabled = device.status == Status.ON
                 )
             }
         }
@@ -353,7 +315,6 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(25.dp)
                     ) {
                         lightSwitch()
-                        colorSwitch()
                         brightnessMenu()
                         colorMenu()
                     }
@@ -373,7 +334,6 @@ fun LightScreen(deviceName: String, onBackCalled: () -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(15.dp)
                         ) {
                             lightSwitch()
-                            colorSwitch()
                             brightnessMenu()
                         }
                         colorMenu()

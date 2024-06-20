@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.ui.theme.darken
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
@@ -35,36 +36,31 @@ import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
-// @Preview(device = Devices.PHONE, showBackground = true)
-// @Composable
-// fun BlindsPreview() {
-//     BlindsScreen()
-// }
 
 enum class MoveState {
     STILL, OPENING, CLOSING
 }
 
 @Composable
-fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
-    var blindsLimit by rememberSaveable { mutableFloatStateOf(75f) }
-    var blindsStatus by rememberSaveable { mutableFloatStateOf(0f) }
+fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
 
     var isMoving by rememberSaveable { mutableStateOf(MoveState.STILL) }
+
+    var blindsLimit by rememberSaveable { mutableFloatStateOf(0f) }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
     @Composable
     fun blindsTitle() {
         Text(
-            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
     @Composable
     fun blindsStatusText() {
         Text(
-            text = "${stringResource(id = R.string.status)} ${blindsStatus.toInt()}% ${
+            text = "${stringResource(id = R.string.status)} ${device.currentLevel}% ${
                 when (isMoving) {
                     MoveState.STILL -> ""
                     MoveState.OPENING -> "- " + stringResource(id = R.string.opening)
@@ -79,8 +75,8 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun openButton() {
         Button(
-            onClick = { /*SEND TO API*/
-                blindsStatus = 0f
+            onClick = { /*TODO SEND TO API*/
+                //device.currentLevel = 0
 //                isMoving = moveState.OPENING //Lo comento xq todavia la API no devuelve cuando termine de moverse
             },
             colors = ButtonColors(
@@ -89,7 +85,7 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = isMoving == MoveState.STILL && blindsStatus > 0f,
+            enabled = isMoving == MoveState.STILL && device.currentLevel > 0,
         ) {
             Text(text = stringResource(id = R.string.open))
         }
@@ -98,9 +94,9 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun closeButton() {
         Button(
-            onClick = { /*SEND TO API*/
-                blindsStatus = blindsLimit
-//                isMoving = moveState.CLOSING  //Lo comento xq todavia la API no devuelve cuando termine de moverse
+            onClick = { /*TODO SEND TO API*/
+                //device.currentLevel = device.level
+                isMoving = MoveState.CLOSING  //Lo comento xq todavia la API no devuelve cuando termine de moverse
 
             },
             colors = ButtonColors(
@@ -109,7 +105,7 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = isMoving == MoveState.STILL && blindsStatus < blindsLimit,
+            enabled = isMoving == MoveState.STILL && device.currentLevel < device.level,
         ) {
             Text(text = stringResource(id = R.string.close))
         }
@@ -128,7 +124,7 @@ fun BlindsScreen(deviceName: String, onBackCalled: () -> Unit) {
                 Slider(
                     value = blindsLimit,
                     onValueChange = { blindsLimit = it },
-                    onValueChangeFinished = {/*MANDAR A LA API*/ },
+                    onValueChangeFinished = {/*TODO MANDAR A LA API*/ },
                     valueRange = 0f..100f,
                     colors = SliderColors(
                         tertiary.darken(0.9f),

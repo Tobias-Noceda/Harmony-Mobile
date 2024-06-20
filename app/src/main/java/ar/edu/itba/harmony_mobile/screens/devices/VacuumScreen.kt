@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -36,7 +37,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Status
+import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
@@ -49,16 +53,10 @@ enum class VacuumMode(@StringRes val textId: Int) {
 }
 
 @Composable
-fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
+fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
     val roomDropDownOptions = arrayOf("asdasd", "jhsgghjkgkhjf") //REEMPLAZAR CON FETCH A LA API
-
-    var mode by rememberSaveable { mutableStateOf(VacuumMode.VACUUM) }
-    var isOn by rememberSaveable { mutableStateOf(false) }
-    var isCharging by rememberSaveable { mutableStateOf(false) }
-    var battery by rememberSaveable { mutableFloatStateOf(50f) }
-    var assignedRoomID by rememberSaveable { mutableStateOf("asdasd") }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
@@ -66,7 +64,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun vacuumTitle() {
         Text(
-            text = deviceName, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
@@ -74,7 +72,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
     fun modeSelector() {
         var isExpanded by rememberSaveable { mutableStateOf(false) }
         Text(
-            text = stringResource(id = R.string.mode),
+            text = stringResource(id = R.string.mode) + ":",
             fontSize = 20.sp,
             fontWeight = FontWeight.Normal
         )
@@ -87,7 +85,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
-                Text(stringResource(mode.textId))
+                // TODO Text(stringResource(mode.textId))
                 Icon(
                     imageVector = when (isExpanded) {
                         false -> Icons.Default.KeyboardArrowDown
@@ -107,7 +105,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                 modeDropDownOptions.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            mode = item
+                            // TODO mode = item
                             isExpanded = false
                         },
                         text = {
@@ -137,7 +135,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
-                Text(assignedRoomID)     //REEMPLAZAR CON EL NOMBRE
+                device.targetRoom?.let { Text(it.name) }     //REEMPLAZAR CON EL NOMBRE
                 Icon(
                     imageVector = when (isExpanded) {
                         false -> Icons.Default.KeyboardArrowDown
@@ -157,7 +155,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                 roomDropDownOptions.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            assignedRoomID = item   //REEMPLAZAR CON OBTENER ID
+                            //TODO device.targetRoom = item   //REEMPLAZAR CON OBTENER ID
                             isExpanded = false
                         },
                         text = {
@@ -174,8 +172,16 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
     fun onButton() {
         IconButton(
             onClick = {
-                isOn = !isOn
+                /*
+                TODO MANDAR A API
+                if(device.status == Status.ON){
+                    device.status = Status.OFF
+                } else{
+                    device.status = Status.ON
+                }
+
                 isCharging = false
+             */
             },
             colors = IconButtonColors(
                 tertiary,
@@ -183,10 +189,10 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = battery > 5
+            enabled = device.battery > 5
         ) {
             Icon(
-                painter = when (isOn) {
+                painter = when (device.status == Status.ON /*TODO && device.docker == false*/) {
                     true -> painterResource(id = R.drawable.pause)
                     false -> painterResource(id = R.drawable.play_arrow)
                 }, contentDescription = ""
@@ -198,8 +204,11 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
     fun sendToBaseButton() {
         Button(
             onClick = {
-                isOn = false
+                /*
+                TODO MANDAR A API
+                device.status = Status.OFF
                 isCharging = true
+                */
             },
             colors = ButtonColors(
                 tertiary,
@@ -207,7 +216,7 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = !isCharging
+            //enabled = device.isCharging
         ) {
             Text(text = stringResource(id = R.string.send_to_base))
         }
@@ -216,8 +225,10 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun statusText() {
         Text(
-            text = "${stringResource(id = R.string.status)} ${
-                stringResource(
+            text = "${stringResource(id = R.string.status)} "
+                /*  TODO
+                    "${
+                    stringResource(
                     id = if (isCharging) {
                         R.string.charging
                     } else if (isOn) {
@@ -225,8 +236,8 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
                     } else {
                         R.string.off
                     }
-                )
-            }",
+                )}"*/
+            ,
             fontSize = 20.sp,
             fontWeight = FontWeight.Normal
         )
@@ -237,20 +248,22 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
         Icon(
             painter = painterResource(
                 id =
+                /* TODO
                 if (isCharging) {
                     R.drawable.battery_charging
                 } else {
-                    when (battery) {
-                        in 1f..15f -> R.drawable.battery_1_bar
-                        in 15f..30f -> R.drawable.battery_2_bar
-                        in 30f..45f -> R.drawable.battery_3_bar
-                        in 45f..60f -> R.drawable.battery_4_bar
-                        in 60f..75f -> R.drawable.battery_5_bar
-                        in 75f..90f -> R.drawable.battery_6_bar
-                        in 90f..100f -> R.drawable.battery_full
+                */
+                    when (device.battery) {
+                        in 1..15 -> R.drawable.battery_1_bar
+                        in 15..30 -> R.drawable.battery_2_bar
+                        in 30..45 -> R.drawable.battery_3_bar
+                        in 45..60 -> R.drawable.battery_4_bar
+                        in 60..75 -> R.drawable.battery_5_bar
+                        in 75..90 -> R.drawable.battery_6_bar
+                        in 90..100 -> R.drawable.battery_full
                         else -> R.drawable.battery_empty
                     }
-                }
+                //}
             ),
             contentDescription = ""
         )
@@ -274,29 +287,100 @@ fun VacuumScreen(deviceName: String, onBackCalled: () -> Unit) {
 
                 with(adaptiveInfo) {
                     if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT) {
-                        Row {
-                            Column {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 30.dp)
+                        ) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                 onButton()
                                 sendToBaseButton()
                             }
-                            Column {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(0.5f),
+                                verticalArrangement = Arrangement.Center
+                            ) {
                                 statusText()
                                 batteryIndicator()
                             }
                         }
-                    } else {
-                        Row (horizontalArrangement = Arrangement.spacedBy(20.dp)){
-                            Column {
+                    } else if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.EXPANDED) {
+                        Column(
+                            verticalArrangement = Arrangement.SpaceAround,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterHorizontally),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
                                 onButton()
                                 sendToBaseButton()
                             }
-                            Column {
-                                modeSelector()
-                                roomSelector()
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceAround,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(0.5f)
+                                ) {
+                                    modeSelector()
+                                }
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(0.5f)
+                                ) {
+                                    roomSelector()
+                                }
+                            }
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                statusText()
+                                batteryIndicator()
                             }
                         }
-                        statusText()
-                        batteryIndicator()
+                    } else if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
+
+                    } else {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier.fillMaxHeight()
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(15.dp)
+                            ) {
+                                Row {
+                                    onButton()
+                                    sendToBaseButton()
+                                }
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(
+                                        25.dp,
+                                        Alignment.CenterHorizontally
+                                    )
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
+                                        modeSelector()
+                                        roomSelector()
+                                    }
+                                }
+                            }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(15.dp)
+                            ) {
+                                statusText()
+                                batteryIndicator()
+                            }
+                        }
                     }
                 }
             }
