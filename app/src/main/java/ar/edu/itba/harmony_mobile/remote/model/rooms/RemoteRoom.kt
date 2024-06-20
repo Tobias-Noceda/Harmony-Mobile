@@ -10,7 +10,7 @@ class RemoteRoom {
     var id: String? = null
 
     @SerializedName("name")
-    lateinit var name: String
+    var name: String = ""
 
     @SerializedName("home")
     var home: RemoteHome? = null

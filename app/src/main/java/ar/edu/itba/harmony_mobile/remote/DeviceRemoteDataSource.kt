@@ -21,60 +21,33 @@ class DeviceRemoteDataSource(
             val devices = handleApiResponse {
                 deviceService.getDevices()
             }
-            updateDevicesByRoomByHome()
+            updateDevicesByRoomByHome(devices)
             emit(devices)
             delay(DELAY)
         }
     }
 
-    val personalDevicesHome: RemoteHome = RemoteHome()
-
-    val personalDevicesRoom: RemoteRoom = RemoteRoom()
-
     var devicesByRoomByHome: MutableSet<RemoteHome> = HashSet();
 
-    init {
-
-        val metaHome = RemoteHomeMeta()
-        metaHome.size = "0"
-        metaHome.color = "0"
-
-        val model = RemoteHome()
-        model.id = "0"
-        model.name = "Personal Devices"
-        model.rooms = hashSetOf(personalDevicesRoom)
-        model.meta = metaHome
-
-        val metaRoom: RemoteRoomMeta = RemoteRoomMeta()
-        metaRoom.size = "0"
-        metaRoom.color = "0"
-
-        personalDevicesRoom.id = "0"
-        personalDevicesRoom.name = "Personal Devices"
-        personalDevicesRoom.devices = HashSet()
-        personalDevicesRoom.home = personalDevicesHome
-        personalDevicesRoom.meta = metaRoom
-    }
-
-    private suspend fun updateDevicesByRoomByHome() {
+    private suspend fun updateDevicesByRoomByHome(devices: List<RemoteDevice<*>>) {
         devicesByRoomByHome = HashSet()
-        devices.collect {
-            it.forEach { jt ->
-                val h: RemoteHome;
-                val r: RemoteRoom;
-                if (jt.room?.home == null) {
-                    jt.room = personalDevicesRoom
-                    h = personalDevicesHome
-                    r = personalDevicesRoom
-                } else {
-                    h = jt.room!!.home!!
-                    r = jt.room!!
-                }
-                devicesByRoomByHome.add(h) // won't add if already present
-                h.rooms.add(r) // won't add if already present
-                r.devices.add(jt) // by definition, will not be present
+
+        devices.forEach { jt ->
+            val h: RemoteHome;
+            val r: RemoteRoom;
+            if (jt.room?.home == null) {
+                jt.room = GlobalDataHomes.personalDevicesRoom
+                h = GlobalDataHomes.personalDevicesHome
+                r = GlobalDataHomes.personalDevicesRoom
+            } else {
+                h = jt.room!!.home!!
+                r = jt.room!!
             }
+            devicesByRoomByHome.add(h) // won't add if already present
+            h.rooms.add(r) // won't add if already present
+            r.devices.add(jt) // by definition, will not be present
         }
+
     }
 
 

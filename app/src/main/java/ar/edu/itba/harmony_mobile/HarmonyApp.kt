@@ -61,6 +61,7 @@ import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
 import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
@@ -80,7 +81,7 @@ enum class AppDestinations(
 }
 
 @Composable
-fun HarmonyApp(hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory())) {
+fun HarmonyApp(hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory()),dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val houseState by hViewModel.uiState.collectAsState()

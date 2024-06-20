@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.remote.model.homes
 
+import android.util.Log
 import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.remote.model.rooms.RemoteRoom
 import com.google.gson.annotations.SerializedName
@@ -9,7 +10,7 @@ class RemoteHome {
     var id: String? = null
 
     @SerializedName("name")
-    lateinit var name: String
+    var name: String = ""
 
     @SerializedName("rooms")
     var rooms: MutableSet<RemoteRoom> = HashSet()
