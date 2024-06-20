@@ -14,7 +14,7 @@ data class RoomsUiState(
 ) {
     fun getHomeRooms(home: Home): List<Room> {
         if (home.id == null || home.id == "0") {
-            return rooms.filter { it.home == null || it.home == home }
+            listOf(GlobalDataHomes.personalDevicesRoom.asModel())
         }
         return rooms.filter { it.home == home }
     }
