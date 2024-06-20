@@ -4,6 +4,7 @@ import ar.edu.itba.harmony_mobile.model.Room
 import ar.edu.itba.harmony_mobile.model.Error
 import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.model.Routine
+import ar.edu.itba.harmony_mobile.remote.GlobalDataHomes
 
 data class RoomsUiState(
     val loading: Boolean = false,
@@ -16,6 +17,13 @@ data class RoomsUiState(
             return rooms.filter { it.home == null || it.home == home }
         }
         return rooms.filter { it.home == home }
+    }
+
+    fun getRoom(roomId: String): Room {
+        val r: Room? = rooms.find { it.id == roomId }
+        if (r == null)
+            GlobalDataHomes.personalDevicesRoom.asModel()
+        return r!!
     }
 }
 
