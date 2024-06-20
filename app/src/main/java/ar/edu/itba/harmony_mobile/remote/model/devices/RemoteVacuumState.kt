@@ -13,6 +13,6 @@ class RemoteVacuumState {
     @SerializedName("location")
     var targetRoom: RemoteRoom? = null
 
-    @SerializedName("battery")
+    @SerializedName("batteryLevel")
     var battery: Int = 0
 }
