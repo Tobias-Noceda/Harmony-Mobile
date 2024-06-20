@@ -26,4 +26,13 @@ class Home(
     override fun toString(): String {
         return "{Home;id:${id};name:${name}}"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Home
+
+        return id == other.id
+    }
 }
