@@ -1,5 +1,7 @@
 package ar.edu.itba.harmony_mobile.remote
 
+import android.util.Log
+import ar.edu.itba.harmony_mobile.model.Error
 import ar.edu.itba.harmony_mobile.remote.api.HomeService
 import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHome
 import kotlinx.coroutines.delay
@@ -14,8 +16,9 @@ class HomeRemoteDataSource(
         while (true) {
             val homes = handleApiResponse {
                 homeService.getHomes()
-            }
-            emit(homes)
+            }.toMutableList()
+            homes.add(GlobalDataHomes.personalDevicesHome)
+            emit(homes.toList())
             delay(DELAY)
         }
     }
