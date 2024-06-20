@@ -1,7 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens
 
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -60,18 +59,22 @@ val routines = listOf(
 fun RoutinesScreen(modifier: Modifier = Modifier, currentHouse: String) {
 
     var inList by rememberSaveable { mutableStateOf(false) }
+    var showingRoutine by rememberSaveable { mutableStateOf("") }
 
     Box(modifier = modifier) {
         if (inList) {
-            BackHandler(onBack = { inList = false })
+            RoutineView(routineName = showingRoutine) { inList = false }
         } else {
-            RoutinesList(currentHouse) { inList = true }
+            RoutinesList(currentHouse) { routine ->
+                    showingRoutine = routine
+                    inList = true
+            }
         }
     }
 }
 
 @Composable
-fun RoutinesList(currentHouse: String, onNav: () -> Unit) {
+fun RoutinesList(currentHouse: String, onNav: (String) -> Unit) {
 
     val scState = rememberScrollState(0)
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -93,7 +96,7 @@ fun RoutinesList(currentHouse: String, onNav: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 6.dp,)
+                .padding(horizontal = 6.dp)
                 .verticalScroll(scState)
         ) {
             val actions = listOf(
@@ -101,6 +104,9 @@ fun RoutinesList(currentHouse: String, onNav: () -> Unit) {
                 "Turn on FootLamp",
                 "Open Sprinkler",
                 "Turn on CeilingLamp",
+                "Turn on BarLight",
+                "Turn on BarLight",
+                "Turn on BarLight",
                 "Turn on BarLight"
             )
             for (routine in routines) {
@@ -146,8 +152,8 @@ fun RoutinesList(currentHouse: String, onNav: () -> Unit) {
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 var text: String
-                                if(actions.size > 3) {
-                                    for(i in 0 until 2) {
+                                if (actions.size > 3) {
+                                    for (i in 0 until 2) {
                                         text = "• ${actions[i]}"
                                         Text(
                                             text = text,
@@ -158,10 +164,108 @@ fun RoutinesList(currentHouse: String, onNav: () -> Unit) {
                                         text = "Expand",
                                         style = MaterialTheme.typography.labelLarge,
                                         color = Color.Black.copy(alpha = .4f),
-                                        modifier = Modifier.clickable { onNav() }
+                                        modifier = Modifier.clickable { onNav(routine.first) }
                                     )
                                 } else {
-                                    for(action in actions) {
+                                    for (action in actions) {
+                                        text = "• $action"
+                                        Text(
+                                            text = text,
+                                            color = Color.Black
+                                        )
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            val text = stringResource(id = R.string.running)
+                            val context = LocalContext.current
+                            Button(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .wrapContentWidth(),
+                                shape = CircleShape,
+                                onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "$text ${routine.first}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                colors = ButtonColors(primary, secondary, tertiary, tertiary)
+                            ) {
+                                Icon(
+                                    Icons.Outlined.PlayArrow,
+                                    contentDescription = null,
+                                    modifier = Modifier.wrapContentWidth()
+                                )
+                            }
+                        }
+                    }
+                } else if (isExpandedHeight) {
+                    Surface(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        color = secondary,
+                        shadowElevation = 8.dp,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = Color.Black.copy(alpha = 0.3f)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp)
+                                .height(140.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .width(200.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painterResource(id = getIcon(routine.second)),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(start = 16.dp)
+                                        .height(80.dp)
+                                )
+                                Text(
+                                    text = routine.first,
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier
+                                        .padding(start = 16.dp)
+                                        .width(200.dp)
+                                )
+                            }
+                            Column(
+                                modifier = Modifier.padding(start = 4.dp),
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                var text: String
+                                if (actions.size > 6) {
+                                    for (i in 0 until 5) {
+                                        text = "• ${actions[i]}"
+                                        Text(
+                                            text = text,
+                                            color = Color.Black
+                                        )
+                                    }
+                                    Text(
+                                        text = "Expand",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = Color.Black.copy(alpha = .4f),
+                                        modifier = Modifier.clickable { onNav(routine.first) }
+                                    )
+                                } else {
+                                    for (action in actions) {
                                         text = "• $action"
                                         Text(
                                             text = text,
@@ -201,7 +305,7 @@ fun RoutinesList(currentHouse: String, onNav: () -> Unit) {
                             .padding(4.dp)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        onClick = { onNav() },
+                        onClick = { onNav(routine.first) },
                         elevation = ButtonDefaults.buttonElevation(8.dp),
                         colors = ButtonColors(
                             secondary,

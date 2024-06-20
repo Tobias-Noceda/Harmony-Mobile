@@ -64,9 +64,9 @@ fun DevicesByType(type: DeviceTypes, currentHouse: String, onBackCalled: () -> U
     } else {
         when(type) {
             DeviceTypes.LIGHTS -> LightScreen(currentName) { currentName = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
             DeviceTypes.DOORS -> DoorScreen(currentName) { currentName = "" }
             DeviceTypes.REFRIS -> FridgeScreen(currentName) { currentName = "" }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
             else -> BlindsScreen(currentName) { currentName = "" }
         }
     }

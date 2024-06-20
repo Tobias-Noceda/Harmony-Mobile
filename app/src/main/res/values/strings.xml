@@ -48,5 +48,6 @@
     <string name="kL">Kilolitres</string>
     <string name="fridge">Refrigerator</string>
     <string name="freezer">Freezer</string>
+    <string name="run">Run</string>
     <string name="running">Running routine:</string>
 </resources>

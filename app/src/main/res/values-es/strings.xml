@@ -49,4 +49,5 @@
     <string name="fridge">Refrigerador</string>
     <string name="freezer">Congelador</string>
     <string name="running">Corriendo la rutina:</string>
+    <string name="run">Correr</string>
 </resources>
