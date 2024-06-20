@@ -8,15 +8,15 @@
     <string name="personal_devices">Personal Devices</string>
 
     <string name="api_lamp">lamp</string>
-    <string name="lamp">Lamps</string>
+    <string name="lamps">Lamps</string>
     <string name="api_door">door</string>
-    <string name="door">Doors</string>
+    <string name="doors">Doors</string>
     <string name="api_refrigerator">refrigerator</string>
-    <string name="refrigerator">Refrigerators</string>
+    <string name="refrigerators">Refrigerators</string>
     <string name="api_vacuum">vacuum</string>
-    <string name="vacuum">Vacuums</string>
+    <string name="vacuums">Vacuums</string>
     <string name="api_sprinkler">faucet</string>
-    <string name="sprinkler">Sprinklers</string>
+    <string name="sprinklers">Sprinklers</string>
     <string name="api_blinds">blinds</string>
     <string name="blinds">Blinds</string>
 
@@ -50,4 +50,10 @@
     <string name="freezer">Freezer</string>
     <string name="run">Run</string>
     <string name="running">Running routine:</string>
+    <string name="mop">Mop</string>
+    <string name="vacuum">Vacuum</string>
+    <string name="mode">Mode</string>
+    <string name="target_room">Target room:</string>
+    <string name="send_to_base">Send to base</string>
+    <string name="charging">Charging</string>
 </resources>

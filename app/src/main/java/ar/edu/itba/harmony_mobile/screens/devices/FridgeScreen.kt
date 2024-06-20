@@ -71,6 +71,11 @@ fun FridgeScreen(deviceName: String, onBackCalled: () -> Unit) {
     @Composable
     fun modeSelector() {
         var isExpanded by rememberSaveable { mutableStateOf(false) }
+        Text(
+            text = stringResource(id = R.string.mode),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Normal
+        )
         Box {
             Button(
                 onClick = { isExpanded = true },

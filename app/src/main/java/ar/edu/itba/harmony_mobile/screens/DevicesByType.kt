@@ -38,6 +38,7 @@ import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
 import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
 import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
 import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
+import ar.edu.itba.harmony_mobile.screens.devices.VacuumScreen
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.BlindsCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.DoorCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.LightCard
@@ -67,7 +68,8 @@ fun DevicesByType(type: DeviceTypes, currentHouse: String, onBackCalled: () -> U
             DeviceTypes.DOORS -> DoorScreen(currentName) { currentName = "" }
             DeviceTypes.REFRIS -> FridgeScreen(currentName) { currentName = "" }
             DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
-            else -> BlindsScreen(currentName) { currentName = "" }
+            DeviceTypes.VACUUMS -> VacuumScreen(currentName) { currentName = "" }
+            DeviceTypes.BLINDS -> BlindsScreen(currentName) { currentName = "" }
         }
     }
 }
