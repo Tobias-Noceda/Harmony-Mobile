@@ -13,8 +13,13 @@ import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.repository.HomeRepository
 import ar.edu.itba.harmony_mobile.repository.RoomRepository
 import ar.edu.itba.harmony_mobile.repository.RoutineRepository
+import ar.edu.itba.harmony_mobile.ui.devices.BlindsViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
+import ar.edu.itba.harmony_mobile.ui.devices.DoorViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.LampViewModel
+import ar.edu.itba.harmony_mobile.ui.devices.RefrigeratorViewModel
+import ar.edu.itba.harmony_mobile.ui.devices.SprinklerViewModel
+import ar.edu.itba.harmony_mobile.ui.devices.VacuumViewModel
 import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsViewModel
 import ar.edu.itba.harmony_mobile.ui.rooms.RoutinesViewModel
@@ -65,6 +70,21 @@ class ViewModelFactory(
 
             isAssignableFrom(LampViewModel::class.java) ->
                 LampViewModel(deviceRepository)
+
+            isAssignableFrom(BlindsViewModel::class.java) ->
+                BlindsViewModel(deviceRepository)
+
+            isAssignableFrom(RefrigeratorViewModel::class.java) ->
+                RefrigeratorViewModel(deviceRepository)
+
+            isAssignableFrom(VacuumViewModel::class.java) ->
+                VacuumViewModel(deviceRepository)
+
+            isAssignableFrom(SprinklerViewModel::class.java) ->
+                SprinklerViewModel(deviceRepository)
+
+            isAssignableFrom(DoorViewModel::class.java) ->
+                DoorViewModel(deviceRepository)
 
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
