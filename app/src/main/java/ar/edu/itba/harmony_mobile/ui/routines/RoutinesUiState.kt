@@ -1,15 +1,23 @@
 package ar.edu.itba.harmony_mobile.ui.routines
 
-import ar.edu.itba.harmony_mobile.model.Room
+import ar.edu.itba.harmony_mobile.model.Routine
 import ar.edu.itba.harmony_mobile.model.Error
+import ar.edu.itba.harmony_mobile.model.Home
 
-data class RoomsUiState(
+data class RoutinesUiState(
     val loading: Boolean = false,
     val error: Error? = null,
-    val rooms: List<Room> = emptyList(),
-    val currentRoom: Room? = null
-)
+    val routines: List<Routine> = emptyList(),
+    val currentRoutine: Routine? = null
+) {
+    fun getHomeRoutines(home: Home): List<Routine> {
+        if (home.id == null || home.id == "0") {
+            return routines.filter { it.homeId == "0" }
+        }
+        return routines.filter { it.homeId == home.id }
+    }
+}
 
-val RoomsUiState.canGetCurrent: Boolean get() = currentRoom != null
-val RoomsUiState.canModify: Boolean get() = currentRoom != null
-val RoomsUiState.canDelete: Boolean get() = canModify
+val RoutinesUiState.canGetCurrent: Boolean get() = currentRoutine != null
+val RoutinesUiState.canModify: Boolean get() = currentRoutine != null
+val RoutinesUiState.canDelete: Boolean get() = canModify

@@ -15,9 +15,6 @@ class RemoteRoom {
     @SerializedName("home")
     var home: RemoteHome? = null
 
-    @SerializedName("devices")
-    var devices: MutableSet<RemoteDevice<*>> = HashSet()
-
     @SerializedName("meta")
     var meta: RemoteRoomMeta? = null
 
@@ -26,7 +23,6 @@ class RemoteRoom {
             id = id,
             name = name,
             home = home?.asModel(),
-            devices = devices.map { it.asModel() },
             size = meta?.size,
             color = meta?.color
         )
@@ -46,6 +42,6 @@ class RemoteRoom {
     }
 
     override fun toString(): String {
-        return "{RemoteRoom;id:${id};name:${name};Home:${home?.name};devices:${devices.fold("") { acc, device -> "${acc}${device.toString()};" }}}"
+        return "{RemoteRoom;id:${id};name:${name};Home:${home?.name}}"
     }
 }

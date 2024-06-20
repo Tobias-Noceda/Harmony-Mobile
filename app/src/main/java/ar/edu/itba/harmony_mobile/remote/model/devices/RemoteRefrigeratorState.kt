@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class RemoteRefrigeratorState {
     @SerializedName("status")
-    lateinit var status: String
+    var status: String = ""
 
     @SerializedName("freezerTemperature")
     var freezerTemperature: Int = 0

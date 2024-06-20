@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 class RemoteDeviceType {
     @SerializedName("id")
-    lateinit var id: String
+    var id: String = ""
 
     @SerializedName("name")
-    lateinit var name: String
+    var name: String = ""
 
     @SerializedName("powerUsage")
     var powerUsage: Int? = null

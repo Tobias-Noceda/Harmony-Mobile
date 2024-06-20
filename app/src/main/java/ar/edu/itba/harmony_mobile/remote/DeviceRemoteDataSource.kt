@@ -1,16 +1,13 @@
 package ar.edu.itba.harmony_mobile.remote
 
-import ar.edu.itba.harmony_mobile.model.Home
+import android.util.Log
 import ar.edu.itba.harmony_mobile.remote.api.DeviceService
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHome
-import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHomeMeta
 import ar.edu.itba.harmony_mobile.remote.model.rooms.RemoteRoom
-import ar.edu.itba.harmony_mobile.remote.model.rooms.RemoteRoomMeta
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.forEach
 
 class DeviceRemoteDataSource(
     private val deviceService: DeviceService
@@ -21,35 +18,33 @@ class DeviceRemoteDataSource(
             val devices = handleApiResponse {
                 deviceService.getDevices()
             }
-            updateDevicesByRoomByHome(devices)
+           // updateDevicesByRoomByHome(devices) // this does not work, and I am tired of fixing it
             emit(devices)
             delay(DELAY)
         }
     }
 
-    var devicesByRoomByHome: MutableSet<RemoteHome> = HashSet();
+  /*  private val devicesByRoomByHome: MutableSet<RemoteHome> = HashSet();
 
     private suspend fun updateDevicesByRoomByHome(devices: List<RemoteDevice<*>>) {
-        devicesByRoomByHome = HashSet()
-
-        devices.forEach { jt ->
+        devicesByRoomByHome.removeIf { true }
+        devices.forEach {
             val h: RemoteHome;
             val r: RemoteRoom;
-            if (jt.room?.home == null) {
-                jt.room = GlobalDataHomes.personalDevicesRoom
+            if (it.room?.home == null) {
+                it.room = GlobalDataHomes.personalDevicesRoom
                 h = GlobalDataHomes.personalDevicesHome
                 r = GlobalDataHomes.personalDevicesRoom
             } else {
-                h = jt.room!!.home!!
-                r = jt.room!!
+                h = it.room!!.home!!
+                r = it.room!!
             }
             devicesByRoomByHome.add(h) // won't add if already present
             h.rooms.add(r) // won't add if already present
-            r.devices.add(jt) // by definition, will not be present
+            r.devices.add(it) // by definition, will not be present
         }
-
     }
-
+*/
 
     suspend fun getDevice(deviceId: String): RemoteDevice<*> {
         return handleApiResponse {

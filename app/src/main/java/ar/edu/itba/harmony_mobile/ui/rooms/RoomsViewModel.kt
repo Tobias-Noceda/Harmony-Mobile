@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.harmony_mobile.DataSourceException
 import ar.edu.itba.harmony_mobile.repository.RoomRepository
-import ar.edu.itba.harmony_mobile.ui.routines.RoomsUiState
 import ar.edu.itba.harmony_mobile.model.Error
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -7,7 +7,6 @@ class Room(
     var id: String? = null,
     var name: String,
     var home: Home?,
-    var devices: List<Device>,
     var size: String? = null,
     var color: String? = null
 ) {
@@ -20,7 +19,6 @@ class Room(
         val model = RemoteRoom()
         model.id = id
         model.name = name
-        model.devices = devices.map { it.asRemoteModel() }.toMutableSet()
         model.home = home?.asRemoteModel()
         model.meta = meta
 
@@ -28,6 +26,6 @@ class Room(
     }
 
     override fun toString(): String {
-        return "{Room;id:${id};name:${name};Home:${home?.name};devices:${devices.fold("") { acc, device -> "${acc}${device.toString()};" }}}"
+        return "{Room;id:${id};name:${name};Home:${home?.name}}"
     }
 }

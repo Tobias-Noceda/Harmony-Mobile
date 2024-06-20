@@ -14,7 +14,6 @@ class DeviceRepository(
         remoteDataSource.devices
             .map { it.map { jt -> jt.asModel() } }
 
-    var devicesByRoomByHome: Set<RemoteHome> = remoteDataSource.devicesByRoomByHome
 
     suspend fun getDevice(deviceId: String): Device {
         return remoteDataSource.getDevice(deviceId).asModel()

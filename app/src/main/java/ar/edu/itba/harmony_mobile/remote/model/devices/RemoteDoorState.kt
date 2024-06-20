@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class RemoteDoorState {
     @SerializedName("status")
-    lateinit var status: String
+    var status: String = ""
 
     @SerializedName("lock")
     var lock: Boolean = false

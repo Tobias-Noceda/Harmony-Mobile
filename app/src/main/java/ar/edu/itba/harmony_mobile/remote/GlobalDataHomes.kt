@@ -17,9 +17,7 @@ class GlobalDataHomes {
 
             auxHome.id = "0"
             auxHome.name = "Personal Devices"
-            auxHome.rooms = hashSetOf(auxRoom)
             auxHome.meta = metaHome
-            auxHome.rooms = personalRooms
 
             val metaRoom: RemoteRoomMeta = RemoteRoomMeta()
             metaRoom.size = "0"
@@ -27,10 +25,8 @@ class GlobalDataHomes {
 
             auxRoom.id = "0"
             auxRoom.name = "Personal Devices"
-            auxRoom.devices = HashSet()
             auxRoom.home = auxHome
             auxRoom.meta = metaRoom
-            auxRoom.devices = personalDevices
             return auxRoom
         }
 
@@ -44,8 +40,6 @@ class GlobalDataHomes {
             auxHome.id = "0"
             auxHome.name = "Personal Devices"
             auxHome.meta = metaHome
-            //personalRooms.add(auxRoom) // Currently, the HarmonyApp.kt screen flips its shit if I initialize this
-            auxHome.rooms = personalRooms
 
             val metaRoom: RemoteRoomMeta = RemoteRoomMeta()
             metaRoom.size = "0"
@@ -53,10 +47,8 @@ class GlobalDataHomes {
 
             auxRoom.id = "0"
             auxRoom.name = "Personal Devices"
-            auxRoom.devices = HashSet()
             auxRoom.home = auxHome
             auxRoom.meta = metaRoom
-            auxRoom.devices = personalDevices
             return auxHome
         }
 
@@ -65,9 +57,5 @@ class GlobalDataHomes {
 
         val personalDevicesRoom: RemoteRoom
             get() = producePersonalDevicesRoom()
-
-
-        private val personalRooms: MutableSet<RemoteRoom> = HashSet()
-        private val personalDevices: MutableSet<RemoteDevice<*>> = HashSet()
     }
 }

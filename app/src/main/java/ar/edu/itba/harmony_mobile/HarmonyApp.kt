@@ -85,6 +85,8 @@ fun HarmonyApp(hViewModel: HomesViewModel = viewModel(factory = getViewModelFact
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val houseState by hViewModel.uiState.collectAsState()
+    val deviceState by dViewModel.uiState.collectAsState()
+    Log.i("Log",deviceState.devices.toString())
 
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.ROOMS) }
     var currentHouseId by rememberSaveable { mutableStateOf("0") }

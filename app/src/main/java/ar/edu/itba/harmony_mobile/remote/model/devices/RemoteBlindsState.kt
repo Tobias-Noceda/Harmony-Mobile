@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class RemoteBlindsState {
     @SerializedName("status")
-    lateinit var status: String
+    var status: String = ""
 
     @SerializedName("currentLevel")
     var currentLevel: Int = 0

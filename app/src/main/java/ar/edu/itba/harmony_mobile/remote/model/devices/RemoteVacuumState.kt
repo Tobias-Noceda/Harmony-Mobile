@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 
 class RemoteVacuumState {
     @SerializedName("status")
-    lateinit var status: String
+    var status: String = ""
 
     @SerializedName("mode")
-    lateinit var mode: String
+    var mode: String = ""
 
     @SerializedName("location")
     var targetRoom: RemoteRoom? = null
