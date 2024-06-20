@@ -22,13 +22,13 @@ class LampViewModel(
     private val _uiState = MutableStateFlow(LampUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun turnOn() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_ON_ACTION) },
+    fun turnOn(lamp: Lamp) = runOnViewModelScope(
+        { repository.executeDeviceAction(lamp.id!!, Lamp.TURN_ON_ACTION) },
         { state, _ -> state }
     )
 
-    fun turnOff() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_OFF_ACTION) },
+    fun turnOff(lamp: Lamp) = runOnViewModelScope(
+        { repository.executeDeviceAction(lamp.id!!, Lamp.TURN_OFF_ACTION) },
         { state, _ -> state }
     )
 
