@@ -34,6 +34,12 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Room
+import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
+import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
+import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
+import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
+import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
+import ar.edu.itba.harmony_mobile.screens.devices.VacuumScreen
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.BlindsCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.DoorCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.LightCard
@@ -64,14 +70,14 @@ fun RoomScreen(room: Room, roomsState: RoomsUiState, devicesState: DevicesUiStat
             }
         )
     } else {
-        // when(currentDeviceType) {
-        //     DeviceTypes.LIGHTS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
-        //     DeviceTypes.DOORS -> DoorScreen(deviceName = currentDevice) { currentDevice = "" }
-        //     DeviceTypes.REFRIS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
-        //     DeviceTypes.VACUUMS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
-        //     DeviceTypes.SPRINKLERS -> SprinklerScreen(deviceName = currentDevice) { currentDevice = "" }
-        //     else -> BlindsScreen(deviceName = currentDevice) { currentDevice = "" }
-        // }
+        when(currentDeviceType) {
+            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+            DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+            else -> BlindsScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+        }
         BackHandler(onBack = { currentDevice = "" })
     }
 }
@@ -149,12 +155,12 @@ fun RoomDevices(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         for (id in chunk) {
                             when(deviceList[id].type) {
-                                DeviceTypes.LIGHTS -> LightCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
-                                DeviceTypes.DOORS -> DoorCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
-                                DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
-                                DeviceTypes.VACUUMS -> VacuumCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
-                                DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
-                                else -> BlindsCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                DeviceTypes.LIGHTS -> LightCard(lamp = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                DeviceTypes.DOORS -> DoorCard(door = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                DeviceTypes.REFRIS -> RefrigeratorCard(refrigerator = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                DeviceTypes.VACUUMS -> VacuumCard(vacuum = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                DeviceTypes.SPRINKLERS -> SprinklerCard(sprinkler = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                else -> BlindsCard(blinds = deviceList[id], modifier = modifier) { onDeviceClick(deviceList[id]) }
                             }
                         }
                         if(chunk.size != 2) {
@@ -169,12 +175,12 @@ fun RoomDevices(
             } else {
                 for (id in deviceList.indices) {
                     when(deviceList[id].type) {
-                        DeviceTypes.LIGHTS -> LightCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
-                        DeviceTypes.DOORS -> DoorCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
-                        DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
-                        DeviceTypes.VACUUMS -> VacuumCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
-                        DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
-                        else -> BlindsCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
+                        DeviceTypes.LIGHTS -> LightCard(lamp = deviceList[id]) { onDeviceClick(deviceList[id]) }
+                        DeviceTypes.DOORS -> DoorCard(door = deviceList[id]) { onDeviceClick(deviceList[id]) }
+                        DeviceTypes.REFRIS -> RefrigeratorCard(refrigerator = deviceList[id]) { onDeviceClick(deviceList[id]) }
+                        DeviceTypes.VACUUMS -> VacuumCard(vacuum = deviceList[id]) { onDeviceClick(deviceList[id]) }
+                        DeviceTypes.SPRINKLERS -> SprinklerCard(sprinkler = deviceList[id]) { onDeviceClick(deviceList[id]) }
+                        else -> BlindsCard(blinds = deviceList[id]) { onDeviceClick(deviceList[id]) }
                     }
                 }
             }

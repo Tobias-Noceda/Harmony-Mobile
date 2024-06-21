@@ -23,13 +23,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
 fun MyCard(
-    name: String,
+    device: Device,
     type: DeviceTypes,
     modifier: Modifier,
     content: @Composable () -> Unit,
@@ -58,7 +59,7 @@ fun MyCard(
                 modifier = Modifier.height(60.dp)
             )
             Text(
-                text = name,
+                text = device.name,
                 textAlign = TextAlign.Left,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp)
@@ -71,12 +72,12 @@ fun MyCard(
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun LightCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
+fun LightCard(lamp: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "On"
     val brightness = 75
 
     MyCard(
-        name = name,
+        device = lamp,
         type = DeviceTypes.LIGHTS,
         modifier = modifier,
         content = {
@@ -101,11 +102,11 @@ fun LightCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun DoorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
+fun DoorCard(door: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "Closed"
     val lock = "Locked"
     MyCard(
-        name = name,
+        device = door,
         type = DeviceTypes.DOORS,
         modifier = modifier,
         content = {
@@ -129,12 +130,12 @@ fun DoorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun RefrigeratorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
+fun RefrigeratorCard(refrigerator: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val fridgeTemp = 2
     val freezerTemp = -8
 
     MyCard(
-        name = name,
+        device = refrigerator,
         type = DeviceTypes.REFRIS,
         modifier = modifier,
         content = {
@@ -157,11 +158,11 @@ fun RefrigeratorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun VacuumCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
+fun VacuumCard(vacuum: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "On" // Docked also possible
     val battery = 75
     MyCard(
-        name = name,
+        device = vacuum,
         type = DeviceTypes.VACUUMS,
         modifier = modifier,
         content = {
@@ -184,10 +185,10 @@ fun VacuumCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().paddin
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun SprinklerCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
+fun SprinklerCard(sprinkler: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "On"
     MyCard(
-        name = name,
+        device = sprinkler,
         type = DeviceTypes.SPRINKLERS,
         modifier = modifier,
         content = {
@@ -205,11 +206,11 @@ fun SprinklerCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().pad
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun BlindsCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
+fun BlindsCard(blinds: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
     val status = "Closed"
     val maxLevel = 75
     MyCard(
-        name = name,
+        device = blinds,
         type = DeviceTypes.BLINDS,
         modifier = modifier,
         content = {
