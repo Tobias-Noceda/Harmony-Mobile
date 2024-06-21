@@ -11,6 +11,10 @@ data class DevicesUiState(
     val error: Error? = null,
     val devices: List<Device> = emptyList()
 ) {
+    fun getDevice(deviceId: String): Device? {
+        return devices.find { it.id == deviceId }
+    }
+
     fun getHomeDevices(home: Home): List<Device> {
         Log.i("LucasH", home.toString())
         Log.i("LucassH", devices.toString())
@@ -24,7 +28,7 @@ data class DevicesUiState(
         Log.i("Lucas", room.toString())
         Log.i("Lucass", devices.toString())
         if (room.id == null || room.id == "0") {
-            return devices.filter { it.room == null || it.room==room }
+            return devices.filter { it.room == null || it.room == room }
         }
         return devices.filter { it.room != null && it.room == room }
     }
