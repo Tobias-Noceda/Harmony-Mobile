@@ -164,7 +164,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                         )
                                     }
                                     Text(
-                                        text = "Expand",
+                                        text = stringResource(id = R.string.expand),
                                         style = MaterialTheme.typography.headlineMedium,
                                         color = Color.Black.copy(alpha = .4f),
                                         modifier = Modifier.clickable { onNav(routine.id!!) }
@@ -262,7 +262,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                         )
                                     }
                                     Text(
-                                        text = "Expand",
+                                        text = stringResource(id = R.string.expand),
                                         style = MaterialTheme.typography.headlineMedium,
                                         color = Color.Black.copy(alpha = .4f),
                                         modifier = Modifier.clickable { onNav(routine.id!!) }

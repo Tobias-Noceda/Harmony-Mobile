@@ -69,7 +69,6 @@ import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
-import ar.edu.itba.harmony_mobile.ui.homes.HomesUiState
 import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsViewModel
@@ -170,6 +169,7 @@ fun HarmonyApp(
             onDismiss = { showBottomSheet = false },
             onButtonClick = { house ->
                 currentHouseId = house.id!!
+                navController.navigate(AppDestinations.ROOMS.route)
                 showBottomSheet = false
             },
             houses = houseState.homes
