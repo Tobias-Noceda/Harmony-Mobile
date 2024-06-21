@@ -169,7 +169,7 @@ fun HarmonyApp(
             onDismiss = { showBottomSheet = false },
             onButtonClick = { house ->
                 currentHouseId = house.id!!
-                navController.navigate(AppDestinations.ROOMS.route)
+                navController.navigate(currentRoute!!)
                 showBottomSheet = false
             },
             houses = houseState.homes

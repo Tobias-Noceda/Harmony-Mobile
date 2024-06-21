@@ -61,17 +61,10 @@ fun RoomsScreen(
             if (roomsState.getHomeRooms(currentHouse).isEmpty()) {
                 EmptyScreen(description = "${stringResource(id = R.string.empty_house)} ${currentHouse.name}")
             } else {
-                var show = false
-                for(room in roomsState.getHomeRooms(currentHouse)) {
-                    Log.i("Tobi", "Room: ${room.name}. Devices: ${devicesState.getRoomDevices(room)}")
-                    if (devicesState.getRoomDevices(room).isNotEmpty()) {
-                        show = true
-                        break
-                    }
-                }
-                if(show) {
+                val rooms = filterRooms(devicesState, roomsState.getHomeRooms(currentHouse))
+                if(rooms.isNotEmpty()) {
                     RoomsList(
-                        rooms = roomsState.getHomeRooms(currentHouse),
+                        rooms = rooms,
                         onDeviceClick = { roomId ->
                             currentDestination = roomId
                         }
@@ -81,6 +74,9 @@ fun RoomsScreen(
                 }
             }
         } else {
+            if (currentHouse.id == "0" && devicesState.getHomeDevices(currentHouse).isEmpty()) {
+                EmptyScreen("${stringResource(id = R.string.empty_house)} ${stringResource(id = R.string.personal_devices)}")
+            }
             RoomScreen(
                 if (currentHouse.id == "0") {
                     Room("0", stringResource(id = R.string.personal_devices), currentHouse)
@@ -196,4 +192,16 @@ fun RoomsList(rooms: List<Room>, onDeviceClick: (String) -> Unit) {
             }
         }
     }
+}
+
+@Composable
+private fun filterRooms(devicesState: DevicesUiState, rooms: List<Room>): List<Room> {
+    var toRet = emptyList<Room>()
+    for(room in rooms) {
+        if (devicesState.getRoomDevices(room).isNotEmpty()) {
+           toRet = toRet + room 
+        }
+    }
+    
+    return toRet
 }

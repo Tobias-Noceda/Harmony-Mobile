@@ -10,6 +10,7 @@ import java.util.Date
 
 private const val API_URL = "http://10.0.2.2:8080/api/" // if you are using an emulator
 // private const val API_URL = "http://192.168.0.24:8080/api/" // if you are not using an emulator
+// private  const val API_URL = "https://api-hci-9716.onrender.com/api/" // Hosted api
 
 private val httpLoggingInterceptor = HttpLoggingInterceptor()
     .setLevel(HttpLoggingInterceptor.Level.BASIC)
