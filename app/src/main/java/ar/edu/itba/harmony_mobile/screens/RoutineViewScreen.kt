@@ -57,7 +57,7 @@ fun RoutineView(routine: Routine, onBack: () -> Unit) {
         ) {
             var text: String
             for (action in routine.actions) {
-                text = "• $action"
+                text = "• ${actionToString(action.actionName)} ${action.deviceName}"
                 Text(
                     text = text,
                     color = Color.Black,

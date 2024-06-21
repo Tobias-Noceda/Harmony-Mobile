@@ -61,4 +61,16 @@
     <string name="no_devices1">No hay dispositivos del tipo</string>
     <string name="no_devices2">in la casa:</string>
     <string name="expand">Expandir</string>
+    <string name="turn_on">Prender</string>
+    <string name="turn_off">Apagar</string>
+    <string name="set_level">Establecer nivel</string>
+    <string name="set_color">Establecer color</string>
+    <string name="set_brightness">Establecer intensidad</string>
+    <string name="set_fridge_temperature">Temperatura de heladera</string>
+    <string name="set_freezer_temperature">Temperatura de freezer</string>
+    <string name="set_mode">Establecer modo</string>
+    <string name="dock">Mandar a base</string>
+    <string name="pause">Pausar</string>
+    <string name="set_location">Establecer ubicación</string>
+    <string name="start">Iniciar</string>
 </resources>

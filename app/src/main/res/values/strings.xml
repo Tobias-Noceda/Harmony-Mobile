@@ -61,4 +61,18 @@
     <string name="no_devices1">No devices of type</string>
     <string name="no_devices2">in house:</string>
     <string name="expand">Expand</string>
+
+    <!-- routines -->
+    <string name="turn_on">Turn On</string>
+    <string name="turn_off">Turn Off</string>
+    <string name="set_level">Set level</string>
+    <string name="set_color">Set color</string>
+    <string name="set_brightness">Set brightness</string>
+    <string name="set_fridge_temperature">Set fridge temperature</string>
+    <string name="set_freezer_temperature">Set freezer temperature</string>
+    <string name="set_mode">Set mode</string>
+    <string name="set_location">Set target location</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="dock">Send to base</string>
 </resources>

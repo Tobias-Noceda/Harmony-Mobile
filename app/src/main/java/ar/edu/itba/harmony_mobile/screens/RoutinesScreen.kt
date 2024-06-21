@@ -157,7 +157,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                 var text: String
                                 if (routine.actions.size > 3) {
                                     for (i in 0 until 2) {
-                                        text = "• ${routine.actions[i]}"
+                                        text = "• ${actionToString(routine.actions[i].actionName)} ${routine.actions[i].deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -171,7 +171,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                     )
                                 } else {
                                     for (action in routine.actions) {
-                                        text = "• $action"
+                                        text = "• ${actionToString(action.actionName)} ${action.deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -255,7 +255,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                 var text: String
                                 if (routine.actions.size > 6) {
                                     for (i in 0 until 5) {
-                                        text = "• ${routine.actions[i]}"
+                                        text = "• ${actionToString(routine.actions[i].actionName)} ${routine.actions[i].deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -269,7 +269,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                     )
                                 } else {
                                     for (action in routine.actions) {
-                                        text = "• $action"
+                                        text = "• ${actionToString(action.actionName)} ${action.deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -374,7 +374,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
     }
 }
 
-fun getIcon(webIcon: String): Int {
+private fun getIcon(webIcon: String): Int {
     val icon = when(webIcon) {
         "mdi-white-balance-sunny" -> R.drawable.sun_icon
         "mdi-briefcase-variant-outline" -> R.drawable.work_icon
@@ -384,4 +384,27 @@ fun getIcon(webIcon: String): Int {
     }
 
     return icon
+}
+
+private val actionsMap = mapOf(
+    Pair("turnOn", R.string.turn_on),
+    Pair("open", R.string.open),
+    Pair("close", R.string.close),
+    Pair("turnOff", R.string.turn_off),
+    Pair("dispense", R.string.dispense),
+    Pair("setLevel", R.string.set_level),
+    Pair("setColor", R.string.set_color),
+    Pair("setBrightness", R.string.set_brightness),
+    Pair("setTemperature", R.string.set_fridge_temperature),
+    Pair("setFreezerTemperature", R.string.set_freezer_temperature),
+    Pair("setMode", R.string.set_mode),
+    Pair("start", R.string.start),
+    Pair("pause", R.string.pause),
+    Pair("dock", R.string.dock),
+    Pair("setLocation", R.string.set_location)
+)
+
+@Composable
+fun actionToString(action: String): String {
+    return stringResource(id = actionsMap[action]!!)
 }
