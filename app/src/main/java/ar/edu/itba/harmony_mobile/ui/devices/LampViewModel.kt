@@ -8,6 +8,7 @@ import ar.edu.itba.harmony_mobile.model.Lamp
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.model.Error
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,6 +41,7 @@ class LampViewModel(
 
     fun setColor(lamp: Lamp, color: Color) = runOnViewModelScope(
         {
+            delay(1000)
             repository.executeDeviceAction(
                 lamp.id!!,
                 Lamp.SET_COLOR_ACTION,
@@ -70,18 +72,24 @@ class LampViewModel(
             .collect { response -> _uiState.update { updateState(it, response) } }
     }
 
+    private var debouncedJob: Job? = null;
+
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (LampUiState, R) -> LampUiState
-    ): Job = viewModelScope.launch {
-        _uiState.update { it.copy(loading = true, error = null) }
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            _uiState.update { updateState(it, response).copy(loading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(loading = false, error = handleError(e)) }
+    ): Job {
+        debouncedJob?.cancel()
+        debouncedJob = viewModelScope.launch {
+            _uiState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                block()
+            }.onSuccess { response ->
+                _uiState.update { updateState(it, response).copy(loading = false) }
+            }.onFailure { e ->
+                _uiState.update { it.copy(loading = false, error = handleError(e)) }
+            }
         }
+        return debouncedJob as Job;
     }
 
     private fun handleError(e: Throwable): Error {
