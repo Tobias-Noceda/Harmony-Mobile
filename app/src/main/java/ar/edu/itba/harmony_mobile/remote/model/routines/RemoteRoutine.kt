@@ -12,7 +12,7 @@ class RemoteRoutine {
     lateinit var name: String
 
     @SerializedName("actions")
-    var actions: List<RemoteAction> = ArrayList()//TODO create an action type, probably
+    var actions: List<RemoteAction> = ArrayList()
 
     override fun toString(): String {
         return "{Routine;id:${id};name:${name};icon:${actions[0].meta.icon};homeId:${actions[0].meta.homeId};actions:${actions}}"
@@ -20,7 +20,6 @@ class RemoteRoutine {
 
 
     fun asModel(): Routine {
-        Log.i("RemoteR",this.toString())
         return Routine(
             id = id,
             name = name,

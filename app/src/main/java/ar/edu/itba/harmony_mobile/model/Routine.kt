@@ -20,6 +20,7 @@ class Routine(
         model.id = id
         model.name = name
         model.actions = actions.map { it.asRemoteModel() }
+        model.actions.forEach { it.meta.icon = icon;it.meta.homeId = homeId }
 
         return model
     }
