@@ -30,7 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
@@ -77,10 +79,16 @@ fun DevicesByType(
 
     if (currentId == "") {
         val list = filterDevices(devicesState.getHomeDevices(currentHouse), type)
+        var typeStr = stringResource(id = type.type)
+        if(typeStr[typeStr.length - 2] == 'e') {
+            typeStr = typeStr.toLowerCase(Locale.current).dropLast(2)
+        } else {
+            typeStr = typeStr.toLowerCase(Locale.current).dropLast(1)
+        }
         if (list.isEmpty()) {
             val name = if(currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
             EmptyScreen(
-                description = "${stringResource(id = R.string.no_devices1)} ${type.name} " +
+                description = "${stringResource(id = R.string.no_devices1)} ${typeStr} " +
                         "${stringResource(id = R.string.no_devices2)} $name"
             )
         } else {

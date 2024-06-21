@@ -57,9 +57,9 @@ fun RoomsScreen(
     }
 
     Box(modifier = modifier) {
-        if (currentDestination == "") {
+        if (currentDestination == "" && currentHouse.id != "0") {
             if (roomsState.getHomeRooms(currentHouse).isEmpty()) {
-                EmptyScreen(description = "You have no devices in house: ${currentHouse.name}")
+                EmptyScreen(description = "${stringResource(id = R.string.empty_house)} ${currentHouse.name}")
             } else {
                 var show = false
                 for(room in roomsState.getHomeRooms(currentHouse)) {
@@ -69,20 +69,24 @@ fun RoomsScreen(
                         break
                     }
                 }
-                // if(show) {
+                if(show) {
                     RoomsList(
                         rooms = roomsState.getHomeRooms(currentHouse),
                         onDeviceClick = { roomId ->
                             currentDestination = roomId
                         }
                     )
-                // } else {
-                //    EmptyScreen(description = "You have no devices in house: ${currentHouse.name}")
-                // }
+                } else {
+                   EmptyScreen(description = "${stringResource(id = R.string.empty_house)} ${currentHouse.name}")
+                }
             }
         } else {
             RoomScreen(
-                roomsState.getRoom(currentDestination),
+                if (currentHouse.id == "0") {
+                    Room("0", stringResource(id = R.string.personal_devices), currentHouse)
+                } else {
+                    roomsState.getRoom(currentDestination)
+                },
                 roomsState,
                 devicesState,
             ) { currentDestination = "" }

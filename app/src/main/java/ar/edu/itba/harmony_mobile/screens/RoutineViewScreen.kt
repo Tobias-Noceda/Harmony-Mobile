@@ -89,8 +89,7 @@ fun RoutineView(routine: Routine, onBack: () -> Unit) {
                 ) {
                     Row {
                         Text(
-                            text = stringResource(id = R.string.run),
-                            style = MaterialTheme.typography.bodyMedium
+                            text = stringResource(id = R.string.run)
                         )
                         Icon(
                             Icons.Outlined.PlayArrow,

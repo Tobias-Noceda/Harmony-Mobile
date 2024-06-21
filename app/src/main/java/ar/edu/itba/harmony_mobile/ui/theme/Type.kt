@@ -29,7 +29,7 @@ val Typography = Typography(
         lineHeight = 26.sp,
         letterSpacing = 0.sp
     ),
-    labelLarge = TextStyle(
+    headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,

@@ -64,6 +64,7 @@ fun RoutinesScreen(
 ) {
     val routinesState by rViewModel.uiState.collectAsState()
 
+    Log.i("Tobi", routinesState.routines.toString())
     Log.i("Tobi", routinesState.getHomeRoutines(currentHouse).toString())
 
     var inList by rememberSaveable { mutableStateOf(false) }
@@ -164,7 +165,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                     }
                                     Text(
                                         text = "Expand",
-                                        style = MaterialTheme.typography.labelLarge,
+                                        style = MaterialTheme.typography.headlineMedium,
                                         color = Color.Black.copy(alpha = .4f),
                                         modifier = Modifier.clickable { onNav(routine.id!!) }
                                     )
@@ -262,7 +263,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                     }
                                     Text(
                                         text = "Expand",
-                                        style = MaterialTheme.typography.labelLarge,
+                                        style = MaterialTheme.typography.headlineMedium,
                                         color = Color.Black.copy(alpha = .4f),
                                         modifier = Modifier.clickable { onNav(routine.id!!) }
                                     )

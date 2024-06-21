@@ -60,7 +60,12 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
 @Composable
-fun RoomScreen(room: Room, roomsState: RoomsUiState, devicesState: DevicesUiState, onBackCalled: () -> Unit) {
+fun RoomScreen(
+    room: Room,
+    roomsState: RoomsUiState,
+    devicesState: DevicesUiState,
+    onBackCalled: () -> Unit
+) {
     var currentDevice by rememberSaveable { mutableStateOf("") }
     var currentDeviceType by rememberSaveable { mutableStateOf(DeviceTypes.DOORS) }
 
@@ -69,7 +74,7 @@ fun RoomScreen(room: Room, roomsState: RoomsUiState, devicesState: DevicesUiStat
     if(currentDevice == "") {
         RoomDevices(
             roomName = room.name,
-            deviceList = devicesState.getRoomDevices(room),
+            deviceList = if(room.id == "0") devicesState.getHomeDevices(room.home!!) else devicesState.getRoomDevices(room),
             onDeviceClick = { device ->
                     currentDevice = device.id!!
                     currentDeviceType = device.type
