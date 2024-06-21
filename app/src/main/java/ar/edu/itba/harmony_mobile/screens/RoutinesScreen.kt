@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -63,6 +64,8 @@ fun RoutinesScreen(
 ) {
     val routinesState by rViewModel.uiState.collectAsState()
 
+    Log.i("Tobi", routinesState.getHomeRoutines(currentHouse).toString())
+
     var inList by rememberSaveable { mutableStateOf(false) }
     var showingRoutine by rememberSaveable { mutableStateOf("") }
 
@@ -70,6 +73,10 @@ fun RoutinesScreen(
         if (inList) {
             RoutineView(routine = routinesState.getRoutine(showingRoutine)!!) { inList = false }
         } else {
+            if (routinesState.getHomeRoutines(currentHouse).isEmpty()) {
+                val text = if(currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
+                EmptyScreen(description = "${stringResource(id = R.string.no_routines)} $text")
+            }
             RoutinesList(routinesState.getHomeRoutines(currentHouse)) { routineId ->
                     showingRoutine = routineId
                     inList = true
