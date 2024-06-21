@@ -20,10 +20,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Device
+import ar.edu.itba.harmony_mobile.model.Door
+import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.model.Status
+import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
@@ -72,9 +81,17 @@ fun MyCard(
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun LightCard(lamp: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
-    val status = "On"
-    val brightness = 75
+fun LightCard(
+    lamp: Device,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+    onClick: () -> Unit
+) {
+    val actualLamp = lamp as Lamp
+    val status = actualLamp.status
+    val statusText = if (status == Status.ON) stringResource(R.string.on) else stringResource(R.string.off)
+    val brightness = actualLamp.brightness
 
     MyCard(
         device = lamp,
@@ -83,12 +100,12 @@ fun LightCard(lamp: Device, modifier: Modifier = Modifier.fillMaxWidth().padding
         content = {
             Column {
                 Text(
-                    text = "Status: $status",
+                    text = "${stringResource(R.string.status)} $statusText",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                if(status == "On") {
+                if(status == Status.ON) {
                     Text(
-                        text = "Brightness: $brightness%",
+                        text = "${stringResource(id = R.string.brightness)} $brightness%",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(top = 4.dp)
                     )
@@ -102,9 +119,16 @@ fun LightCard(lamp: Device, modifier: Modifier = Modifier.fillMaxWidth().padding
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun DoorCard(door: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
-    val status = "Closed"
-    val lock = "Locked"
+fun DoorCard(
+    door: Device,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+    onClick: () -> Unit
+) {
+    val actualDoor = door as Door
+    val status = actualDoor.status
+    var text = if(status == Status.OPEN) stringResource(R.string.open) else stringResource(R.string.closed)
     MyCard(
         device = door,
         type = DeviceTypes.DOORS,
@@ -112,15 +136,17 @@ fun DoorCard(door: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(
         content = {
             Column {
                 Text(
-                    text = "Status: $status",
+                    text = "${stringResource(id = R.string.status)} $text",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                if(status == "Closed")
-                Text(
-                    text = "Lock: $lock",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                if(status == Status.CLOSED) {
+                    val lock = if(actualDoor.lock) stringResource(R.string.locked) else stringResource(R.string.unlocked)
+                    Text(
+                        text = lock,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
         }
     ) {
@@ -130,9 +156,16 @@ fun DoorCard(door: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun RefrigeratorCard(refrigerator: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
-    val fridgeTemp = 2
-    val freezerTemp = -8
+fun RefrigeratorCard(
+    refrigerator: Device,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+    onClick: () -> Unit
+) {
+    val actualRefrigerator = refrigerator as Refrigerator
+    val fridgeTemp = actualRefrigerator.temperature
+    val freezerTemp = actualRefrigerator.freezerTemperature
 
     MyCard(
         device = refrigerator,
@@ -158,9 +191,21 @@ fun RefrigeratorCard(refrigerator: Device, modifier: Modifier = Modifier.fillMax
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun VacuumCard(vacuum: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
-    val status = "On" // Docked also possible
-    val battery = 75
+fun VacuumCard(
+    vacuum: Device,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+    onClick: () -> Unit
+) {
+    val actualVacuum = vacuum as Vacuum
+    val status = when (actualVacuum.status)
+    {
+        Status.ON -> { stringResource(id = R.string.on) }
+        Status.DOCKED -> { stringResource(id = R.string.docked) }
+        else -> { stringResource(id = R.string.off) }
+    }
+    val battery = actualVacuum.battery
     MyCard(
         device = vacuum,
         type = DeviceTypes.VACUUMS,
@@ -168,7 +213,7 @@ fun VacuumCard(vacuum: Device, modifier: Modifier = Modifier.fillMaxWidth().padd
         content = {
             Column {
                 Text(
-                    text = "Status: $status",
+                    text = "${stringResource(id = R.string.status)} $status",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
@@ -185,8 +230,19 @@ fun VacuumCard(vacuum: Device, modifier: Modifier = Modifier.fillMaxWidth().padd
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun SprinklerCard(sprinkler: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
-    val status = "On"
+fun SprinklerCard(
+    sprinkler: Device,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+    onClick: () -> Unit
+) {
+    val actualSprinkler = sprinkler as Sprinkler
+    val status = if (actualSprinkler.status == Status.OPEN) {
+        stringResource(id = R.string.opened)
+    } else {
+        stringResource(id = R.string.closed)
+    }
     MyCard(
         device = sprinkler,
         type = DeviceTypes.SPRINKLERS,
@@ -206,9 +262,20 @@ fun SprinklerCard(sprinkler: Device, modifier: Modifier = Modifier.fillMaxWidth(
 
 @SuppressLint("ModifierParameter")
 @Composable
-fun BlindsCard(blinds: Device, modifier: Modifier = Modifier.fillMaxWidth().padding(4.dp), onClick: () -> Unit) {
-    val status = "Closed"
-    val maxLevel = 75
+fun BlindsCard(
+    blinds: Device,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp),
+    onClick: () -> Unit
+) {
+    val actualBlinds = blinds as Blinds
+    val status = if (actualBlinds.status == Status.OPEN) {
+        stringResource(id = R.string.opened)
+    } else {
+        stringResource(id = R.string.closed)
+    }
+    val maxLevel = actualBlinds.level
     MyCard(
         device = blinds,
         type = DeviceTypes.BLINDS,
@@ -216,11 +283,11 @@ fun BlindsCard(blinds: Device, modifier: Modifier = Modifier.fillMaxWidth().padd
         content = {
             Column {
                 Text(
-                    text = "Status: $status",
+                    text = "${stringResource(id = R.string.status)} $status",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Max Level: $maxLevel%",
+                    text = "${stringResource(id = R.string.limit)} $maxLevel%",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(top = 4.dp)
                 )

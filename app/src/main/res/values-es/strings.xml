@@ -21,8 +21,8 @@
     <string name="blinds">Persianas</string>
 
     <string name="status">Estado:</string>
-    <string name="on">Prendido</string>
-    <string name="off">Apagado</string>
+    <string name="on">Prendida</string>
+    <string name="off">Apagada</string>
     <string name="color_mode">Modo color:</string>
     <string name="color">Color:</string>
     <string name="brightness">Brillo:</string>
@@ -33,9 +33,11 @@
     <string name="closing">Cerrando</string>
     <string name="amount">Cantidad:</string>
     <string name="dispense">Dispensar</string>
-    <string name="opened">Abierto</string>
-    <string name="closed">Cerrado</string>
-    <string name="locked">Trabado</string>
+    <string name="opened">Abierta</string>
+    <string name="closed">Cerrada</string>
+    <string name="docked">En base</string>
+    <string name="locked">Trabada</string>
+    <string name="unlocked">Destrabada</string>
     <string name="lock">Trabar</string>
     <string name="unlock">Destrabar</string>
     <string name="default_mode">Normal</string>
@@ -59,13 +61,13 @@
     <string name="empty_house">No hay dispositivos en la casa:</string>
     <string name="no_routines">No hay rutinas en la casa:</string>
     <string name="no_devices1">No hay dispositivos del tipo</string>
-    <string name="no_devices2">in la casa:</string>
+    <string name="no_devices2">en la casa:</string>
     <string name="expand">Expandir</string>
     <string name="turn_on">Prender</string>
     <string name="turn_off">Apagar</string>
     <string name="set_level">Establecer nivel</string>
     <string name="set_color">Establecer color</string>
-    <string name="set_brightness">Establecer intensidad</string>
+    <string name="set_brightness">Establecer brillo de</string>
     <string name="set_fridge_temperature">Temperatura de heladera</string>
     <string name="set_freezer_temperature">Temperatura de freezer</string>
     <string name="set_mode">Establecer modo</string>
