@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.harmony_mobile.DataSourceException
 import ar.edu.itba.harmony_mobile.model.Blinds
+import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.model.Error
 import kotlinx.coroutines.Job
@@ -22,13 +23,18 @@ class BlindsViewModel(
     private val _uiState = MutableStateFlow(BlindsUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun open() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Blinds.OPEN_ACTION) },
+    fun open(blinds: Blinds) = runOnViewModelScope(
+        { repository.executeDeviceAction(blinds.id!!, Blinds.OPEN_ACTION) },
         { state, _ -> state }
     )
 
-    fun close() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Blinds.CLOSE_ACTION) },
+    fun close(blinds: Blinds) = runOnViewModelScope(
+        { repository.executeDeviceAction(blinds.id!!, Blinds.CLOSE_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun setLevel(blinds: Blinds, level: Int) = runOnViewModelScope(
+        { repository.executeDeviceAction(blinds.id!!, Blinds.SET_LEVEL_ACTION, arrayOf(level)) },
         { state, _ -> state }
     )
 

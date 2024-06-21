@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.ui.devices
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.harmony_mobile.DataSourceException
@@ -22,13 +23,40 @@ class LampViewModel(
     private val _uiState = MutableStateFlow(LampUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun turnOn() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_ON_ACTION) },
+    fun turnOn(lamp: Lamp) = runOnViewModelScope(
+        { repository.executeDeviceAction(lamp.id!!, Lamp.TURN_ON_ACTION) },
         { state, _ -> state }
     )
 
-    fun turnOff() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_OFF_ACTION) },
+    fun turnOff(lamp: Lamp) = runOnViewModelScope(
+        { repository.executeDeviceAction(lamp.id!!, Lamp.TURN_OFF_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun setColor(lamp: Lamp, color: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(lamp.id!!, Lamp.SET_COLOR_ACTION, arrayOf(color)) },
+        { state, _ -> state }
+    )
+
+    fun setColor(lamp: Lamp, color: Color) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                lamp.id!!,
+                Lamp.SET_COLOR_ACTION,
+                arrayOf(color.toString())
+            )
+        },
+        { state, _ -> state }
+    )
+
+    fun setBrightness(lamp: Lamp, brightness: Int) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                lamp.id!!,
+                Lamp.SET_BRIGHTNESS_ACTION,
+                arrayOf(brightness)
+            )
+        },
         { state, _ -> state }
     )
 

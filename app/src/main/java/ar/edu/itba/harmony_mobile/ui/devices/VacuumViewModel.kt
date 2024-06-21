@@ -22,13 +22,28 @@ class VacuumViewModel(
     private val _uiState = MutableStateFlow(VacuumUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun turnOn() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Vacuum.TURN_ON_ACTION) },
+    fun start(vacuum: Vacuum) = runOnViewModelScope(
+        { repository.executeDeviceAction(vacuum.id!!, Vacuum.START_ACTION) },
         { state, _ -> state }
     )
 
-    fun turnOff() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Vacuum.TURN_OFF_ACTION) },
+    fun pause(vacuum: Vacuum) = runOnViewModelScope(
+        { repository.executeDeviceAction(vacuum.id!!, Vacuum.PAUSE_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun dock(vacuum: Vacuum) = runOnViewModelScope(
+        { repository.executeDeviceAction(vacuum.id!!, Vacuum.DOCK_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun setLocation(vacuum: Vacuum, roomId: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(vacuum.id!!, Vacuum.SET_LOCATION_ACTION, arrayOf(roomId)) },
+        { state, _ -> state }
+    )
+
+    fun setMode(vacuum: Vacuum, mode: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(vacuum.id!!, Vacuum.SET_MODE_ACTION, arrayOf(mode)) },
         { state, _ -> state }
     )
 

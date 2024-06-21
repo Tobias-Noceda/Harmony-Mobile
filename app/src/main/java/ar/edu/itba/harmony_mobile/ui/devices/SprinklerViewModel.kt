@@ -6,6 +6,7 @@ import ar.edu.itba.harmony_mobile.DataSourceException
 import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.model.Error
+import ar.edu.itba.harmony_mobile.model.Vacuum
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +23,24 @@ class SprinklerViewModel(
     private val _uiState = MutableStateFlow(SprinklerUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun turnOn() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Sprinkler.TURN_ON_ACTION) },
+    fun start(sprinkler: Sprinkler) = runOnViewModelScope(
+        { repository.executeDeviceAction(sprinkler.id!!, Sprinkler.OPEN_ACTION) },
         { state, _ -> state }
     )
 
-    fun turnOff() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Sprinkler.TURN_OFF_ACTION) },
+    fun pause(sprinkler: Sprinkler) = runOnViewModelScope(
+        { repository.executeDeviceAction(sprinkler.id!!, Sprinkler.CLOSE_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun dispense(sprinkler: Sprinkler, unit: String, quantity: Int) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                sprinkler.id!!,
+                Sprinkler.DISPENSE_ACTION,
+                arrayOf(unit, quantity)
+            )
+        },
         { state, _ -> state }
     )
 

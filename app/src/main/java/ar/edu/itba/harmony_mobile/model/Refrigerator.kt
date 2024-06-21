@@ -32,5 +32,8 @@ class Refrigerator(
     companion object {
         const val TURN_ON_ACTION = "turnOn"
         const val TURN_OFF_ACTION = "turnOff"
+        const val SET_TEMPERATURE_ACTION = "setTemperature"
+        const val SET_FREEZER_TEMPERATURE_ACTION = "setFreezerTemperature"
+        const val SET_MODE_ACTION = "setMode"
     }
 }

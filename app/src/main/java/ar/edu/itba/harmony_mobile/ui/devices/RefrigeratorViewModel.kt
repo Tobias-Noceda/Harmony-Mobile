@@ -3,9 +3,9 @@ package ar.edu.itba.harmony_mobile.ui.devices
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.harmony_mobile.DataSourceException
-import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.model.Error
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +22,56 @@ class RefrigeratorViewModel(
     private val _uiState = MutableStateFlow(RefrigeratorUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun turnOn() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Refrigerator.TURN_ON_ACTION) },
+    fun turnOn(refrigerator: Refrigerator) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                refrigerator.id!!,
+                Refrigerator.TURN_ON_ACTION
+            )
+        },
         { state, _ -> state }
     )
 
-    fun turnOff() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Refrigerator.TURN_OFF_ACTION) },
+    fun turnOff(refrigerator: Refrigerator) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                refrigerator.id!!,
+                Refrigerator.TURN_OFF_ACTION
+            )
+        },
+        { state, _ -> state }
+    )
+
+    fun setTemperature(refrigerator: Refrigerator, temperature: Int) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                refrigerator.id!!,
+                Refrigerator.SET_TEMPERATURE_ACTION,
+                arrayOf(temperature)
+            )
+        },
+        { state, _ -> state }
+    )
+
+    fun setFreezerTemperature(refrigerator: Refrigerator, temperature: Int) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                refrigerator.id!!,
+                Refrigerator.SET_FREEZER_TEMPERATURE_ACTION,
+                arrayOf(temperature)
+            )
+        },
+        { state, _ -> state }
+    )
+
+    fun setMode(refrigerator: Refrigerator, mode: String) = runOnViewModelScope(
+        {
+            repository.executeDeviceAction(
+                refrigerator.id!!,
+                Refrigerator.SET_MODE_ACTION,
+                arrayOf(mode)
+            )
+        },
         { state, _ -> state }
     )
 

@@ -6,6 +6,7 @@ import ar.edu.itba.harmony_mobile.DataSourceException
 import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.model.Error
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +23,23 @@ class DoorViewModel(
     private val _uiState = MutableStateFlow(DoorUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun open() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.OPEN_ACTION) },
+    fun open(door: Door) = runOnViewModelScope(
+        { repository.executeDeviceAction(door.id!!, Door.OPEN_ACTION) },
         { state, _ -> state }
     )
 
-    fun close() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.CLOSE_ACTION) },
+    fun close(door: Door) = runOnViewModelScope(
+        { repository.executeDeviceAction(door.id!!, Door.CLOSE_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun lock(door: Door) = runOnViewModelScope(
+        { repository.executeDeviceAction(door.id!!, Door.LOCK_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun unlock(door: Door) = runOnViewModelScope(
+        { repository.executeDeviceAction(door.id!!, Door.UNLOCK_ACTION) },
         { state, _ -> state }
     )
 

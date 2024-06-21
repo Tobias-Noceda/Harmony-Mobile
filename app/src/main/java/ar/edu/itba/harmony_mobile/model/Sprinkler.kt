@@ -30,8 +30,8 @@ class Sprinkler(
     }
 
     companion object {
-        const val TURN_ON_ACTION = "turnOn"
-        const val TURN_OFF_ACTION = "turnOff"
+        const val OPEN_ACTION = "open"
+        const val CLOSE_ACTION = "close"
         const val DISPENSE_ACTION = "dispense"
     }
 }

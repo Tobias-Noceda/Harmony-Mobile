@@ -30,7 +30,10 @@ class Vacuum(
     }
 
     companion object {
-        const val TURN_ON_ACTION = "turnOn"
-        const val TURN_OFF_ACTION = "turnOff"
+        const val START_ACTION = "start"
+        const val PAUSE_ACTION = "pause"
+        const val DOCK_ACTION = "dock"
+        const val SET_LOCATION_ACTION = "setLocation"
+        const val SET_MODE_ACTION = "setMode"
     }
 }
