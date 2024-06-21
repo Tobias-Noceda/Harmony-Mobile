@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import ar.edu.itba.harmony_mobile.MyIntent
+import ar.edu.itba.harmony_mobile.remote.api.GlobalAPIData
 import ar.edu.itba.harmony_mobile.remote.model.EventData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -19,6 +20,7 @@ import java.net.URL
 
 class ServerEventReceiver : BroadcastReceiver() {
     private val gson = Gson()
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d(TAG, "Alarm received.")
@@ -83,10 +85,7 @@ class ServerEventReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "ServerEventReceiver"
-
-        // const val API_URL = "http://10.0.2.2:8080/api/" // if you are using an emulator
-        // const val API_URL = "http://192.168.0.24:8080/api/" // if you are not using an emulator
-        const val API_URL = "https://api-hci-9716.onrender.com/api/" //if you want the hosted api
+        const val API_URL = GlobalAPIData.API_URL
 
     }
 }
