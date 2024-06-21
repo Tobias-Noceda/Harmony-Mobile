@@ -67,7 +67,7 @@ fun RoomScreen(room: Room, roomsState: RoomsUiState, devicesState: DevicesUiStat
         // when(currentDeviceType) {
         //     DeviceTypes.LIGHTS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
         //     DeviceTypes.DOORS -> DoorScreen(deviceName = currentDevice) { currentDevice = "" }
-        //     DeviceTypes.REFRIS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
+        //     DeviceTypes.REFRIGERATORS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
         //     DeviceTypes.VACUUMS -> LightScreen(deviceName = currentDevice) { currentDevice = "" }
         //     DeviceTypes.SPRINKLERS -> SprinklerScreen(deviceName = currentDevice) { currentDevice = "" }
         //     else -> BlindsScreen(deviceName = currentDevice) { currentDevice = "" }
@@ -151,7 +151,7 @@ fun RoomDevices(
                             when(deviceList[id].type) {
                                 DeviceTypes.LIGHTS -> LightCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
                                 DeviceTypes.DOORS -> DoorCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
-                                DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
+                                DeviceTypes.REFRIGERATORS -> RefrigeratorCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
                                 DeviceTypes.VACUUMS -> VacuumCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
                                 DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
                                 else -> BlindsCard(name = deviceList[id].name, modifier = modifier) { onDeviceClick(deviceList[id]) }
@@ -171,7 +171,7 @@ fun RoomDevices(
                     when(deviceList[id].type) {
                         DeviceTypes.LIGHTS -> LightCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
                         DeviceTypes.DOORS -> DoorCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
-                        DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
+                        DeviceTypes.REFRIGERATORS -> RefrigeratorCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
                         DeviceTypes.VACUUMS -> VacuumCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
                         DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }
                         else -> BlindsCard(name = deviceList[id].name) { onDeviceClick(deviceList[id]) }

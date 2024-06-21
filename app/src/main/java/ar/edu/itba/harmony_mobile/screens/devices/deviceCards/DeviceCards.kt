@@ -135,7 +135,7 @@ fun RefrigeratorCard(name: String, modifier: Modifier = Modifier.fillMaxWidth().
 
     MyCard(
         name = name,
-        type = DeviceTypes.REFRIS,
+        type = DeviceTypes.REFRIGERATORS,
         modifier = modifier,
         content = {
             Column {

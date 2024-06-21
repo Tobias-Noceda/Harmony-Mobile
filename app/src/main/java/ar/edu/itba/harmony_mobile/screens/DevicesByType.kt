@@ -72,7 +72,7 @@ fun DevicesByType(
         // when(type) {
         //     DeviceTypes.LIGHTS -> LightScreen(currentName) { currentName = "" }
         //     DeviceTypes.DOORS -> DoorScreen(currentName) { currentName = "" }
-        //     DeviceTypes.REFRIS -> FridgeScreen(currentName) { currentName = "" }
+        //     DeviceTypes.REFRIGERATORS -> FridgeScreen(currentName) { currentName = "" }
         //     DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
         //     DeviceTypes.VACUUMS -> VacuumScreen(currentName) { currentName = "" }
         //     DeviceTypes.BLINDS -> BlindsScreen(currentName) { currentName = "" }
@@ -155,7 +155,7 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                             when(type) {
                                 DeviceTypes.LIGHTS -> LightCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
                                 DeviceTypes.DOORS -> DoorCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
-                                DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
+                                DeviceTypes.REFRIGERATORS -> RefrigeratorCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
                                 DeviceTypes.VACUUMS -> VacuumCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
                                 DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
                                 else -> BlindsCard(name = deviceNames[id], modifier = modifier) { onDeviceClick(deviceNames[id]) }
@@ -175,7 +175,7 @@ fun TypeList(type: DeviceTypes, onDeviceClick: (String) -> Unit) {
                     when(type) {
                         DeviceTypes.LIGHTS -> LightCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
                         DeviceTypes.DOORS -> DoorCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
-                        DeviceTypes.REFRIS -> RefrigeratorCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
+                        DeviceTypes.REFRIGERATORS -> RefrigeratorCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
                         DeviceTypes.VACUUMS -> VacuumCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
                         DeviceTypes.SPRINKLERS -> SprinklerCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }
                         else -> BlindsCard(name = deviceNames[id]) { onDeviceClick(deviceNames[id]) }

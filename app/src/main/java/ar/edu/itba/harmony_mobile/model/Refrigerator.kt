@@ -13,7 +13,7 @@ class Refrigerator(
     val temperature: Int,
     val freezerTemperature: Int,
     val mode: String
-) : Device(id, name, room, DeviceTypes.REFRIS) {
+) : Device(id, name, room, DeviceTypes.REFRIGERATORS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteRefrigeratorState> {
         val state = RemoteRefrigeratorState()
