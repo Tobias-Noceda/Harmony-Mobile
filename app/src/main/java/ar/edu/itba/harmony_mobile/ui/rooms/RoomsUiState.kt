@@ -15,6 +15,7 @@ data class RoomsUiState(
 ) {
     fun getHomeRooms(home: Home): List<Room> {
         if (home.id == null || home.id == "0") {
+            return ArrayList() // just so it doesn't crash for now
             return listOf(rooms.first())
         }
         return rooms.filter { it.home == home }
