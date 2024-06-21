@@ -32,17 +32,6 @@ import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
-val actions = listOf(
-    "Start VacuumCleaner",
-    "Turn on FootLamp",
-    "Open Sprinkler",
-    "Turn on CeilingLamp",
-    "Turn on BarLight",
-    "Turn on BarLight",
-    "Turn on BarLight",
-    "Turn on BarLight"
-)
-
 @Composable
 fun RoutineView(routine: Routine, onBack: () -> Unit) {
     val scState = rememberScrollState(0)
@@ -67,7 +56,7 @@ fun RoutineView(routine: Routine, onBack: () -> Unit) {
             horizontalAlignment = Alignment.Start
         ) {
             var text: String
-            for (action in actions) {
+            for (action in routine.actions) {
                 text = "• $action"
                 Text(
                     text = text,

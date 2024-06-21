@@ -32,8 +32,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Device
+import ar.edu.itba.harmony_mobile.model.Door
+import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Room
+import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
 import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
 import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
@@ -71,12 +77,12 @@ fun RoomScreen(room: Room, roomsState: RoomsUiState, devicesState: DevicesUiStat
         )
     } else {
         when(currentDeviceType) {
-            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
-            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
-            DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
-            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
-            else -> BlindsScreen(devicesState.getDevice(currentDevice)) { currentDevice = "" }
+            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentDevice) as Lamp) { currentDevice = "" }
+            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentDevice) as Door) { currentDevice = "" }
+            DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentDevice) as Refrigerator) { currentDevice = "" }
+            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentDevice) as Vacuum) { currentDevice = "" }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentDevice) as Sprinkler) { currentDevice = "" }
+            else -> BlindsScreen(devicesState.getDevice(currentDevice) as Blinds) { currentDevice = "" }
         }
         BackHandler(onBack = { currentDevice = "" })
     }

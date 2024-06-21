@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -42,32 +43,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Home
+import ar.edu.itba.harmony_mobile.model.Routine
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
+import ar.edu.itba.harmony_mobile.ui.rooms.RoutinesViewModel
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
-val routines = listOf(
-    Pair("Wake Up", "mdi-white-balance-sunny"),
-    Pair("Sleep", "mdi-bed-king-outline"),
-    Pair("Go To Work", "mdi-briefcase-variant-outline")
-)
-
 @Composable
-fun RoutinesScreen(modifier: Modifier = Modifier, currentHouse: Home) {
+fun RoutinesScreen(
+    modifier: Modifier = Modifier,
+    currentHouse: Home,
+    rViewModel: RoutinesViewModel = viewModel(factory = getViewModelFactory())
+) {
+    val routinesState by rViewModel.uiState.collectAsState()
 
     var inList by rememberSaveable { mutableStateOf(false) }
     var showingRoutine by rememberSaveable { mutableStateOf("") }
 
     Box(modifier = modifier) {
         if (inList) {
-            RoutineView(routineName = showingRoutine) { inList = false }
+            RoutineView(routine = routinesState.getRoutine(showingRoutine)!!) { inList = false }
         } else {
-            RoutinesList(currentHouse) { routine ->
-                    showingRoutine = routine
+            RoutinesList(routinesState.getHomeRoutines(currentHouse)) { routineId ->
+                    showingRoutine = routineId
                     inList = true
             }
         }
@@ -75,7 +79,7 @@ fun RoutinesScreen(modifier: Modifier = Modifier, currentHouse: Home) {
 }
 
 @Composable
-fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
+fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
 
     val scState = rememberScrollState(0)
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -100,16 +104,6 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                 .padding(horizontal = 6.dp)
                 .verticalScroll(scState)
         ) {
-            val actions = listOf(
-                "Start VacuumCleaner",
-                "Turn on FootLamp",
-                "Open Sprinkler",
-                "Turn on CeilingLamp",
-                "Turn on BarLight",
-                "Turn on BarLight",
-                "Turn on BarLight",
-                "Turn on BarLight"
-            )
             for (routine in routines) {
                 if(isExpandedWidth) {
                     Surface(
@@ -132,14 +126,14 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painterResource(id = getIcon(routine.second)),
+                                painterResource(id = getIcon(routine.icon)),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(start = 16.dp)
                                     .height(80.dp)
                             )
                             Text(
-                                text = routine.first,
+                                text = routine.name,
                                 textAlign = TextAlign.Left,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
@@ -153,9 +147,9 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 var text: String
-                                if (actions.size > 3) {
+                                if (routine.actions.size > 3) {
                                     for (i in 0 until 2) {
-                                        text = "• ${actions[i]}"
+                                        text = "• ${routine.actions[i]}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -165,10 +159,10 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                         text = "Expand",
                                         style = MaterialTheme.typography.labelLarge,
                                         color = Color.Black.copy(alpha = .4f),
-                                        modifier = Modifier.clickable { onNav(routine.first) }
+                                        modifier = Modifier.clickable { onNav(routine.id!!) }
                                     )
                                 } else {
-                                    for (action in actions) {
+                                    for (action in routine.actions) {
                                         text = "• $action"
                                         Text(
                                             text = text,
@@ -188,7 +182,7 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                 onClick = {
                                     Toast.makeText(
                                         context,
-                                        "$text ${routine.first}",
+                                        "$text ${routine.name}",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
@@ -229,14 +223,14 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Icon(
-                                    painterResource(id = getIcon(routine.second)),
+                                    painterResource(id = getIcon(routine.icon)),
                                     contentDescription = null,
                                     modifier = Modifier
                                         .padding(start = 16.dp)
                                         .height(80.dp)
                                 )
                                 Text(
-                                    text = routine.first,
+                                    text = routine.name,
                                     textAlign = TextAlign.Center,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
@@ -251,9 +245,9 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 var text: String
-                                if (actions.size > 6) {
+                                if (routine.actions.size > 6) {
                                     for (i in 0 until 5) {
-                                        text = "• ${actions[i]}"
+                                        text = "• ${routine.actions[i]}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -263,10 +257,10 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                         text = "Expand",
                                         style = MaterialTheme.typography.labelLarge,
                                         color = Color.Black.copy(alpha = .4f),
-                                        modifier = Modifier.clickable { onNav(routine.first) }
+                                        modifier = Modifier.clickable { onNav(routine.id!!) }
                                     )
                                 } else {
-                                    for (action in actions) {
+                                    for (action in routine.actions) {
                                         text = "• $action"
                                         Text(
                                             text = text,
@@ -286,7 +280,7 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                 onClick = {
                                     Toast.makeText(
                                         context,
-                                        "$text ${routine.first}",
+                                        "$text ${routine.name}",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
@@ -306,7 +300,7 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                             .padding(4.dp)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        onClick = { onNav(routine.first) },
+                        onClick = { onNav(routine.id!!) },
                         elevation = ButtonDefaults.buttonElevation(8.dp),
                         colors = ButtonColors(
                             secondary,
@@ -327,12 +321,12 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painterResource(id = getIcon(routine.second)),
+                                painterResource(id = getIcon(routine.icon)),
                                 contentDescription = null,
                                 modifier = Modifier.height(80.dp)
                             )
                             Text(
-                                text = routine.first,
+                                text = routine.name,
                                 textAlign = TextAlign.Left,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
@@ -352,7 +346,7 @@ fun RoutinesList(currentHouse: Home, onNav: (String) -> Unit) {
                                 onClick = {
                                     Toast.makeText(
                                         context,
-                                        "$text ${routine.first}",
+                                        "$text ${routine.name}",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },

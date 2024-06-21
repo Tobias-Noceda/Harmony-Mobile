@@ -34,9 +34,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Device
+import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
 import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
 import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
@@ -79,14 +84,14 @@ fun DevicesByType(
         )
     } else {
         when(type) {
-            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentId)) { currentId = "" }
-            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentId)) { currentId = "" }
-            DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentId)) { currentId = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentId)) { currentId = "" }
-            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentId), roomsState.getHomeRooms(currentHouse)) { currentId = "" }
-            else -> BlindsScreen(devicesState.getDevice(currentId)) { currentId = "" }
+            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentId) as Lamp) { currentId = "" }
+            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentId) as Door) { currentId = "" }
+            DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentId) as Refrigerator) { currentId = "" }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentId) as Sprinkler) { currentId = "" }
+            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentId) as Vacuum) { currentId = "" }
+            else -> BlindsScreen(devicesState.getDevice(currentId) as Blinds) { currentId = "" }
         }
-        BackHandler(onBack = { currentName = "" })
+        BackHandler(onBack = { currentId = "" })
     }
 }
 
