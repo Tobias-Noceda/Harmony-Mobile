@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile.model
 
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Lamp.Companion.colorToString
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteVacuum
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteVacuumState
@@ -28,6 +29,10 @@ class Vacuum(
         model.room = room?.asRemoteModel()
         model.setState(state)
         return model
+    }
+
+    override fun toString(): String {
+        return "{Vacuum;id:${id};name:${name};Room:${room?.name};Status:${status};mode:${mode},targetRoom:${targetRoom};battery:${battery}}"
     }
 
     companion object {

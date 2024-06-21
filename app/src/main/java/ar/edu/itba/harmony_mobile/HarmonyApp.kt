@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -99,6 +100,7 @@ fun HarmonyApp(
     val houseState by hViewModel.uiState.collectAsState()
     val roomsState by rViewModel.uiState.collectAsState()
     val devicesState by dViewModel.uiState.collectAsState()
+    Log.i("Devices", devicesState.devices.toString())
 
     val navStack by navController.currentBackStackEntryAsState()
     val currentRoute = navStack?.destination?.route
@@ -214,7 +216,7 @@ private fun CustomTopSheet(
     ) {
         if (visible) {
             val adaptiveInfo = currentWindowAdaptiveInfo()
-            val columns = with (adaptiveInfo) {
+            val columns = with(adaptiveInfo) {
                 if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
                     2
                 } else {
@@ -234,9 +236,10 @@ private fun CustomTopSheet(
                     modifier = Modifier.padding(bottom = 2.dp)
                 )
                 for (houseChunk in chunkedHouse) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
                     ) {
                         for (house in houseChunk) {
                             Button(
@@ -246,7 +249,7 @@ private fun CustomTopSheet(
                                     .weight(1f),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
-                                Row (
+                                Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
@@ -268,7 +271,7 @@ private fun CustomTopSheet(
                                     }
                                     Text(
                                         text = if (house.id == "0") stringResource(id = R.string.personal_devices) else house.name,
-                                        minLines = if ( columns == 2 ) 2 else 1,
+                                        minLines = if (columns == 2) 2 else 1,
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.bodySmall
                                     )
