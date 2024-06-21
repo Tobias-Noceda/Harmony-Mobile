@@ -65,8 +65,8 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
     BackHandler(onBack = onBackCalled)
     val viewModel: VacuumViewModel = viewModel(factory = getViewModelFactory())
 
-    var mode by rememberSaveable { mutableStateOf(VacuumMode.VACUUM)}
-    if(device.mode == "mop"){
+    var mode by rememberSaveable { mutableStateOf(VacuumMode.VACUUM) }
+    if (device.mode == "mop") {
         mode = VacuumMode.MOP
     }
 
@@ -182,9 +182,9 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
     fun onButton() {
         IconButton(
             onClick = {
-                if(device.status == Status.ON){
+                if (device.status == Status.ON) {
                     viewModel.pause(device)
-                } else{
+                } else {
                     viewModel.start(device)
                 }
             },
@@ -197,7 +197,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
             enabled = device.battery > 5
         ) {
             Icon(
-                painter = when (device.status == Status.ON /*TODO && device.docked == false*/) {
+                painter = when (device.status == Status.ON) {
                     true -> painterResource(id = R.drawable.pause)
                     false -> painterResource(id = R.drawable.play_arrow)
                 }, contentDescription = ""
@@ -226,19 +226,18 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
     @Composable
     fun statusText() {
         Text(
-            text = "${stringResource(id = R.string.status)} "
-                /*  TODO
-                    "${
-                    stringResource(
-                    id = if (isCharging) {
+            text = "${stringResource(id = R.string.status)} ${
+                stringResource(
+                    id =
+                    if (device.status == Status.DOCKED) {
                         R.string.charging
-                    } else if (isOn) {
+                    } else if (device.status == Status.ON) {
                         R.string.on
                     } else {
                         R.string.off
                     }
-                )}"*/
-            ,
+                )
+            }",
             fontSize = 20.sp,
             fontWeight = FontWeight.Normal
         )
@@ -249,11 +248,9 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
         Icon(
             painter = painterResource(
                 id =
-                /* TODO
-                if (isCharging) {
+                if (device.status == Status.DOCKED) {
                     R.drawable.battery_charging
                 } else {
-                */
                     when (device.battery) {
                         in 1..15 -> R.drawable.battery_1_bar
                         in 15..30 -> R.drawable.battery_2_bar
@@ -264,7 +261,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                         in 90..100 -> R.drawable.battery_full
                         else -> R.drawable.battery_empty
                     }
-                //}
+                }
             ),
             contentDescription = ""
         )
@@ -314,7 +311,10 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterHorizontally),
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    30.dp,
+                                    Alignment.CenterHorizontally
+                                ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 onButton()

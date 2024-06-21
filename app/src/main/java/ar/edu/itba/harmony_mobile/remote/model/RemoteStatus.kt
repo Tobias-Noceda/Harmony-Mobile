@@ -7,13 +7,15 @@ object RemoteStatus {
     const val OFF = "off"
     const val OPEN = "open"
     const val CLOSED = "closed"
+    const val DOCKED = "docked"
 
     fun asModel(status: String): Status {
         return when (status) {
             ON -> Status.ON
             OFF -> Status.OFF
             OPEN -> Status.OPEN
-            else -> Status.CLOSED
+            CLOSED -> Status.CLOSED
+            else -> Status.DOCKED
         }
     }
 }
