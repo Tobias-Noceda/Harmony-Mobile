@@ -11,7 +11,7 @@ class RemoteLamp : RemoteDevice<RemoteLampState>() {
         var aux: Color;
         try {
             aux = Color(state.color.toLong(radix = 16))
-        }catch (e:Throwable){
+        }catch (e:NumberFormatException){
             aux = Color("#ffffffff".toColorInt())
         }
         return Lamp(
