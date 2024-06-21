@@ -11,10 +11,10 @@ class RemoteRoutine {
     lateinit var name: String
 
     @SerializedName("actions")
-    lateinit var actions: List<Any> //TODO create an action type, probably
+    var actions: List<Any> = ArrayList()//TODO create an action type, probably
 
     @SerializedName("meta")
-    lateinit var meta: RemoteRoutineMeta
+    var meta: RemoteRoutineMeta = RemoteRoutineMeta()
 
 
     fun asModel(): Routine {
