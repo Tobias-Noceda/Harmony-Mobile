@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -48,21 +49,17 @@ import ar.edu.itba.harmony_mobile.ui.theme.disabled
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
-// @Preview(device = Devices.PHONE, showBackground = true)
-// @Composable
-// fun LightPreview() {
-//    LightScreen()
-//}
-
 @Composable
 fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
     val colorController = rememberColorPickerController()
     val scState = rememberScrollState(0)
     val adaptiveInfo = currentWindowAdaptiveInfo()
 
-    var lightBrightness by rememberSaveable { mutableFloatStateOf(75f) }
+    var lightBrightness by rememberSaveable { mutableFloatStateOf(device.brightness.toFloat()) }
 
     val viewModel: LampViewModel = viewModel(factory = getViewModelFactory())
+
+    Log.i("Device", device.toString())
 
     BackHandler(onBack = onBackCalled)
 
