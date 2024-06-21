@@ -391,11 +391,4 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
             }
         }
     }
-
-    while(true){
-        if(isDispensing && device.dispensedQuantity >= selectedAmountToDispense){
-            isDispensing = false
-        }
-        Thread.sleep(1000)
-    }
 }
