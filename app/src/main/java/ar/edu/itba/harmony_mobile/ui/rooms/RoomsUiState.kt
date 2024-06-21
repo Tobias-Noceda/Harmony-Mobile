@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.ui.rooms
 
+import android.util.Log
 import ar.edu.itba.harmony_mobile.model.Room
 import ar.edu.itba.harmony_mobile.model.Error
 import ar.edu.itba.harmony_mobile.model.Home
@@ -14,7 +15,8 @@ data class RoomsUiState(
 ) {
     fun getHomeRooms(home: Home): List<Room> {
         if (home.id == null || home.id == "0") {
-            listOf(GlobalDataHomes.personalDevicesRoom.asModel())
+            return ArrayList() // just so it doesn't crash for now
+            return listOf(rooms.first())
         }
         return rooms.filter { it.home == home }
     }
