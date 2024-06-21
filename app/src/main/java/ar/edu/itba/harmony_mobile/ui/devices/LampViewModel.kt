@@ -78,7 +78,7 @@ class LampViewModel(
         block: suspend () -> R,
         updateState: (LampUiState, R) -> LampUiState
     ): Job {
-        debouncedJob?.cancel()
+        debouncedJob?.cancel() // Method is modified to allow debouncing, if you call to runOnViewModelScope should be debounced, simply add a delay before the actual execution, this function will handle it on its own (note, all calls to this function are debounced jointly, I will not be changing this, as it is pointless)
         debouncedJob = viewModelScope.launch {
             _uiState.update { it.copy(loading = true, error = null) }
             runCatching {
