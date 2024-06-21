@@ -60,4 +60,5 @@
     <string name="no_routines">No hay rutinas en la casa:</string>
     <string name="no_devices1">No hay dispositivos del tipo</string>
     <string name="no_devices2">in la casa:</string>
+    <string name="expand">Expandir</string>
 </resources>
