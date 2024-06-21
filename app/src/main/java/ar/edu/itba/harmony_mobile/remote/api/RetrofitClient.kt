@@ -8,8 +8,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
 
-private const val API_URL = "http://10.0.2.2:8080/api/" // if you are using an emulator
-// private const val API_URL = "http://192.168.0.24:8080/api/" // if you are not using an emulator
+// const val API_URL = "http://10.0.2.2:8080/api/" // if you are using an emulator
+//  const val API_URL = "http://192.168.0.24:8080/api/" // if you are not using an emulator
+const val API_URL = "https://api-hci-9716.onrender.com/api/" //if you want the hosted api
 // private  const val API_URL = "https://api-hci-9716.onrender.com/api/" // Hosted api
 
 private val httpLoggingInterceptor = HttpLoggingInterceptor()
