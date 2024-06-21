@@ -5,6 +5,7 @@ import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLamp
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLampState
+import okhttp3.internal.toHexString
 
 class Lamp(
     id: String?,
@@ -18,7 +19,7 @@ class Lamp(
     override fun asRemoteModel(): RemoteDevice<RemoteLampState> {
         val state = RemoteLampState()
         state.status = Status.asRemoteModel(status)
-        state.color = color.toString()
+        state.color = colorToString(color)
         state.brightness = brightness
 
         val model = RemoteLamp()
@@ -29,10 +30,26 @@ class Lamp(
         return model
     }
 
+    override fun toString(): String {
+        return "{Lamp;id:${id};name:${name};Room:${room?.name};Status:${status};color:${color},brightness:${brightness}"
+    }
+
     companion object {
         const val TURN_ON_ACTION = "turnOn"
         const val TURN_OFF_ACTION = "turnOff"
         const val SET_COLOR_ACTION = "setColor"
         const val SET_BRIGHTNESS_ACTION = "setBrightness"
+        fun colorToString(color: Color): String {
+            var red = (0xFF * color.red.toInt()).toHexString()
+            if(red.length<2)
+                red = "0${red}"
+            var blue = (0xFF * color.blue.toInt()).toHexString()
+            if(blue.length<2)
+                blue = "0${blue}"
+            var green = (0xFF * color.green.toInt()).toHexString()
+            if(green.length<2)
+                green = "0${green}"
+            return "${red}${blue}${green}"
+        }
     }
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.remote.model.devices
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import ar.edu.itba.harmony_mobile.model.Lamp
@@ -11,7 +12,8 @@ class RemoteLamp : RemoteDevice<RemoteLampState>() {
         var aux: Color;
         try {
             aux = Color(state.color.toLong(radix = 16))
-        }catch (e:NumberFormatException){
+        } catch (e: NumberFormatException) {
+            Log.i("color", state.color)
             aux = Color("#ffffffff".toColorInt())
         }
         return Lamp(
