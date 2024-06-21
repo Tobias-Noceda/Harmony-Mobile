@@ -54,7 +54,6 @@ fun DevicesScreen(
     Box(modifier = modifier) {
         if (currentDestination == null) {
             DevicesList(
-                currentHouse = currentHouse,
                 onDeviceClick = { deviceType ->
                     currentDestination = deviceType
                 }
@@ -66,7 +65,7 @@ fun DevicesScreen(
 }
 
 @Composable
-fun DevicesList(currentHouse: Home, onDeviceClick: (DeviceTypes) -> Unit) {
+fun DevicesList(onDeviceClick: (DeviceTypes) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(id = R.string.devices),

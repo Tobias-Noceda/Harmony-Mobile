@@ -56,4 +56,8 @@
     <string name="target_room">Cuarto objetivo:</string>
     <string name="send_to_base">Mandar a base</string>
     <string name="charging">Cargando</string>
+    <string name="empty_house">No hay dispositivos en la casa:</string>
+    <string name="no_routines">No hay rutinas en la casa:</string>
+    <string name="no_devices1">No hay dispositivos del tipo</string>
+    <string name="no_devices2">in la casa:</string>
 </resources>

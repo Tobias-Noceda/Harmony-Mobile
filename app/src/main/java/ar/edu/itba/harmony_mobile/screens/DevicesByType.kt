@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Door
@@ -75,13 +76,22 @@ fun DevicesByType(
     Log.i("Tobi", devicesState.getHomeDevices(currentHouse).toString())
 
     if (currentId == "") {
-        TypeList(
-            type,
-            filterDevices(devicesState.getHomeDevices(currentHouse), type),
-            onDeviceClick = { deviceId ->
-                currentId = deviceId
-            }
-        )
+        val list = filterDevices(devicesState.getHomeDevices(currentHouse), type)
+        if (list.isEmpty()) {
+            val name = if(currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
+            EmptyScreen(
+                description = "${stringResource(id = R.string.no_devices1)} ${type.name} " +
+                        "${stringResource(id = R.string.no_devices2)} $name"
+            )
+        } else {
+            TypeList(
+                type,
+                list,
+                onDeviceClick = { deviceId ->
+                    currentId = deviceId
+                }
+            )
+        }
     } else {
         when(type) {
             DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentId) as Lamp) { currentId = "" }

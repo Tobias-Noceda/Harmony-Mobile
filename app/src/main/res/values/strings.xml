@@ -56,4 +56,8 @@
     <string name="target_room">Target room:</string>
     <string name="send_to_base">Send to base</string>
     <string name="charging">Charging</string>
+    <string name="empty_house">No devices in house:</string>
+    <string name="no_routines">No routines in house:</string>
+    <string name="no_devices1">No devices of type</string>
+    <string name="no_devices2">in house:</string>
 </resources>
