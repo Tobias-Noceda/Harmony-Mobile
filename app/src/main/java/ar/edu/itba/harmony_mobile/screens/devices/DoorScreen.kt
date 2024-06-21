@@ -24,10 +24,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.model.Status
+import ar.edu.itba.harmony_mobile.ui.devices.DoorViewModel
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
@@ -38,6 +41,9 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
+
+
+    val viewModel: DoorViewModel = viewModel(factory = getViewModelFactory())
 
     @Composable
     fun doorTitle() {
@@ -63,11 +69,10 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
         Switch(
             checked = device.status != Status.OPEN,
             onCheckedChange = {
-                /* TODO ACTUALIZAR CON API
-                device.status = when (device.status) {
-                    Status.OPEN -> Status.CLOSED
-                    else -> Status.OPEN
-                }*/
+                when (device.status) {
+                    Status.OPEN -> viewModel.close(device)
+                    else -> viewModel.open(device)
+                }
             },
             enabled = !device.lock,
             colors = SwitchDefaults.colors(
@@ -84,9 +89,10 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     fun lockButton() {
         Button(
             onClick = {
-                /* TODO ACTUALIZAR CON API
-                    device.lock = !device.lock
-                */
+                  when(device.lock){
+                      true -> viewModel.unlock(device)
+                      false -> viewModel.lock(device)
+                  }
             },
             enabled = device.status != Status.OPEN,
             colors = ButtonColors(
