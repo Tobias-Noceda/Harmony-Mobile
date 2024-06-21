@@ -18,6 +18,7 @@ data class DevicesUiState(
     fun getHomeDevices(home: Home): List<Device> {
         Log.i("LucasH", home.toString())
         Log.i("LucassH", devices.toString())
+        Log.i("PersonalsH", devices.filter { it.room?.home == null || it.room.home!!.id=="0" }.toString())
         if (home.id == null || home.id == "0") {
             return devices.filter { it.room?.home == null || it.room.home == home }
         }
@@ -27,6 +28,7 @@ data class DevicesUiState(
     fun getRoomDevices(room: Room): List<Device> {
         Log.i("Lucas", room.toString())
         Log.i("Lucass", devices.toString())
+        Log.i("Personals", devices.filter { it.room == null }.toString())
         if (room.id == null || room.id == "0") {
             return devices.filter { it.room == null || it.room == room }
         }

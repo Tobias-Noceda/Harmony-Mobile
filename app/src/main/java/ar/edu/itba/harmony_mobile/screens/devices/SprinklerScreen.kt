@@ -34,17 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
+import ar.edu.itba.harmony_mobile.ui.devices.SprinklerViewModel
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 
-enum class UnitToDispense(@StringRes val textId: Int) {
-    MILLILITRES(R.string.mL),
-    DECILITRES(R.string.dL),
-    LITRES(R.string.L),
-    HECTOLITRES(R.string.hL),
-    KILOLITRES(R.string.kL);
+enum class UnitToDispense(@StringRes val textId: Int, val apiText: String) {
+    MILLILITRES(R.string.mL, "ml"),
+    DECILITRES(R.string.dL, "dl"),
+    LITRES(R.string.L, "l"),
+    HECTOLITRES(R.string.hL, "hl"),
+    KILOLITRES(R.string.kL, "kl");
 }
 
 @Composable
@@ -56,6 +59,9 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
+    val viewModel: SprinklerViewModel = viewModel(factory = getViewModelFactory())
+
+    var isDispensing by rememberSaveable { mutableStateOf(false) }
 
     @Composable
     fun blindsTitle() {
@@ -83,7 +89,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
     fun openButton() {
         Button(
             onClick = {
-                      /*TODO SEND TO API*/
+                viewModel.start(device)
             },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
@@ -106,7 +112,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
     fun closeButton() {
         Button(
             onClick = {
-                  /*TODO SEND TO API*/
+                viewModel.pause(device)
             },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
@@ -115,7 +121,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = device.status != Status.OPEN /*TODO && !dispensing*/,
+            enabled = device.status != Status.OPEN && !isDispensing,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -211,8 +217,13 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                             }
                         }
                         Button(
-                            onClick = { /*TODO SEND TO API*/
-                                //DISPENSE
+                            onClick = {
+                                viewModel.dispense(
+                                    device,
+                                    selectedUnitToDispense.apiText,
+                                    selectedAmountToDispense
+                                )
+                                isDispensing = true
                             },
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonColors(
@@ -221,7 +232,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                                 tertiary.desaturate(0f),
                                 secondary.desaturate(0f)
                             ),
-                            //TODO enabled = !isDispensing,
+                            enabled = !isDispensing,
                             elevation = ButtonDefaults.buttonElevation(
                                 defaultElevation = 5.dp,
                                 disabledElevation = (-5).dp
@@ -298,8 +309,13 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                     }
                 }
                 Button(
-                    onClick = { /*TODO SEND TO API*/
-                        //DISPENSE
+                    onClick = {
+                        viewModel.dispense(
+                            device,
+                            selectedUnitToDispense.apiText,
+                            selectedAmountToDispense
+                        )
+                        isDispensing = true
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonColors(
@@ -308,7 +324,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                         tertiary.desaturate(0f),
                         secondary.desaturate(0f)
                     ),
-                    //TODO enabled = !isDispensing,
+                    enabled = !isDispensing,
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 5.dp,
                         disabledElevation = (-5).dp
@@ -376,4 +392,10 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
         }
     }
 
+    while(true){
+        if(isDispensing && device.dispensedQuantity >= selectedAmountToDispense){
+            isDispensing = false
+        }
+        Thread.sleep(1000)
+    }
 }

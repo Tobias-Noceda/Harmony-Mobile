@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
@@ -39,6 +40,8 @@ import ar.edu.itba.harmony_mobile.model.Lamp
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
+import ar.edu.itba.harmony_mobile.ui.devices.LampViewModel
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.darken
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
@@ -57,7 +60,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
     val scState = rememberScrollState(0)
     val adaptiveInfo = currentWindowAdaptiveInfo()
 
-    var lightBrightness by rememberSaveable{ mutableFloatStateOf(75f) }
+    var lightBrightness by rememberSaveable { mutableFloatStateOf(75f) }
+
+    val viewModel: LampViewModel = viewModel(factory = getViewModelFactory())
 
     BackHandler(onBack = onBackCalled)
 
@@ -86,7 +91,11 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
             )
             Switch(
                 checked = device.status == Status.ON, onCheckedChange = {
-                    /*TODO device.status == Status.ON = it*/
+                    if (device.status == Status.ON) {
+                        viewModel.turnOff(device)
+                    } else {
+                        viewModel.turnOn(device)
+                    }
                 }, colors = SwitchDefaults.colors(
                     checkedThumbColor = tertiary,
                     checkedTrackColor = tertiary.copy(0.5f),
@@ -113,7 +122,10 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                 )
                 Button(
                     onClick = {}, shape = RoundedCornerShape(8.dp), colors = ButtonColors(
-                        device.color, device.color, device.color.desaturate(0f), device.color.desaturate(0f)
+                        device.color,
+                        device.color,
+                        device.color.desaturate(0f),
+                        device.color.desaturate(0f)
                     ), border = BorderStroke(2.dp, primary)
                 ) {}
             }
@@ -128,8 +140,7 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                         HsvColorPicker(modifier = Modifier.padding(0.dp),
                             controller = colorController,
                             onColorChanged = {
-                                //TODO device.color = it.color
-                                /*MANDAR A LA API*/
+                                viewModel.setColor(device, it.color)
                             })
                     }
                 } else {
@@ -142,7 +153,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
                             Button(
-                                onClick = { /*TODO device.color = Color.Red*/ },
+                                onClick = {
+                                    viewModel.setColor(device, Color.Red)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Red,
@@ -160,7 +173,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                                 )
                             ) {}
                             Button(
-                                onClick = { /*TODO device.color = Color.Blue */},
+                                onClick = {
+                                    viewModel.setColor(device, Color.Blue)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Blue,
@@ -178,7 +193,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                                 )
                             ) {}
                             Button(
-                                onClick = { /*TODO device.color = Color.Green*/ },
+                                onClick = {
+                                    viewModel.setColor(device, Color.Green)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Green,
@@ -201,7 +218,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
                             Button(
-                                onClick = { /* TODO device.color = Color.Yellow*/ },
+                                onClick = {
+                                    viewModel.setColor(device, Color.Yellow)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Yellow,
@@ -219,7 +238,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                                 )
                             ) {}
                             Button(
-                                onClick = { /*TODO device.color = Color.Cyan */},
+                                onClick = {
+                                    viewModel.setColor(device, Color.Cyan)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Cyan,
@@ -237,7 +258,9 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                                 )
                             ) {}
                             Button(
-                                onClick = { /*TODO device.color = Color.Magenta */},
+                                onClick = {
+                                    viewModel.setColor(device, Color.Magenta)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Magenta,
@@ -267,7 +290,7 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
         Box(contentAlignment = Alignment.Center) {
             Column {
                 Text(
-                    text = stringResource(R.string.brightness) + " " + "${lightBrightness}",
+                    text = stringResource(R.string.brightness) + " " + "${lightBrightness.toInt()}",
                     color = primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
@@ -275,7 +298,12 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                 Slider(
                     value = lightBrightness,
                     onValueChange = { lightBrightness = it },
-                    onValueChangeFinished = {/*TODO MANDAR A LA API*/ },
+                    onValueChangeFinished = {
+                        viewModel.setBrightness(
+                            device,
+                            lightBrightness.toInt()
+                        )
+                    },
                     valueRange = 0f..100f,
                     colors = SliderColors(
                         tertiary.darken(0.9f),

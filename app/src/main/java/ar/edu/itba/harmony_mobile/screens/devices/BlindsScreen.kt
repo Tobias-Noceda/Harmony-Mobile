@@ -26,9 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Blinds
+import ar.edu.itba.harmony_mobile.ui.devices.BlindsViewModel
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.darken
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.disabled
@@ -47,6 +50,8 @@ fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
     var isMoving by rememberSaveable { mutableStateOf(MoveState.STILL) }
 
     var blindsLimit by rememberSaveable { mutableFloatStateOf(0f) }
+
+    val viewModel: BlindsViewModel = viewModel(factory = getViewModelFactory())
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
@@ -75,9 +80,9 @@ fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
     @Composable
     fun openButton() {
         Button(
-            onClick = { /*TODO SEND TO API*/
-                //device.currentLevel = 0
-//                isMoving = moveState.OPENING //Lo comento xq todavia la API no devuelve cuando termine de moverse
+            onClick = {
+                viewModel.open(device)
+                isMoving = MoveState.OPENING
             },
             colors = ButtonColors(
                 tertiary,
@@ -94,9 +99,9 @@ fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
     @Composable
     fun closeButton() {
         Button(
-            onClick = { /*TODO SEND TO API*/
-                //device.currentLevel = device.level
-                isMoving = MoveState.CLOSING  //Lo comento xq todavia la API no devuelve cuando termine de moverse
+            onClick = {
+                viewModel.close(device)
+                isMoving = MoveState.CLOSING
 
             },
             colors = ButtonColors(
@@ -124,7 +129,9 @@ fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
                 Slider(
                     value = blindsLimit,
                     onValueChange = { blindsLimit = it },
-                    onValueChangeFinished = {/*TODO MANDAR A LA API*/ },
+                    onValueChangeFinished = {
+                        viewModel.setLevel(device, blindsLimit.toInt())
+                    },
                     valueRange = 0f..100f,
                     colors = SliderColors(
                         tertiary.darken(0.9f),
@@ -196,4 +203,13 @@ fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
         }
     }
 
+    while (true) {
+        if (device.currentLevel == 0 && isMoving == MoveState.OPENING) {
+            isMoving = MoveState.STILL
+        }
+        if (device.currentLevel == device.level && isMoving == MoveState.CLOSING) {
+            isMoving = MoveState.STILL
+        }
+        Thread.sleep(1000)
+    }
 }

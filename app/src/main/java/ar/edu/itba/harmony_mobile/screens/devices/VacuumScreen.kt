@@ -36,20 +36,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
+import ar.edu.itba.harmony_mobile.ui.devices.VacuumViewModel
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
-enum class VacuumMode(@StringRes val textId: Int) {
-    VACUUM(R.string.vacuum),
-    MOP(R.string.mop),
+enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
+    VACUUM(R.string.vacuum, "vacuum"),
+    MOP(R.string.mop, "mop"),
 }
 
 @Composable
@@ -60,6 +63,12 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
+    val viewModel: VacuumViewModel = viewModel(factory = getViewModelFactory())
+
+    var mode by rememberSaveable { mutableStateOf(VacuumMode.VACUUM)}
+    if(device.mode == "mop"){
+        mode = VacuumMode.MOP
+    }
 
     @Composable
     fun vacuumTitle() {
@@ -85,7 +94,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
-                // TODO Text(stringResource(mode.textId))
+                Text(stringResource(mode.textId))
                 Icon(
                     imageVector = when (isExpanded) {
                         false -> Icons.Default.KeyboardArrowDown
@@ -105,8 +114,9 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                 modeDropDownOptions.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            // TODO mode = item
+                            mode = item
                             isExpanded = false
+                            viewModel.setMode(device, item.apiText)
                         },
                         text = {
                             Text(stringResource(item.textId), color = secondary)
@@ -172,16 +182,11 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
     fun onButton() {
         IconButton(
             onClick = {
-                /*
-                TODO MANDAR A API
                 if(device.status == Status.ON){
-                    device.status = Status.OFF
+                    viewModel.pause(device)
                 } else{
-                    device.status = Status.ON
+                    viewModel.start(device)
                 }
-
-                isCharging = false
-             */
             },
             colors = IconButtonColors(
                 tertiary,
@@ -192,7 +197,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
             enabled = device.battery > 5
         ) {
             Icon(
-                painter = when (device.status == Status.ON /*TODO && device.docker == false*/) {
+                painter = when (device.status == Status.ON /*TODO && device.docked == false*/) {
                     true -> painterResource(id = R.drawable.pause)
                     false -> painterResource(id = R.drawable.play_arrow)
                 }, contentDescription = ""
@@ -204,11 +209,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
     fun sendToBaseButton() {
         Button(
             onClick = {
-                /*
-                TODO MANDAR A API
-                device.status = Status.OFF
-                isCharging = true
-                */
+                viewModel.dock(device)
             },
             colors = ButtonColors(
                 tertiary,
