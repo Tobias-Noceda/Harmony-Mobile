@@ -1,8 +1,9 @@
 package ar.edu.itba.harmony_mobile.model
 
+import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinklerState
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinkler
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinklerState
 
 class Sprinkler(
     id: String?,
@@ -12,7 +13,7 @@ class Sprinkler(
     val quantity: Int=0,
     val dispensedQuantity: Int = 0,
     val unit : String
-) : Device(id, name, room,DeviceType.SPRINKLER) {
+) : Device(id, name, room,DeviceTypes.SPRINKLERS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteSprinklerState> {
         val state = RemoteSprinklerState()

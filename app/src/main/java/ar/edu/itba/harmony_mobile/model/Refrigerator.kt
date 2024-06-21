@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.model
 
+import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteRefrigerator
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteRefrigeratorState
@@ -12,7 +13,7 @@ class Refrigerator(
     val temperature: Int,
     val freezerTemperature: Int,
     val mode: String
-) : Device(id, name, room, DeviceType.REFRIGERATOR) {
+) : Device(id, name, room, DeviceTypes.REFRIS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteRefrigeratorState> {
         val state = RemoteRefrigeratorState()

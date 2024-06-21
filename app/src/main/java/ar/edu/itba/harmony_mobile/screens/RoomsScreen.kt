@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,35 +33,65 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Home
+import ar.edu.itba.harmony_mobile.model.Room
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
+import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun RoomsScreen(modifier: Modifier, currentHouse: Home, state: String = "") {
-
+fun RoomsScreen(
+    modifier: Modifier,
+    currentHouse: Home,
+    roomsState: RoomsUiState,
+    devicesState: DevicesUiState,
+    state: String = ""
+) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
+
+    Log.i("Tobi", currentHouse.toString())
+
+    if (roomsState.getHomeRooms(currentHouse).size == 1) {
+       currentDestination = roomsState.getHomeRooms(currentHouse)[0].id!!
+    }
 
     Box(modifier = modifier) {
         if (currentDestination == "") {
-            RoomsList(
-                currentHouse = currentHouse,
-                onDeviceClick = { roomId ->
-                    currentDestination = roomId
+            if (roomsState.getHomeRooms(currentHouse).isEmpty()) {
+                EmptyScreen(description = "You have no devices in house: ${currentHouse.name}")
+            } else {
+                var show = false
+                for(room in roomsState.getHomeRooms(currentHouse)) {
+                    Log.i("Tobi", "Room: ${room.name}. Devices: ${devicesState.getRoomDevices(room)}")
+                    if (devicesState.getRoomDevices(room).isNotEmpty()) {
+                        show = true
+                        break
+                    }
                 }
-            )
+                // if(show) {
+                    RoomsList(
+                        rooms = roomsState.getHomeRooms(currentHouse),
+                        onDeviceClick = { roomId ->
+                            currentDestination = roomId
+                        }
+                    )
+                // } else {
+                //    EmptyScreen(description = "You have no devices in house: ${currentHouse.name}")
+                // }
+            }
         } else {
-            // if(currentDestination.isEmpty) {
-            //     BackHandler(onBack = { currentDestination = "" })
-            //     EmptyScreen("No devices in house: $currentDestination")
-            // } else {
-            RoomScreen(currentHouse, currentDestination) { currentDestination = "" }
+            RoomScreen(
+                roomsState.getRoom(currentDestination),
+                roomsState,
+                devicesState,
+            ) { currentDestination = "" }
         }
     }
 }
 
 @Composable
-fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
+fun RoomsList(rooms: List<Room>, onDeviceClick: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(id = R.string.rooms),
@@ -76,8 +107,6 @@ fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
         val widthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
         val isCompact = widthClass == WindowWidthSizeClass.COMPACT
 
-        val rooms = listOf("BedRoom", "Living", "Garden", "Kitchen")
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,7 +120,7 @@ fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
                     Button(
                         modifier = Modifier.padding(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        onClick = { onDeviceClick(room) },
+                        onClick = { onDeviceClick(room.id!!) },
                         colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
                         elevation = ButtonDefaults.buttonElevation(8.dp),
                         border = BorderStroke(
@@ -108,7 +137,7 @@ fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = room,
+                                text = room.name,
                                 textAlign = TextAlign.Left,
                                 style = MaterialTheme.typography.titleLarge
                             )
@@ -126,7 +155,7 @@ fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
                                     .weight(1f)
                                     .padding(4.dp),
                                 shape = RoundedCornerShape(8.dp),
-                                onClick = { onDeviceClick(room) },
+                                onClick = { onDeviceClick(room.id!!) },
                                 colors = ButtonColors(secondary, primary, tertiary.copy(alpha = .5f), Color.White),
                                 elevation = ButtonDefaults.buttonElevation(8.dp),
                                 border = BorderStroke(
@@ -143,7 +172,7 @@ fun RoomsList(currentHouse: Home, onDeviceClick: (String) -> Unit) {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = room,
+                                        text = room.name,
                                         textAlign = TextAlign.Left,
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(start = 16.dp)

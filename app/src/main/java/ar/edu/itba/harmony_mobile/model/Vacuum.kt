@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.model
 
+import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteVacuum
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteVacuumState
@@ -12,7 +13,7 @@ class Vacuum(
     val mode: String,
     val targetRoom: Room?,
     val battery: Int,
-) : Device(id, name, room, DeviceType.VACUUM) {
+) : Device(id, name, room, DeviceTypes.VACUUMS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteVacuumState> {
         val state = RemoteVacuumState()

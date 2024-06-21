@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -34,27 +35,31 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.model.Home
-import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
-import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
-import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
-import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
-import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
-import ar.edu.itba.harmony_mobile.screens.devices.VacuumScreen
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.BlindsCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.DoorCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.LightCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.RefrigeratorCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.SprinklerCard
 import ar.edu.itba.harmony_mobile.screens.devices.deviceCards.VacuumCard
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
+import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesByType(type: DeviceTypes, currentHouse: Home, onBackCalled: () -> Unit) {
+fun DevicesByType(
+    type: DeviceTypes,
+    currentHouse: Home,
+    roomsState: RoomsUiState,
+    devicesState: DevicesUiState,
+    onBackCalled: () -> Unit
+) {
     var currentName by rememberSaveable { mutableStateOf("") }
 
     BackHandler(onBack = onBackCalled)
+
+    Log.i("Tobi", devicesState.getHomeDevices(currentHouse).toString())
 
     if (currentName == "") {
         TypeList(
@@ -64,14 +69,15 @@ fun DevicesByType(type: DeviceTypes, currentHouse: Home, onBackCalled: () -> Uni
             }
         )
     } else {
-        when(type) {
-            DeviceTypes.LIGHTS -> LightScreen(currentName) { currentName = "" }
-            DeviceTypes.DOORS -> DoorScreen(currentName) { currentName = "" }
-            DeviceTypes.REFRIS -> FridgeScreen(currentName) { currentName = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
-            DeviceTypes.VACUUMS -> VacuumScreen(currentName) { currentName = "" }
-            DeviceTypes.BLINDS -> BlindsScreen(currentName) { currentName = "" }
-        }
+        // when(type) {
+        //     DeviceTypes.LIGHTS -> LightScreen(currentName) { currentName = "" }
+        //     DeviceTypes.DOORS -> DoorScreen(currentName) { currentName = "" }
+        //     DeviceTypes.REFRIS -> FridgeScreen(currentName) { currentName = "" }
+        //     DeviceTypes.SPRINKLERS -> SprinklerScreen(currentName) { currentName = "" }
+        //     DeviceTypes.VACUUMS -> VacuumScreen(currentName) { currentName = "" }
+        //     DeviceTypes.BLINDS -> BlindsScreen(currentName) { currentName = "" }
+        // }
+        BackHandler(onBack = { currentName = "" })
     }
 }
 

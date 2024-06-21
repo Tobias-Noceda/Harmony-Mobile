@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.model
 
+import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoor
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoorState
@@ -10,7 +11,7 @@ class Door(
     room: Room?,
     val status: Status,
     val lock: Boolean
-) : Device(id, name, room, DeviceType.DOOR) {
+) : Device(id, name, room, DeviceTypes.DOORS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteDoorState> {
         val state = RemoteDoorState()

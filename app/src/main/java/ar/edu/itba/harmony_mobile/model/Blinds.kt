@@ -1,8 +1,9 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlinds
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlindsState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 
 class Blinds(
     id: String?,
@@ -11,7 +12,7 @@ class Blinds(
     val status: Status,
     val currentLevel: Int,
     val level: Int,
-) : Device(id, name, room,DeviceType.BLINDS) {
+) : Device(id, name, room, DeviceTypes.BLINDS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteBlindsState> {
         val state = RemoteBlindsState()

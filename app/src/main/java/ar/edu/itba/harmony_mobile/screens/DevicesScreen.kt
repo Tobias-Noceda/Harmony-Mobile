@@ -35,13 +35,20 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Home
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
+import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun DevicesScreen(modifier: Modifier, currentHouse: Home, state: DeviceTypes? = null) {
-
+fun DevicesScreen(
+    modifier: Modifier,
+    currentHouse: Home,
+    roomsState: RoomsUiState,
+    devicesState: DevicesUiState,
+    state: DeviceTypes? = null
+) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
     Box(modifier = modifier) {
@@ -53,7 +60,7 @@ fun DevicesScreen(modifier: Modifier, currentHouse: Home, state: DeviceTypes? = 
                 }
             )
         } else {
-            DevicesByType(currentDestination!!, currentHouse) { currentDestination = null }
+            DevicesByType(currentDestination!!, currentHouse, roomsState, devicesState) { currentDestination = null }
         }
     }
 }

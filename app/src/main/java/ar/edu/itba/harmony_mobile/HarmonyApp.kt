@@ -1,7 +1,6 @@
 package ar.edu.itba.harmony_mobile
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -67,9 +66,13 @@ import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
 import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
+import ar.edu.itba.harmony_mobile.ui.homes.HomesUiState
 import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
+import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
+import ar.edu.itba.harmony_mobile.ui.rooms.RoomsViewModel
 import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
@@ -88,14 +91,16 @@ enum class AppDestinations(
 @Composable
 fun HarmonyApp(
     hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory()),
+    rViewModel: RoomsViewModel = viewModel(factory = getViewModelFactory()),
     dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
     navController: NavHostController = rememberNavController()
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val houseState by hViewModel.uiState.collectAsState()
-    val deviceState by dViewModel.uiState.collectAsState()
-    Log.i("Log",deviceState.devices.toString())
+    val roomsState by rViewModel.uiState.collectAsState()
+    val devicesState by dViewModel.uiState.collectAsState()
+
     val navStack by navController.currentBackStackEntryAsState()
     val currentRoute = navStack?.destination?.route
 
@@ -113,7 +118,7 @@ fun HarmonyApp(
     val adaptiveInfo = currentWindowAdaptiveInfo()
     val layoutType = NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
 
-    HarmonyTopAppBar(Home(currentHouseId, "PersonalDevices")) { showBottomSheet = !showBottomSheet }
+    HarmonyTopAppBar(houseState.getHome(currentHouseId)) { showBottomSheet = !showBottomSheet }
     NavigationSuiteScaffold(
         layoutType = layoutType,
         modifier = Modifier
@@ -158,7 +163,7 @@ fun HarmonyApp(
             }
         }
     ) {
-        Router(navController, Home(currentHouseId, "Personal Devices"))
+        Router(navController, houseState.getHome(currentHouseId), roomsState, devicesState)
 
         CustomTopSheet(
             visible = showBottomSheet,
@@ -298,18 +303,23 @@ private fun CustomTopSheet(
 
 @Composable
 @SuppressLint("StateFlowValueCalledInComposition")
-private fun Router(navController: NavHostController, currentHome: Home) {
+private fun Router(
+    navController: NavHostController,
+    currentHome: Home,
+    roomsState: RoomsUiState,
+    devicesState: DevicesUiState
+) {
 
     NavHost(
         navController = navController, startDestination = AppDestinations.ROOMS.route
     ) {
         val modifier = Modifier.fillMaxSize()
         composable(AppDestinations.ROOMS.route) {
-            RoomsScreen(modifier = modifier, currentHouse = currentHome)
+            RoomsScreen(modifier = modifier, currentHouse = currentHome, roomsState, devicesState)
         }
 
         composable(AppDestinations.DEVICES.route) {
-            DevicesScreen(modifier = modifier, currentHouse = currentHome)
+            DevicesScreen(modifier = modifier, currentHouse = currentHome, roomsState, devicesState)
         }
 
         composable(AppDestinations.ROUTINES.route) {

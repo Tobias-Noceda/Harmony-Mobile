@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile.model
 
 import androidx.compose.ui.graphics.Color
+import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLamp
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLampState
@@ -12,7 +13,7 @@ class Lamp(
     val status: Status,
     val color: Color,
     val brightness: Int
-) : Device(id, name, room,DeviceType.LAMP) {
+) : Device(id, name, room, DeviceTypes.LIGHTS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteLampState> {
         val state = RemoteLampState()
