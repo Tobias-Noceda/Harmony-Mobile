@@ -25,17 +25,22 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val permissionState =
-                    rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-                if (!permissionState.status.isGranted) {
-                    LaunchedEffect(true) {
-                        permissionState.launchPermissionRequest()
+            HarmonyTheme {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    val permissionState =
+                        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+                    if (!permissionState.status.isGranted) {
+                        LaunchedEffect(true) {
+                            permissionState.launchPermissionRequest()
+                        }
                     }
                 }
-            }
 
-            HarmonyTheme {
+                val deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
+                if (deviceId != null) {
+                    //Mostrar device
+                }
+
                 HarmonyApp()
             }
         }
