@@ -37,4 +37,8 @@ class Room(
 
         return id == other.id
     }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
 }

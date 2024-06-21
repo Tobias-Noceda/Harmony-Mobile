@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile.model
 
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Lamp.Companion.colorToString
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlinds
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlindsState
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
@@ -26,6 +27,10 @@ class Blinds(
         model.room = room?.asRemoteModel()
         model.setState(state)
         return model
+    }
+
+    override fun toString(): String {
+        return "{Blinds;id:${id};name:${name};Room:${room?.name};Status:${status};currentLevel:${currentLevel},level:${level}}"
     }
 
     companion object {

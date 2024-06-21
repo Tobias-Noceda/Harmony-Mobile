@@ -43,7 +43,7 @@ class LampViewModel(
             repository.executeDeviceAction(
                 lamp.id!!,
                 Lamp.SET_COLOR_ACTION,
-                arrayOf(color.toString())
+                arrayOf(Lamp.colorToString(color))
             )
         },
         { state, _ -> state }

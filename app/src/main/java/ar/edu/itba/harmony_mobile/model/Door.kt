@@ -1,6 +1,7 @@
 package ar.edu.itba.harmony_mobile.model
 
 import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Lamp.Companion.colorToString
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoor
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoorState
@@ -24,6 +25,10 @@ class Door(
         model.room = room?.asRemoteModel()
         model.setState(state)
         return model
+    }
+
+    override fun toString(): String {
+        return "{Door;id:${id};name:${name};Room:${room?.name};Status:${status};lock:${lock}}"
     }
 
     companion object {

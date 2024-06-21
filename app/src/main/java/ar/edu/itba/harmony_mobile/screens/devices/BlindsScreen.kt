@@ -202,14 +202,4 @@ fun BlindsScreen(device: Blinds, onBackCalled: () -> Unit) {
             }
         }
     }
-
-    while (true) {
-        if (device.currentLevel == 0 && isMoving == MoveState.OPENING) {
-            isMoving = MoveState.STILL
-        }
-        if (device.currentLevel == device.level && isMoving == MoveState.CLOSING) {
-            isMoving = MoveState.STILL
-        }
-        Thread.sleep(1000)
-    }
 }

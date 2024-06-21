@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -63,9 +64,11 @@ dependencies {
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.window.core.android)
     implementation(libs.gson)
+    implementation(libs.accompanist.permissions)
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout)
