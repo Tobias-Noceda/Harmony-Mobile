@@ -59,7 +59,7 @@ enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
 fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
-    val roomDropDownOptions = arrayOf("asdasd", "jhsgghjkgkhjf") //REEMPLAZAR CON FETCH A LA API
+    val roomDropDownOptions = arrayOf("asdasd", "jhsgghjkgkhjf") //TODO REEMPLAZAR CON FETCH A LA API
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
