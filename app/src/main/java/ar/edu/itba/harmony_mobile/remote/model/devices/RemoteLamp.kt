@@ -11,7 +11,7 @@ class RemoteLamp : RemoteDevice<RemoteLampState>() {
     override fun asModel(): Lamp {
         var aux: Color;
         try {
-            aux = Color(state.color.toLong(radix = 16).and(0xff000000))
+            aux = Color(state.color.toLong(radix = 16))
         } catch (e: NumberFormatException) {
             Log.i("color", state.color)
             aux = Color("#ffffffff".toColorInt())

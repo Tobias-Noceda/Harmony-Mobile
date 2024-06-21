@@ -7,7 +7,7 @@ class RemoteLampState {
     var status: String = ""
 
     @SerializedName("color")
-    var color: String = "ffffffff"
+    var color: String = "ffffff"
 
     @SerializedName("brightness")
     var brightness: Int = 0
