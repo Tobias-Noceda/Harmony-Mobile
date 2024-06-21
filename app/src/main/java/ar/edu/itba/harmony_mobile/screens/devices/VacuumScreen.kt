@@ -68,6 +68,8 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
     var mode by rememberSaveable { mutableStateOf(VacuumMode.VACUUM) }
     if (device.mode == "mop") {
         mode = VacuumMode.MOP
+    } else if(device.mode == "vacuum"){
+        mode = VacuumMode.VACUUM
     }
 
     @Composable
@@ -93,6 +95,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                     contentColor = secondary
                 ),
                 shape = RoundedCornerShape(8.dp),
+                enabled = device.targetRoom != null
             ) {
                 Text(stringResource(mode.textId))
                 Icon(
@@ -145,7 +148,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
-                device.targetRoom?.let { Text(it.name) }     //REEMPLAZAR CON EL NOMBRE
+                device.targetRoom?.let { Text(it.name) }     //TODO REEMPLAZAR CON EL NOMBRE
                 Icon(
                     imageVector = when (isExpanded) {
                         false -> Icons.Default.KeyboardArrowDown
@@ -160,7 +163,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                 containerColor = primary,
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                    .align(Alignment.BottomEnd),
             ) {
                 roomDropDownOptions.forEach { item ->
                     DropdownMenuItem(
@@ -217,7 +220,7 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            //enabled = device.isCharging
+            enabled = device.status != Status.DOCKED
         ) {
             Text(text = stringResource(id = R.string.send_to_base))
         }
