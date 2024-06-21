@@ -31,7 +31,7 @@ class Lamp(
     }
 
     override fun toString(): String {
-        return "{Lamp;id:${id};name:${name};Room:${room?.name};Status:${status};color:${colorToString(color)},brightness:${brightness}}"
+        return "{Lamp;id:${id};name:${name};Room:${room?.name};Status:${status};color:${colorToString(color)};verboseColor:${color},brightness:${brightness}}"
     }
 
     companion object {
