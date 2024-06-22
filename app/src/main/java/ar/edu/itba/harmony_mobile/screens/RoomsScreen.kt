@@ -45,6 +45,7 @@ fun RoomsScreen(
     currentHouse: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
+    setShowingDevice: (String) -> Unit,
     state: String = ""
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
@@ -83,6 +84,7 @@ fun RoomsScreen(
                 currentHouse,
                 roomsState,
                 devicesState,
+                setShowingDevice
             ) { currentDestination = "" }
         }
     }

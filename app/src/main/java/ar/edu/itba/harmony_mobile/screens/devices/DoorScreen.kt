@@ -1,6 +1,5 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,8 +60,6 @@ fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
         }
         return deviceRef
     }
-
-    Log.i("Door", deviceRef.status.toString())
 
     @Composable
     fun doorTitle() {

@@ -66,6 +66,7 @@ fun RoomScreen(
     currentHome: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
+    setShowingDevice: (String) -> Unit,
     onBackCalled: () -> Unit
 ) {
     var currentDevice by rememberSaveable { mutableStateOf("") }
@@ -79,20 +80,27 @@ fun RoomScreen(
             deviceList = if(room.id == "0") devicesState.getHomeDevices(room.home!!) else devicesState.getRoomDevices(room),
             onDeviceClick = { device ->
                     currentDevice = device.id!!
+                    setShowingDevice(device.id)
                     currentDeviceType = device.type
             }
         )
     } else {
+        val device = devicesState.getDevice(currentDevice)
+        setShowingDevice(device!!.id!!)
+        val onLeave = {
+            currentDevice = ""
+            setShowingDevice("")
+        }
         when(currentDeviceType) {
-            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentDevice) as Lamp) { currentDevice = "" }
-            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentDevice) as Door) { currentDevice = "" }
-            DeviceTypes.REFRIGERATORS -> FridgeScreen(devicesState.getDevice(currentDevice) as Refrigerator) { currentDevice = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentDevice) as Sprinkler) { currentDevice = "" }
-            DeviceTypes.BLINDS -> BlindsScreen(devicesState.getDevice(currentDevice) as Blinds) { currentDevice = "" }
+            DeviceTypes.LIGHTS -> LightScreen(device as Lamp) { onLeave() }
+            DeviceTypes.DOORS -> DoorScreen(device as Door) { onLeave() }
+            DeviceTypes.REFRIGERATORS -> FridgeScreen(device as Refrigerator) { onLeave() }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(device as Sprinkler) { onLeave() }
+            DeviceTypes.BLINDS -> BlindsScreen(device as Blinds) { onLeave() }
             else -> VacuumScreen(
-                devicesState.getDevice(currentDevice) as Vacuum,
+                device as Vacuum,
                 roomsState.getHomeRooms(currentHome)
-            ) { currentDevice = "" }
+            ) { onLeave() }
         }
         BackHandler(onBack = { currentDevice = "" })
     }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -17,6 +18,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 class MainActivity : ComponentActivity() {
     private lateinit var receiver: SkipNotificationReceiver
+
+    private var showingDeviceId = ""
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +37,12 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                var deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
+                val deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
 
-                HarmonyApp(deviceId)
+                HarmonyApp(deviceId) { id ->
+                    showingDeviceId = id
+                    Log.i("Tobi", "New id: $id")
+                }
             }
         }
     }

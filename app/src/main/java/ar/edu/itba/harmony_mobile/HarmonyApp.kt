@@ -108,7 +108,8 @@ fun HarmonyApp(
     hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory()),
     rViewModel: RoomsViewModel = viewModel(factory = getViewModelFactory()),
     dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    setShowingDevice: (String) -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -196,7 +197,14 @@ fun HarmonyApp(
                 currentHouseId = room.home!!.id!!
             }
         }
-        Router(device, navController, houseState.getHome(currentHouseId), roomsState, devicesState)
+        Router(device = device,
+            navController = navController,
+            currentHome = houseState.getHome(currentHouseId),
+            roomsState = roomsState,
+            devicesState = devicesState,
+            setShowingDevice = setShowingDevice
+        )
+
         CustomTopSheet(
             visible = showBottomSheet,
             onDismiss = { showBottomSheet = false },
@@ -342,7 +350,8 @@ private fun Router(
     navController: NavHostController,
     currentHome: Home,
     roomsState: RoomsUiState,
-    devicesState: DevicesUiState
+    devicesState: DevicesUiState,
+    setShowingDevice: (String) -> Unit
 ) {
     NavHost(
         navController = navController, startDestination = AppDestinations.ROOMS.route
@@ -350,8 +359,9 @@ private fun Router(
         val modifier = Modifier.fillMaxSize()
         composable(AppDestinations.ROOMS.route) {
             if (device == null)
-                RoomsScreen(modifier, currentHome, roomsState, devicesState)
+                RoomsScreen(modifier, currentHome, roomsState, devicesState, setShowingDevice)
             else {
+                setShowingDevice(device.id!!)
                 when(device.type) {
                     DeviceTypes.LIGHTS -> LightScreen(device as Lamp)
                     DeviceTypes.DOORS -> DoorScreen(device as Door)
@@ -364,7 +374,7 @@ private fun Router(
         }
 
         composable(AppDestinations.DEVICES.route) {
-            DevicesScreen(modifier, currentHome, roomsState, devicesState)
+            DevicesScreen(modifier, currentHome, roomsState, devicesState, setShowingDevice)
         }
 
         composable(AppDestinations.ROUTINES.route) {

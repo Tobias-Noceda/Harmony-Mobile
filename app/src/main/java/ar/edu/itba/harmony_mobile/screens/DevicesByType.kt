@@ -68,6 +68,7 @@ fun DevicesByType(
     currentHouse: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
+    setShowingDevice: (String) -> Unit,
     onBackCalled: () -> Unit
 ) {
     var currentId by rememberSaveable { mutableStateOf("") }
@@ -85,7 +86,7 @@ fun DevicesByType(
         if (list.isEmpty()) {
             val name = if(currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
             EmptyScreen(
-                description = "${stringResource(id = R.string.no_devices1)} ${typeStr} " +
+                description = "${stringResource(id = R.string.no_devices1)} $typeStr " +
                         "${stringResource(id = R.string.no_devices2)} $name"
             )
         } else {
@@ -94,20 +95,27 @@ fun DevicesByType(
                 list,
                 onDeviceClick = { deviceId ->
                     currentId = deviceId
+                    setShowingDevice(deviceId)
                 }
             )
         }
     } else {
+        val device = devicesState.getDevice(currentId)
+        setShowingDevice(device!!.id!!)
+        val onLeave = {
+            currentId = ""
+            setShowingDevice("")
+        }
         when(type) {
-            DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentId) as Lamp) { currentId = "" }
-            DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentId) as Door) { currentId = "" }
-            DeviceTypes.REFRIGERATORS -> FridgeScreen(devicesState.getDevice(currentId) as Refrigerator) { currentId = "" }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentId) as Sprinkler) { currentId = "" }
-            DeviceTypes.BLINDS -> BlindsScreen(devicesState.getDevice(currentId) as Blinds) { currentId = "" }
+            DeviceTypes.LIGHTS -> LightScreen(device as Lamp) { onLeave() }
+            DeviceTypes.DOORS -> DoorScreen(device as Door) { onLeave() }
+            DeviceTypes.REFRIGERATORS -> FridgeScreen(device as Refrigerator) { onLeave() }
+            DeviceTypes.SPRINKLERS -> SprinklerScreen(device as Sprinkler) { onLeave() }
+            DeviceTypes.BLINDS -> BlindsScreen(device as Blinds) { onLeave() }
             else -> VacuumScreen(
-                devicesState.getDevice(currentId) as Vacuum,
+                device as Vacuum,
                 roomsState.getHomeRooms(currentHouse)
-            ) { currentId = "" }
+            ) { onLeave() }
         }
         BackHandler(onBack = { currentId = "" })
     }

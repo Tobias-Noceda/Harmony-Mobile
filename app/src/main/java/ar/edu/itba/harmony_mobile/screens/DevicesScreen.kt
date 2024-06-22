@@ -47,6 +47,7 @@ fun DevicesScreen(
     currentHouse: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
+    setShowingDevice: (String) -> Unit,
     state: DeviceTypes? = null
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
@@ -59,7 +60,13 @@ fun DevicesScreen(
                 }
             )
         } else {
-            DevicesByType(currentDestination!!, currentHouse, roomsState, devicesState) { currentDestination = null }
+            DevicesByType(
+                type = currentDestination!!,
+                currentHouse = currentHouse,
+                roomsState = roomsState,
+                devicesState = devicesState,
+                setShowingDevice = setShowingDevice
+            ) { currentDestination = null }
         }
     }
 }
