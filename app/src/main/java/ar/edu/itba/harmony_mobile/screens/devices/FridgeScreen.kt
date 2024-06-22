@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,10 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Refrigerator
-import ar.edu.itba.harmony_mobile.model.Sprinkler
-import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.RefrigeratorViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
@@ -60,10 +60,6 @@ enum class FridgeMode(@StringRes val textId: Int, val apiText: String) {
 fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
 
     val dropDownOptions = FridgeMode.entries.toList()
-
-//    var mode by rememberSaveable { mutableStateOf(FridgeMode.DEFAULT) }
-//    var fridgeTemp by rememberSaveable { mutableIntStateOf(5) }
-//    var freezerTemp by rememberSaveable { mutableIntStateOf(-10) }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
@@ -156,6 +152,7 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
         IconButton(
             onClick = {
                 onClick.invoke()
+                dViewModel.getDevice(deviceRef.id)
             },
             colors = IconButtonColors(
                 tertiary,
@@ -194,163 +191,243 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(25.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize()
         ) {
             fridgeTitle()
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(30.dp)
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center
             ) {
 
-                with(adaptiveInfo) {
-                    if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = stringResource(id = R.string.fridge),
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Normal
-                                )
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().temperature - 1
-                                            )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.remove),
-                                        enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(30.dp)
+                ) {
+
+                    with(adaptiveInfo) {
+                        if (windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = stringResource(id = R.string.fridge),
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Normal
                                     )
-                                    fridgeTempText()
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().temperature + 1
-                                            )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.add),
-                                        enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().temperature - 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.remove),
+                                            enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
+                                        )
+                                        fridgeTempText()
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().temperature + 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.add),
+                                            enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
+                                        )
+                                    }
+                                }
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = stringResource(id = R.string.freezer),
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Normal
                                     )
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setFreezerTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().freezerTemperature - 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.remove),
+                                            enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
+                                        )
+                                        freezerTempText()
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setFreezerTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().freezerTemperature + 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.add),
+                                            enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
+                                        )
+                                    }
                                 }
                             }
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = stringResource(id = R.string.freezer),
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Normal
-                                )
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setFreezerTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().freezerTemperature - 1
+                        } else if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
+                            Row (horizontalArrangement = Arrangement.SpaceEvenly,
+                                modifier = Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically){
+                                Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.fridge),
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                                        ) {
+                                            tempButton(
+                                                onClick = {
+                                                    viewModel.setTemperature(
+                                                        getValidDevice(),
+                                                        getValidDevice().temperature - 1
+                                                    )
+                                                },
+                                                icon = painterResource(id = R.drawable.remove),
+                                                enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
                                             )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.remove),
-                                        enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
-                                    )
-                                    freezerTempText()
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setFreezerTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().freezerTemperature + 1
+                                            fridgeTempText()
+                                            tempButton(
+                                                onClick = {
+                                                    viewModel.setTemperature(
+                                                        getValidDevice(),
+                                                        getValidDevice().temperature + 1
+                                                    )
+                                                },
+                                                icon = painterResource(id = R.drawable.add),
+                                                enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
                                             )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.add),
-                                        enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
-                                    )
+                                        }
+                                    }
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.freezer),
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                                        ) {
+                                            tempButton(
+                                                onClick = {
+                                                    viewModel.setFreezerTemperature(
+                                                        getValidDevice(),
+                                                        getValidDevice().freezerTemperature - 1
+                                                    )
+                                                },
+                                                icon = painterResource(id = R.drawable.remove),
+                                                enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
+                                            )
+                                            freezerTempText()
+                                            tempButton(
+                                                onClick = {
+                                                    viewModel.setFreezerTemperature(
+                                                        getValidDevice(),
+                                                        getValidDevice().freezerTemperature + 1
+                                                    )
+                                                },
+                                                icon = painterResource(id = R.drawable.add),
+                                                enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
+                                            )
+                                        }
+                                    }
+                                }
+                                Column {
+                                    modeSelector()
                                 }
                             }
-                        }
-                    } else {
-                        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(20.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.fridge),
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Normal
-                                )
+                        } else {
+                            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                                    verticalArrangement = Arrangement.spacedBy(20.dp)
                                 ) {
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().temperature - 1
-                                            )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.remove),
-                                        enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
+                                    Text(
+                                        text = stringResource(id = R.string.fridge),
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Normal
                                     )
-                                    fridgeTempText()
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().temperature + 1
-                                            )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.add),
-                                        enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
-                                    )
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().temperature - 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.remove),
+                                            enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
+                                        )
+                                        fridgeTempText()
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().temperature + 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.add),
+                                            enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
+                                        )
+                                    }
                                 }
-                            }
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(20.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.freezer),
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Normal
-                                )
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                                    verticalArrangement = Arrangement.spacedBy(20.dp)
                                 ) {
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setFreezerTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().freezerTemperature - 1
-                                            )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.remove),
-                                        enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
+                                    Text(
+                                        text = stringResource(id = R.string.freezer),
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Normal
                                     )
-                                    freezerTempText()
-                                    tempButton(
-                                        onClick = {
-                                            viewModel.setFreezerTemperature(
-                                                getValidDevice(),
-                                                getValidDevice().freezerTemperature + 1
-                                            )
-                                            dViewModel.getDevice(deviceRef.id)
-                                        },
-                                        icon = painterResource(id = R.drawable.add),
-                                        enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
-                                    )
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setFreezerTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().freezerTemperature - 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.remove),
+                                            enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
+                                        )
+                                        freezerTempText()
+                                        tempButton(
+                                            onClick = {
+                                                viewModel.setFreezerTemperature(
+                                                    getValidDevice(),
+                                                    getValidDevice().freezerTemperature + 1
+                                                )
+                                            },
+                                            icon = painterResource(id = R.drawable.add),
+                                            enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
+                                        )
+                                    }
                                 }
                             }
+                            modeSelector()
                         }
-                        modeSelector()
                     }
                 }
             }
