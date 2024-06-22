@@ -16,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Blinds
@@ -33,6 +36,8 @@ import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
+import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
@@ -79,6 +84,17 @@ fun MyCard(
     }
 }
 
+@Composable
+private fun getLamp(lamp: Device): Lamp {
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val devicesState by dViewModel.uiState.collectAsState()
+    return if(devicesState.getDevice(lamp.id!!) == null) {
+        lamp as Lamp
+    } else {
+        devicesState.getDevice(lamp.id) as Lamp
+    }
+}
+
 @SuppressLint("ModifierParameter")
 @Composable
 fun LightCard(
@@ -88,11 +104,7 @@ fun LightCard(
         .padding(4.dp),
     onClick: () -> Unit
 ) {
-    val actualLamp = lamp as Lamp
-    val status = actualLamp.status
-    val statusText = if (status == Status.ON) stringResource(R.string.on) else stringResource(R.string.off)
-    val brightness = actualLamp.brightness
-
+    val actualLamp = getLamp(lamp = lamp)
     MyCard(
         device = lamp,
         type = DeviceTypes.LIGHTS,
@@ -100,12 +112,12 @@ fun LightCard(
         content = {
             Column {
                 Text(
-                    text = "${stringResource(R.string.status)} $statusText",
+                    text = "${stringResource(R.string.status)} ${if (actualLamp.status == Status.ON) stringResource(R.string.on) else stringResource(R.string.off)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                if(status == Status.ON) {
+                if(actualLamp.status == Status.ON) {
                     Text(
-                        text = "${stringResource(id = R.string.brightness)} $brightness%",
+                        text = "${stringResource(id = R.string.brightness)} ${actualLamp.brightness}%",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(top = 4.dp)
                     )

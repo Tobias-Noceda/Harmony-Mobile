@@ -1,10 +1,7 @@
 package ar.edu.itba.harmony_mobile.remote
 
-import android.util.Log
 import ar.edu.itba.harmony_mobile.remote.api.DeviceService
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHome
-import ar.edu.itba.harmony_mobile.remote.model.rooms.RemoteRoom
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -81,6 +78,6 @@ class DeviceRemoteDataSource(
     }
 
     companion object {
-        const val DELAY: Long = 10000
+        const val DELAY: Long = 2000
     }
 }
