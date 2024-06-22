@@ -1,6 +1,5 @@
 package ar.edu.itba.harmony_mobile.screens
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -74,8 +73,6 @@ fun DevicesByType(
     var currentId by rememberSaveable { mutableStateOf("") }
 
     BackHandler(onBack = onBackCalled)
-
-    Log.i("Tobi", devicesState.getHomeDevices(currentHouse).toString())
 
     if (currentId == "") {
         val list = filterDevices(devicesState.getHomeDevices(currentHouse), type)

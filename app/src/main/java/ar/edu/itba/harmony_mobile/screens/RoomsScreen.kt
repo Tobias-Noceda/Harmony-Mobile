@@ -1,6 +1,5 @@
 package ar.edu.itba.harmony_mobile.screens
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,7 +49,6 @@ fun RoomsScreen(
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
-    Log.i("Tobi", currentHouse.toString())
 
     if (roomsState.getHomeRooms(currentHouse).size == 1) {
        currentDestination = roomsState.getHomeRooms(currentHouse)[0].id!!
