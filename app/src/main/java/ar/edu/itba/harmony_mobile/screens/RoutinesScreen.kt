@@ -215,75 +215,7 @@ fun RoutinesList(
                             }
                         }
                     }
-                } else if (!isExpandedHeight) {
-                    Button(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { onNav(routine.id!!) },
-                        elevation = ButtonDefaults.buttonElevation(8.dp),
-                        colors = ButtonColors(
-                            secondary,
-                            primary,
-                            tertiary.copy(alpha = .5f),
-                            Color.White
-                        ),
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = Color.Black.copy(alpha = 0.3f)
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp)
-                                .height(90.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                painterResource(id = getIcon(routine.icon)),
-                                contentDescription = null,
-                                modifier = Modifier.height(80.dp)
-                            )
-                            Text(
-                                text = routine.name,
-                                textAlign = TextAlign.Left,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .widthIn(max = if (isCompactWidth) 120.dp else 360.dp)
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            val text = stringResource(id = R.string.running)
-                            val context = LocalContext.current
-                            Button(
-                                modifier = Modifier
-                                    .padding(end = 8.dp)
-                                    .wrapContentWidth(),
-                                shape = CircleShape,
-                                onClick = {
-                                    if (routine.id != null)
-                                        rViewModel.executeRoutine(routine.id!!)
-                                    Toast.makeText(
-                                        context,
-                                        "$text ${routine.name}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                colors = ButtonColors(primary, secondary, tertiary, tertiary)
-                            ) {
-                                Icon(
-                                    Icons.Outlined.PlayArrow,
-                                    contentDescription = null,
-                                    modifier = Modifier.wrapContentWidth()
-                                )
-                            }
-                        }
-                    }
-                } else {
+                } else if (isExpandedHeight && !isCompactWidth) {
                     Surface(
                         modifier = Modifier
                             .padding(4.dp)
@@ -358,6 +290,74 @@ fun RoutinesList(
                                     }
                                 }
                             }
+                            Spacer(modifier = Modifier.weight(1f))
+                            val text = stringResource(id = R.string.running)
+                            val context = LocalContext.current
+                            Button(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .wrapContentWidth(),
+                                shape = CircleShape,
+                                onClick = {
+                                    if (routine.id != null)
+                                        rViewModel.executeRoutine(routine.id!!)
+                                    Toast.makeText(
+                                        context,
+                                        "$text ${routine.name}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                colors = ButtonColors(primary, secondary, tertiary, tertiary)
+                            ) {
+                                Icon(
+                                    Icons.Outlined.PlayArrow,
+                                    contentDescription = null,
+                                    modifier = Modifier.wrapContentWidth()
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    Button(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = { onNav(routine.id!!) },
+                        elevation = ButtonDefaults.buttonElevation(8.dp),
+                        colors = ButtonColors(
+                            secondary,
+                            primary,
+                            tertiary.copy(alpha = .5f),
+                            Color.White
+                        ),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = Color.Black.copy(alpha = 0.3f)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp)
+                                .height(90.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painterResource(id = getIcon(routine.icon)),
+                                contentDescription = null,
+                                modifier = Modifier.height(80.dp)
+                            )
+                            Text(
+                                text = routine.name,
+                                textAlign = TextAlign.Left,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .widthIn(max = if (isCompactWidth) 120.dp else 360.dp)
+                            )
                             Spacer(modifier = Modifier.weight(1f))
                             val text = stringResource(id = R.string.running)
                             val context = LocalContext.current
