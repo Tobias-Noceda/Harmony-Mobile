@@ -71,7 +71,7 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: () -> Unit) {
     dViewModel.getDevice(deviceRef.id!!) // updates the current device
 
     fun getValidDevice(): Sprinkler {
-        if (deviceState.currentDevice != null) {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Sprinkler) {
             return deviceState.currentDevice as Sprinkler
         }
         return deviceRef

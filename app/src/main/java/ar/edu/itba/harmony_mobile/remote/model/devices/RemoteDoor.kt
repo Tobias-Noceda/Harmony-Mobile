@@ -11,7 +11,7 @@ class RemoteDoor : RemoteDevice<RemoteDoorState>() {
             name = name,
             room = room?.asModel(),
             status = RemoteStatus.asModel(state.status),
-            lock = state.lock
+            lock = state.lock == "locked"
         )
     }
 }

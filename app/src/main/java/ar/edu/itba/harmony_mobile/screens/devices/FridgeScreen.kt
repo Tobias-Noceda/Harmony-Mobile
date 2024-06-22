@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.RefrigeratorViewModel
@@ -75,7 +76,7 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
     dViewModel.getDevice(deviceRef.id!!) // updates the current device
 
     fun getValidDevice(): Refrigerator {
-        if (deviceState.currentDevice != null) {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Refrigerator) {
             return deviceState.currentDevice as Refrigerator
         }
         return deviceRef
@@ -84,7 +85,10 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
     @Composable
     fun fridgeTitle() {
         Text(
-            text = getValidDevice().name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name,
+            color = primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 
@@ -211,7 +215,10 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature - 1)
+                                            viewModel.setTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().temperature - 1
+                                            )
                                             dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.remove),
@@ -220,7 +227,10 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
                                     fridgeTempText()
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature + 1)
+                                            viewModel.setTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().temperature + 1
+                                            )
                                             dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.add),
@@ -278,7 +288,10 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
                                 ) {
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature - 1)
+                                            viewModel.setTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().temperature - 1
+                                            )
                                             dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.remove),
@@ -287,7 +300,10 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
                                     fridgeTempText()
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature + 1)
+                                            viewModel.setTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().temperature + 1
+                                            )
                                             dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.add),

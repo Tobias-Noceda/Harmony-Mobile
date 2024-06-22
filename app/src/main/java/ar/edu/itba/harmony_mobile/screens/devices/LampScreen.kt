@@ -40,6 +40,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
@@ -66,7 +67,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: () -> Unit) {
     dViewModel.getDevice(deviceRef.id!!) // updates the current device
 
     fun getValidDevice(): Lamp {
-        if (deviceState.currentDevice != null) {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Lamp) {
             return deviceState.currentDevice as Lamp
         }
         return deviceRef
@@ -74,15 +75,15 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: () -> Unit) {
 
     var lightBrightness by rememberSaveable { mutableFloatStateOf(getValidDevice().brightness.toFloat()) }
 
-
-    Log.i("Device", getValidDevice().toString())
-
     BackHandler(onBack = onBackCalled)
 
     @Composable
     fun lightTitle() {
         Text(
-            text = getValidDevice().name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name,
+            color = primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
         )
 
     }

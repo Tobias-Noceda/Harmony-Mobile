@@ -101,7 +101,7 @@ fun DevicesByType(
         when(type) {
             DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentId) as Lamp) { currentId = "" }
             DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentId) as Door) { currentId = "" }
-            DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentId) as Refrigerator) { currentId = "" }
+            DeviceTypes.REFRIGERATORS -> FridgeScreen(devicesState.getDevice(currentId) as Refrigerator) { currentId = "" }
             DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentId) as Sprinkler) { currentId = "" }
             DeviceTypes.BLINDS -> BlindsScreen(devicesState.getDevice(currentId) as Blinds) { currentId = "" }
             else -> VacuumScreen(
@@ -184,7 +184,7 @@ fun TypeList(type: DeviceTypes, deviceList: List<Device>, onDeviceClick: (String
                             when(type) {
                                 DeviceTypes.LIGHTS -> LightCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
                                 DeviceTypes.DOORS -> DoorCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
-                                DeviceTypes.REFRIS -> RefrigeratorCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
+                                DeviceTypes.REFRIGERATORS -> RefrigeratorCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
                                 DeviceTypes.VACUUMS -> VacuumCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
                                 DeviceTypes.SPRINKLERS -> SprinklerCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
                                 else -> BlindsCard(device, modifier = modifier) { onDeviceClick(device.id!!) }
@@ -204,7 +204,7 @@ fun TypeList(type: DeviceTypes, deviceList: List<Device>, onDeviceClick: (String
                     when(type) {
                         DeviceTypes.LIGHTS -> LightCard(lamp = device) { onDeviceClick(device.id!!) }
                         DeviceTypes.DOORS -> DoorCard(door = device) { onDeviceClick(device.id!!) }
-                        DeviceTypes.REFRIS -> RefrigeratorCard(refrigerator = device) { onDeviceClick(device.id!!) }
+                        DeviceTypes.REFRIGERATORS -> RefrigeratorCard(refrigerator = device) { onDeviceClick(device.id!!) }
                         DeviceTypes.VACUUMS -> VacuumCard(vacuum = device) { onDeviceClick(device.id!!) }
                         DeviceTypes.SPRINKLERS -> SprinklerCard(sprinkler = device) { onDeviceClick(device.id!!) }
                         else -> BlindsCard(blinds = device) { onDeviceClick(device.id!!) }

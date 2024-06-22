@@ -32,6 +32,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.ui.devices.BlindsViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
@@ -63,7 +64,7 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
     dViewModel.getDevice(deviceRef.id!!) // updates the current device
 
     fun getValidDevice(): Blinds {
-        if (deviceState.currentDevice != null) {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Blinds) {
             return deviceState.currentDevice as Blinds
         }
         return deviceRef
