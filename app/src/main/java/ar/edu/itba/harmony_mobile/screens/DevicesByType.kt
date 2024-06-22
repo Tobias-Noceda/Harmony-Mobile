@@ -103,8 +103,8 @@ fun DevicesByType(
         val device = devicesState.getDevice(currentId)
         setShowingDevice(device!!.id!!)
         val onLeave = {
-            setShowingDevice("0")
-            currentId = "0"
+            setShowingDevice("")
+            currentId = ""
         }
         when(type) {
             DeviceTypes.LIGHTS -> LightScreen(device as Lamp) { onLeave() }
@@ -117,7 +117,6 @@ fun DevicesByType(
                 roomsState.getHomeRooms(currentHouse)
             ) { onLeave() }
         }
-        BackHandler(onBack = { currentId = "" })
     }
 }
 

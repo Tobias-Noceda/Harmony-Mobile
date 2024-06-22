@@ -88,7 +88,7 @@ fun RoomScreen(
         val device = devicesState.getDevice(currentDevice)
         setShowingDevice(device!!.id!!)
         val onLeave = {
-            setShowingDevice("0")
+            setShowingDevice("")
             currentDevice = ""
         }
         when(currentDeviceType) {
@@ -102,7 +102,6 @@ fun RoomScreen(
                 roomsState.getHomeRooms(currentHome)
             ) { onLeave() }
         }
-        BackHandler(onBack = { currentDevice = "" })
     }
 }
 
