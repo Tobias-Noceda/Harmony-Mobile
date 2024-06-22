@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
@@ -60,6 +63,8 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
+    var first = true
+
     dViewModel.getDevice(deviceRef.id!!) // updates the current device
 
     fun getValidDevice(): Lamp {
@@ -68,6 +73,8 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
         }
         return deviceRef
     }
+
+    var colorString by rememberSaveable { mutableStateOf(Lamp.colorToString(getValidDevice().color)) }
 
     var lightBrightness by rememberSaveable { mutableFloatStateOf(getValidDevice().brightness.toFloat()) }
 
@@ -136,10 +143,10 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                 )
                 Button(
                     onClick = {}, shape = RoundedCornerShape(8.dp), colors = ButtonColors(
-                        getValidDevice().color,
-                        getValidDevice().color,
-                        getValidDevice().color.desaturate(0f),
-                        getValidDevice().color.desaturate(0f)
+                        Color("#ff${colorString}".toColorInt()),
+                        Color("#ff${colorString}".toColorInt()),
+                        Color("#ff${colorString}".toColorInt()).desaturate(0f),
+                        Color("#ff${colorString}".toColorInt()).desaturate(0f)
                     ), border = BorderStroke(2.dp, primary)
                 ) {}
             }
@@ -151,12 +158,19 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        HsvColorPicker(modifier = Modifier.padding(0.dp),
+                        HsvColorPicker(
+                            modifier = Modifier.padding(0.dp),
                             controller = colorController,
                             onColorChanged = {
-                                viewModel.setColor(getValidDevice(), it.color)
-                                dViewModel.getDevice(deviceRef.id)
-                            })
+                                if (!first && it.color != Color.Black) {
+                                    Log.i("Color picker", it.color.toString())
+                                    viewModel.setColor(getValidDevice(), it.color)
+                                    dViewModel.getDevice(deviceRef.id)
+                                    colorString = Lamp.colorToString(it.color)
+                                }
+                                first = false
+                            },
+                        )
                     }
                 } else {
                     Column(
