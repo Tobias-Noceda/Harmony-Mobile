@@ -22,6 +22,7 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,6 +39,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.model.Vacuum
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.RefrigeratorViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
@@ -53,7 +56,7 @@ enum class FridgeMode(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
+fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
 
     val dropDownOptions = FridgeMode.entries.toList()
 
@@ -65,10 +68,23 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
     BackHandler(onBack = onBackCalled)
     val viewModel: RefrigeratorViewModel = viewModel(factory = getViewModelFactory())
 
+
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val deviceState by dViewModel.uiState.collectAsState()
+
+    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+
+    fun getValidDevice(): Refrigerator {
+        if (deviceState.currentDevice != null) {
+            return deviceState.currentDevice as Refrigerator
+        }
+        return deviceRef
+    }
+
     @Composable
     fun fridgeTitle() {
         Text(
-            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
@@ -91,7 +107,7 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
             ) {
                 Text(
                     stringResource(
-                        when (device.mode) {
+                        when (getValidDevice().mode) {
                             "vacation" -> FridgeMode.VACATION.textId
                             "party" -> FridgeMode.PARTY.textId
                             else -> FridgeMode.DEFAULT.textId
@@ -117,8 +133,9 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
                 dropDownOptions.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            viewModel.setMode(device, item.apiText)
+                            viewModel.setMode(getValidDevice(), item.apiText)
                             isExpanded = false
+                            dViewModel.getDevice(deviceRef.id)
                         },
                         text = {
                             Text(stringResource(item.textId), color = secondary)
@@ -151,7 +168,7 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
     @Composable
     fun fridgeTempText() {
         Text(
-            text = "${device.temperature} °C",
+            text = "${getValidDevice().temperature} °C",
             fontSize = 20.sp,
             fontWeight = FontWeight.Normal
         )
@@ -160,7 +177,7 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
     @Composable
     fun freezerTempText() {
         Text(
-            text = "${device.freezerTemperature} °C",
+            text = "${getValidDevice().freezerTemperature} °C",
             fontSize = 20.sp,
             fontWeight = FontWeight.Normal
         )
@@ -194,18 +211,20 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(device, device.temperature-1)
+                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature - 1)
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.remove),
-                                        enabled = device.temperature > 2 && device.mode == "default"
+                                        enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
                                     )
                                     fridgeTempText()
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(device, device.temperature+1)
+                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature + 1)
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.add),
-                                        enabled = device.temperature < 8 && device.mode == "default"
+                                        enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
                                     )
                                 }
                             }
@@ -218,18 +237,26 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     tempButton(
                                         onClick = {
-                                            viewModel.setFreezerTemperature(device, device.freezerTemperature-1)
+                                            viewModel.setFreezerTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().freezerTemperature - 1
+                                            )
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.remove),
-                                        enabled = device.freezerTemperature > -20 && device.mode == "default"
+                                        enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
                                     )
                                     freezerTempText()
                                     tempButton(
                                         onClick = {
-                                            viewModel.setFreezerTemperature(device, device.freezerTemperature+1)
+                                            viewModel.setFreezerTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().freezerTemperature + 1
+                                            )
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.add),
-                                        enabled = device.freezerTemperature < -8 && device.mode == "default"
+                                        enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
                                     )
                                 }
                             }
@@ -251,18 +278,20 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
                                 ) {
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(device, device.temperature-1)
+                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature - 1)
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.remove),
-                                        enabled = device.temperature > 2 && device.mode == "default"
+                                        enabled = getValidDevice().temperature > 2 && getValidDevice().mode == "default"
                                     )
                                     fridgeTempText()
                                     tempButton(
                                         onClick = {
-                                            viewModel.setTemperature(device, device.temperature+1)
+                                            viewModel.setTemperature(getValidDevice(), getValidDevice().temperature + 1)
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.add),
-                                        enabled = device.temperature < 8 && device.mode == "default"
+                                        enabled = getValidDevice().temperature < 8 && getValidDevice().mode == "default"
                                     )
                                 }
                             }
@@ -281,18 +310,26 @@ fun FridgeScreen(device: Refrigerator, onBackCalled: () -> Unit) {
                                 ) {
                                     tempButton(
                                         onClick = {
-                                            viewModel.setFreezerTemperature(device, device.freezerTemperature-1)
+                                            viewModel.setFreezerTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().freezerTemperature - 1
+                                            )
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.remove),
-                                        enabled = device.freezerTemperature > -20 && device.mode == "default"
+                                        enabled = getValidDevice().freezerTemperature > -20 && getValidDevice().mode == "default"
                                     )
                                     freezerTempText()
                                     tempButton(
                                         onClick = {
-                                            viewModel.setFreezerTemperature(device, device.freezerTemperature+1)
+                                            viewModel.setFreezerTemperature(
+                                                getValidDevice(),
+                                                getValidDevice().freezerTemperature + 1
+                                            )
+                                            dViewModel.getDevice(deviceRef.id)
                                         },
                                         icon = painterResource(id = R.drawable.add),
-                                        enabled = device.freezerTemperature < -8 && device.mode == "default"
+                                        enabled = getValidDevice().freezerTemperature < -8 && getValidDevice().mode == "default"
                                     )
                                 }
                             }

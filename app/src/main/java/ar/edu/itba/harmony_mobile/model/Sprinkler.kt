@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.model
 
+import android.util.Log
 import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.model.Lamp.Companion.colorToString
 import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice

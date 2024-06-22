@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.remote.model.devices
 
+import android.util.Log
 import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.remote.model.RemoteStatus
 

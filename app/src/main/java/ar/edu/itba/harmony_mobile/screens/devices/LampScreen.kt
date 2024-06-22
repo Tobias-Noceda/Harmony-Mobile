@@ -67,10 +67,8 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: () -> Unit) {
 
     fun getValidDevice(): Lamp {
         if (deviceState.currentDevice != null) {
-            Log.i("God","God")
             return deviceState.currentDevice as Lamp
         }
-        Log.i("no god","no god")
         return deviceRef
     }
 

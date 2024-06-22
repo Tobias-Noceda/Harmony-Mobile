@@ -89,10 +89,10 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     fun lockButton() {
         Button(
             onClick = {
-                  when(device.lock){
-                      true -> viewModel.unlock(device)
-                      false -> viewModel.lock(device)
-                  }
+                when (device.lock) {
+                    true -> viewModel.unlock(device)
+                    false -> viewModel.lock(device)
+                }
             },
             enabled = device.status != Status.OPEN,
             colors = ButtonColors(
@@ -116,13 +116,12 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     fun stateText() {
         Text(
             text = "${stringResource(id = R.string.status)} ${
-                if(device.lock){
+                if (device.lock) {
                     stringResource(id = R.string.locked)
-                } else{
+                } else {
                     when (device.status) {
-                        Status.OPEN -> stringResource(id = R.string.opened)
                         Status.CLOSED -> stringResource(id = R.string.closed)
-                        else -> "WTF"
+                        else -> stringResource(id = R.string.opened)
                     }
                 }
             }"
@@ -198,8 +197,10 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
                                 openSwitch()
                             }
                         } else {
-                            Column (modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally){
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 openText()
                                 openSwitch()
                             }
