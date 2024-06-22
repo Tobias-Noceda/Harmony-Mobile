@@ -49,7 +49,7 @@ class Lamp(
             var green = (0xFF * color.green.toInt()).toHexString()
             if(green.length<2)
                 green = "0${green}"
-            return "${red}${blue}${green}"
+            return "${red}${green}${blue}"
         }
     }
 }
