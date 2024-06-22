@@ -40,13 +40,13 @@ class Lamp(
         const val SET_COLOR_ACTION = "setColor"
         const val SET_BRIGHTNESS_ACTION = "setBrightness"
         fun colorToString(color: Color): String {
-            var red = (0xFF * color.red.toInt()).toHexString()
+            var red = ((255 * color.red).toInt()).toHexString()
             if(red.length<2)
                 red = "0${red}"
-            var blue = (0xFF * color.blue.toInt()).toHexString()
+            var blue = ((255 * color.blue).toInt()).toHexString()
             if(blue.length<2)
                 blue = "0${blue}"
-            var green = (0xFF * color.green.toInt()).toHexString()
+            var green = ((255 * color.green).toInt()).toHexString()
             if(green.length<2)
                 green = "0${green}"
             return "${red}${green}${blue}"
