@@ -7,17 +7,11 @@
     <string name="houses">Casas</string>
     <string name="personal_devices">Dispositivos Personales</string>
 
-    <string name="api_lamp">lamp</string>
     <string name="lamps">Lámparas</string>
-    <string name="api_door">door</string>
     <string name="doors">Puertas</string>
-    <string name="api_refrigerator">refrigerator</string>
     <string name="refrigerators">Refrigeradores</string>
-    <string name="api_vacuum">vacuum</string>
     <string name="vacuums">Aspiradoras</string>
-    <string name="api_sprinkler">faucet</string>
     <string name="sprinklers">Aspersores</string>
-    <string name="api_blinds">blinds</string>
     <string name="blinds">Persianas</string>
 
     <string name="status">Estado:</string>

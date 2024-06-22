@@ -5,13 +5,13 @@ import androidx.annotation.StringRes
 
 enum class DeviceTypes(
     @StringRes val type: Int,
-    @StringRes val apiName: Int,
+    val apiName: String,
     @DrawableRes val icon: Int
 ) {
-    LIGHTS(R.string.lamps, R.string.api_lamp, R.drawable.lamp),
-    DOORS(R.string.doors, R.string.api_door, R.drawable.door),
-    REFRIGERATORS(R.string.refrigerators, R.string.api_refrigerator, R.drawable.fridge),
-    VACUUMS(R.string.vacuums, R.string.api_vacuum, R.drawable.vacuum),
-    SPRINKLERS(R.string.sprinklers, R.string.api_sprinkler, R.drawable.sprinkler),
-    BLINDS(R.string.blinds, R.string.api_blinds, R.drawable.blinds)
+    LIGHTS(R.string.lamps, "lamp", R.drawable.lamp),
+    DOORS(R.string.doors, "door", R.drawable.door),
+    REFRIGERATORS(R.string.refrigerators, "refrigerator", R.drawable.fridge),
+    VACUUMS(R.string.vacuums, "vacuum", R.drawable.vacuum),
+    SPRINKLERS(R.string.sprinklers, "faucet", R.drawable.sprinkler),
+    BLINDS(R.string.blinds, "blinds", R.drawable.blinds)
 }
