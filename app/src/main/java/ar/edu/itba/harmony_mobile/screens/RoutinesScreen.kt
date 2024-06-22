@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -71,19 +72,26 @@ fun RoutinesScreen(
             RoutineView(routine = routinesState.getRoutine(showingRoutine)!!) { inList = false }
         } else {
             if (routinesState.getHomeRoutines(currentHouse).isEmpty()) {
-                val text = if(currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
+                val text =
+                    if (currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
                 EmptyScreen(description = "${stringResource(id = R.string.no_routines)} $text")
             }
-            RoutinesList(routinesState.getHomeRoutines(currentHouse)) { routineId ->
+            RoutinesList(
+                routines = routinesState.getHomeRoutines(currentHouse),
+                onNav = { routineId ->
                     showingRoutine = routineId
                     inList = true
-            }
+                })
         }
     }
 }
 
 @Composable
-fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
+fun RoutinesList(
+    routines: List<Routine>,
+    onNav: (String) -> Unit,
+    rViewModel: RoutinesViewModel = viewModel(factory = getViewModelFactory())
+) {
 
     val scState = rememberScrollState(0)
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -109,7 +117,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                 .verticalScroll(scState)
         ) {
             for (routine in routines) {
-                if(isExpandedWidth) {
+                if (isExpandedWidth) {
                     Surface(
                         modifier = Modifier
                             .padding(4.dp)
@@ -153,7 +161,8 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                 var text: String
                                 if (routine.actions.size > 3) {
                                     for (i in 0 until 2) {
-                                        text = "• ${actionToString(routine.actions[i].actionName)} ${routine.actions[i].deviceName}"
+                                        text =
+                                            "• ${actionToString(routine.actions[i].actionName)} ${routine.actions[i].deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -167,7 +176,8 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                     )
                                 } else {
                                     for (action in routine.actions) {
-                                        text = "• ${actionToString(action.actionName)} ${action.deviceName}"
+                                        text =
+                                            "• ${actionToString(action.actionName)} ${action.deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -251,7 +261,8 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                 var text: String
                                 if (routine.actions.size > 6) {
                                     for (i in 0 until 5) {
-                                        text = "• ${actionToString(routine.actions[i].actionName)} ${routine.actions[i].deviceName}"
+                                        text =
+                                            "• ${actionToString(routine.actions[i].actionName)} ${routine.actions[i].deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -265,7 +276,8 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                     )
                                 } else {
                                     for (action in routine.actions) {
-                                        text = "• ${actionToString(action.actionName)} ${action.deviceName}"
+                                        text =
+                                            "• ${actionToString(action.actionName)} ${action.deviceName}"
                                         Text(
                                             text = text,
                                             color = Color.Black
@@ -287,6 +299,8 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
                                         "$text ${routine.name}",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    if (routine.id != null)
+                                        rViewModel.executeRoutine(routine.id!!)
                                 },
                                 colors = ButtonColors(primary, secondary, tertiary, tertiary)
                             ) {
@@ -371,7 +385,7 @@ fun RoutinesList(routines: List<Routine>, onNav: (String) -> Unit) {
 }
 
 private fun getIcon(webIcon: String): Int {
-    val icon = when(webIcon) {
+    val icon = when (webIcon) {
         "mdi-white-balance-sunny" -> R.drawable.sun_icon
         "mdi-briefcase-variant-outline" -> R.drawable.work_icon
         "mdi-bed-king-outline" -> R.drawable.night_icon

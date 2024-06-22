@@ -7,5 +7,5 @@ class RemoteDoorState {
     var status: String = ""
 
     @SerializedName("lock")
-    var lock: Boolean = false
+    var lock: String = ""
 }

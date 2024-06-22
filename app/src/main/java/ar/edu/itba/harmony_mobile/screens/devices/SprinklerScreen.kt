@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import ar.edu.itba.harmony_mobile.ui.theme.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.SprinklerViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 
@@ -51,7 +53,7 @@ enum class UnitToDispense(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
+fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: () -> Unit) {
 
     val dropDownOptions = UnitToDispense.entries.toList()
     var selectedUnitToDispense by rememberSaveable { mutableStateOf(UnitToDispense.LITRES) }
@@ -63,10 +65,22 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
 
     var isDispensing by rememberSaveable { mutableStateOf(false) }
 
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val deviceState by dViewModel.uiState.collectAsState()
+
+    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+
+    fun getValidDevice(): Sprinkler {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Sprinkler) {
+            return deviceState.currentDevice as Sprinkler
+        }
+        return deviceRef
+    }
+
     @Composable
     fun blindsTitle() {
         Text(
-            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
         )
     }
 
@@ -74,7 +88,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
     fun blindsStatusText() {
         Text(
             text = "${stringResource(id = R.string.status)} ${
-                if (device.status == Status.OPEN) {
+                if (getValidDevice().status == Status.OPEN || getValidDevice().status == Status.OPENED) {
                     stringResource(id = R.string.opened)
                 } else {
                     stringResource(id = R.string.closed)
@@ -89,7 +103,8 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
     fun openButton() {
         Button(
             onClick = {
-                viewModel.start(device)
+                viewModel.start(getValidDevice())
+                dViewModel.getDevice(deviceRef.id)
             },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
@@ -98,7 +113,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = device.status != Status.OPEN,
+            enabled = getValidDevice().status != Status.OPEN,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -112,7 +127,8 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
     fun closeButton() {
         Button(
             onClick = {
-                viewModel.pause(device)
+                viewModel.pause(getValidDevice())
+                dViewModel.getDevice(deviceRef.id)
             },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonColors(
@@ -121,7 +137,7 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = device.status != Status.OPEN && !isDispensing,
+            enabled = getValidDevice().status != Status.OPEN && !isDispensing,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -219,10 +235,11 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                         Button(
                             onClick = {
                                 viewModel.dispense(
-                                    device,
+                                    getValidDevice(),
                                     selectedUnitToDispense.apiText,
                                     selectedAmountToDispense
                                 )
+                                dViewModel.getDevice(deviceRef.id)
                                 isDispensing = true
                             },
                             shape = RoundedCornerShape(8.dp),
@@ -311,10 +328,11 @@ fun SprinklerScreen(device: Sprinkler, onBackCalled: () -> Unit) {
                 Button(
                     onClick = {
                         viewModel.dispense(
-                            device,
+                            getValidDevice(),
                             selectedUnitToDispense.apiText,
                             selectedAmountToDispense
                         )
+                        dViewModel.getDevice(deviceRef.id)
                         isDispensing = true
                     },
                     shape = RoundedCornerShape(8.dp),

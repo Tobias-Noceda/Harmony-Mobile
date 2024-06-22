@@ -169,7 +169,7 @@ fun RefrigeratorCard(
 
     MyCard(
         device = refrigerator,
-        type = DeviceTypes.REFRIS,
+        type = DeviceTypes.REFRIGERATORS,
         modifier = modifier,
         content = {
             Column {

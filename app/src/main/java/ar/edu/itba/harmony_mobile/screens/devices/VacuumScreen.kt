@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,8 +42,10 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Room
+import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.VacuumViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
@@ -57,7 +60,7 @@ enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
+fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
 
@@ -65,9 +68,22 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
     BackHandler(onBack = onBackCalled)
     val viewModel: VacuumViewModel = viewModel(factory = getViewModelFactory())
 
+
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val deviceState by dViewModel.uiState.collectAsState()
+
+    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+
+    fun getValidDevice(): Vacuum {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Vacuum) {
+            return deviceState.currentDevice as Vacuum
+        }
+        return deviceRef
+    }
+
     var mode by rememberSaveable {
         mutableStateOf(
-            if (device.mode == "mop") {
+            if (getValidDevice().mode == "mop") {
                 VacuumMode.MOP
             } else {
                 VacuumMode.VACUUM
@@ -86,7 +102,10 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
     @Composable
     fun vacuumTitle() {
         Text(
-            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name,
+            color = primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 
@@ -106,7 +125,7 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                     contentColor = secondary
                 ),
                 shape = RoundedCornerShape(8.dp),
-                enabled = device.targetRoom != null
+                enabled = getValidDevice().targetRoom != null
             ) {
                 Text(stringResource(mode.textId))
                 Icon(
@@ -130,7 +149,7 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                         onClick = {
                             mode = item
                             isExpanded = false
-                            viewModel.setMode(device, item.apiText)
+                            viewModel.setMode(getValidDevice(), item.apiText)
                         },
                         text = {
                             Text(stringResource(item.textId), color = secondary)
@@ -159,7 +178,7 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
-                device.targetRoom?.let { Text(it.name) }
+                getValidDevice().targetRoom?.let { Text(it.name) }
                 Icon(
                     imageVector = when (isExpanded) {
                         false -> Icons.Default.KeyboardArrowDown
@@ -179,7 +198,7 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                 rooms.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            item.id?.let { viewModel.setLocation(device, it) }
+                            item.id?.let { viewModel.setLocation(getValidDevice(), it) }
                             isExpanded = false
                         },
                         text = {
@@ -196,10 +215,12 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
     fun onButton() {
         IconButton(
             onClick = {
-                if (device.status == Status.ON) {
-                    viewModel.pause(device)
+                if (getValidDevice().status == Status.ACTIVE || getValidDevice().status == Status.ON) {
+                    viewModel.pause(getValidDevice())
+                    dViewModel.getDevice(deviceRef.id)
                 } else {
-                    viewModel.start(device)
+                    viewModel.start(getValidDevice())
+                    dViewModel.getDevice(deviceRef.id)
                 }
             },
             colors = IconButtonColors(
@@ -208,10 +229,10 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = device.battery > 5
+            enabled = getValidDevice().battery > 5
         ) {
             Icon(
-                painter = when (device.status == Status.ON) {
+                painter = when (getValidDevice().status == Status.ACTIVE || getValidDevice().status == Status.ON) {
                     true -> painterResource(id = R.drawable.pause)
                     false -> painterResource(id = R.drawable.play_arrow)
                 }, contentDescription = ""
@@ -223,7 +244,8 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
     fun sendToBaseButton() {
         Button(
             onClick = {
-                viewModel.dock(device)
+                viewModel.dock(getValidDevice())
+                dViewModel.getDevice(deviceRef.id)
             },
             colors = ButtonColors(
                 tertiary,
@@ -231,7 +253,7 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = device.status != Status.DOCKED
+            enabled = getValidDevice().status != Status.DOCKED
         ) {
             Text(text = stringResource(id = R.string.send_to_base))
         }
@@ -243,9 +265,9 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
             text = "${stringResource(id = R.string.status)} ${
                 stringResource(
                     id =
-                    if (device.status == Status.DOCKED) {
+                    if (getValidDevice().status == Status.DOCKED && getValidDevice().status != Status.INACTIVE) {
                         R.string.charging
-                    } else if (device.status == Status.ON) {
+                    } else if (getValidDevice().status == Status.ON || getValidDevice().status == Status.ACTIVE) {
                         R.string.on
                     } else {
                         R.string.off
@@ -262,10 +284,10 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
         Icon(
             painter = painterResource(
                 id =
-                if (device.status == Status.DOCKED) {
+                if (getValidDevice().status == Status.DOCKED) {
                     R.drawable.battery_charging
                 } else {
-                    when (device.battery) {
+                    when (getValidDevice().battery) {
                         in 1..15 -> R.drawable.battery_1_bar
                         in 15..30 -> R.drawable.battery_2_bar
                         in 30..45 -> R.drawable.battery_3_bar
@@ -374,9 +396,11 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(25.dp),
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(25.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.fillMaxWidth(0.5f)) {
+                                modifier = Modifier.fillMaxWidth(0.5f)
+                            ) {
                                 Row(
                                     horizontalArrangement = Arrangement.spacedBy(
                                         30.dp,

@@ -9,7 +9,8 @@ import ar.edu.itba.harmony_mobile.model.Room
 data class DevicesUiState(
     val isFetching: Boolean = false,
     val error: Error? = null,
-    val devices: List<Device> = emptyList()
+    val devices: List<Device> = emptyList(),
+    val currentDevice: Device? = null,
 ) {
     fun getDevice(deviceId: String): Device? {
         return devices.find { it.id == deviceId }

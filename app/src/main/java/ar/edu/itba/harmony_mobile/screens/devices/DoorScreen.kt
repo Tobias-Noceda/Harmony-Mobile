@@ -1,5 +1,6 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,8 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,8 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.model.Status
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DoorViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.desaturate
@@ -38,25 +43,42 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
 @Composable
-fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
+fun DoorScreen(deviceRef: Door, onBackCalled: () -> Unit) {
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
 
 
     val viewModel: DoorViewModel = viewModel(factory = getViewModelFactory())
 
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val deviceState by dViewModel.uiState.collectAsState()
+
+    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+
+    fun getValidDevice(): Door {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Door) {
+            return deviceState.currentDevice as Door
+        }
+        return deviceRef
+    }
+
+    Log.i("Door", deviceRef.status.toString())
+
     @Composable
     fun doorTitle() {
         Text(
-            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name,
+            color = primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 
     @Composable
     fun openText() {
         Text(
-            text = when (device.status) {
-                Status.OPEN -> stringResource(id = R.string.close)
+            text = when (getValidDevice().status) {
+                Status.OPEN, Status.OPENED -> stringResource(id = R.string.close)
                 else -> stringResource(id = R.string.open)
             },
             fontSize = 20.sp,
@@ -67,14 +89,21 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     @Composable
     fun openSwitch() {
         Switch(
-            checked = device.status != Status.OPEN,
+            checked = getValidDevice().status != Status.OPEN && getValidDevice().status != Status.OPENED,
             onCheckedChange = {
-                when (device.status) {
-                    Status.OPEN -> viewModel.close(device)
-                    else -> viewModel.open(device)
+                when (getValidDevice().status) {
+                    Status.OPEN, Status.OPENED -> {
+                        viewModel.close(getValidDevice())
+                        dViewModel.getDevice(deviceRef.id)
+                    }
+
+                    else -> {
+                        viewModel.open(getValidDevice())
+                        dViewModel.getDevice(deviceRef.id)
+                    }
                 }
             },
-            enabled = !device.lock,
+            enabled = !getValidDevice().lock,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = tertiary,
                 checkedTrackColor = tertiary.copy(0.5f),
@@ -89,12 +118,19 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     fun lockButton() {
         Button(
             onClick = {
-                  when(device.lock){
-                      true -> viewModel.unlock(device)
-                      false -> viewModel.lock(device)
-                  }
+                when (getValidDevice().lock) {
+                    true -> {
+                        viewModel.unlock(getValidDevice())
+                        dViewModel.getDevice(deviceRef.id)
+                    }
+
+                    false -> {
+                        viewModel.lock(getValidDevice())
+                        dViewModel.getDevice(deviceRef.id)
+                    }
+                }
             },
-            enabled = device.status != Status.OPEN,
+            enabled = getValidDevice().status != Status.OPEN && getValidDevice().status != Status.OPENED,
             colors = ButtonColors(
                 tertiary,
                 secondary,
@@ -104,7 +140,7 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = when (device.lock) {
+                text = when (getValidDevice().lock) {
                     true -> stringResource(id = R.string.unlock)
                     else -> stringResource(id = R.string.lock)
                 }
@@ -116,13 +152,12 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
     fun stateText() {
         Text(
             text = "${stringResource(id = R.string.status)} ${
-                if(device.lock){
+                if (getValidDevice().lock) {
                     stringResource(id = R.string.locked)
-                } else{
-                    when (device.status) {
-                        Status.OPEN -> stringResource(id = R.string.opened)
+                } else {
+                    when (getValidDevice().status) {
                         Status.CLOSED -> stringResource(id = R.string.closed)
-                        else -> "WTF"
+                        else -> stringResource(id = R.string.opened)
                     }
                 }
             }"
@@ -135,8 +170,8 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
         ) {
             Icon(
                 painter =
-                when (device.status) {
-                    Status.OPEN -> painterResource(id = R.drawable.door_open)
+                when (getValidDevice().status) {
+                    Status.OPEN, Status.OPENED -> painterResource(id = R.drawable.door_open)
                     else -> painterResource(id = R.drawable.door)
                 },
                 contentDescription = "",
@@ -149,7 +184,7 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
         ) {
             Icon(
                 painter =
-                when (device.lock) {
+                when (getValidDevice().lock) {
                     true -> painterResource(id = R.drawable.lock)
                     else -> painterResource(id = R.drawable.lock_open)
                 },
@@ -198,8 +233,10 @@ fun DoorScreen(device: Door, onBackCalled: () -> Unit) {
                                 openSwitch()
                             }
                         } else {
-                            Column (modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally){
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 openText()
                                 openSwitch()
                             }

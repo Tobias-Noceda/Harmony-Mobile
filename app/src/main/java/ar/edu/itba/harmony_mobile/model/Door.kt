@@ -17,7 +17,10 @@ class Door(
     override fun asRemoteModel(): RemoteDevice<RemoteDoorState> {
         val state = RemoteDoorState()
         state.status = Status.asRemoteModel(status)
-        state.lock = lock
+
+        state.lock = "unlocked"
+        if (lock)
+            state.lock = "locked"
 
         val model = RemoteDoor()
         model.id = id

@@ -33,6 +33,7 @@ class ServerEventReceiver : BroadcastReceiver() {
                     action = MyIntent.SHOW_NOTIFICATION
                     `package` = MyIntent.PACKAGE
                     putExtra(MyIntent.DEVICE_ID, it.deviceId)
+                    putExtra(MyIntent.EVENT_NAME, it.event)
                 }
                 context?.sendOrderedBroadcast(intent2, null)
             }

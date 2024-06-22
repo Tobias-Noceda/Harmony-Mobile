@@ -22,8 +22,10 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,9 +40,12 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
+import ar.edu.itba.harmony_mobile.ui.devices.LampUiState
 import ar.edu.itba.harmony_mobile.ui.devices.LampViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.darken
@@ -50,23 +55,35 @@ import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
+fun LightScreen(deviceRef: Lamp, onBackCalled: () -> Unit) {
     val colorController = rememberColorPickerController()
     val scState = rememberScrollState(0)
     val adaptiveInfo = currentWindowAdaptiveInfo()
 
-    var lightBrightness by rememberSaveable { mutableFloatStateOf(device.brightness.toFloat()) }
-
     val viewModel: LampViewModel = viewModel(factory = getViewModelFactory())
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val deviceState by dViewModel.uiState.collectAsState()
 
-    Log.i("Device", device.toString())
+    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+
+    fun getValidDevice(): Lamp {
+        if (deviceState.currentDevice != null && deviceState.currentDevice is Lamp) {
+            return deviceState.currentDevice as Lamp
+        }
+        return deviceRef
+    }
+
+    var lightBrightness by rememberSaveable { mutableFloatStateOf(getValidDevice().brightness.toFloat()) }
 
     BackHandler(onBack = onBackCalled)
 
     @Composable
     fun lightTitle() {
         Text(
-            text = device.name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name,
+            color = primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
         )
 
     }
@@ -79,7 +96,7 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = stringResource(id = R.string.status) + " " + if (device.status == Status.ON) {
+                text = stringResource(id = R.string.status) + " " + if (getValidDevice().status == Status.ON) {
                     stringResource(id = R.string.on)
                 } else {
                     stringResource(id = R.string.off)
@@ -87,11 +104,13 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                 }, color = primary, fontSize = 20.sp, fontWeight = FontWeight.Normal
             )
             Switch(
-                checked = device.status == Status.ON, onCheckedChange = {
-                    if (device.status == Status.ON) {
-                        viewModel.turnOff(device)
+                checked = getValidDevice().status == Status.ON, onCheckedChange = {
+                    if (getValidDevice().status == Status.ON) {
+                        viewModel.turnOff(getValidDevice())
+                        dViewModel.getDevice(deviceRef.id)
                     } else {
-                        viewModel.turnOn(device)
+                        viewModel.turnOn(getValidDevice())
+                        dViewModel.getDevice(deviceRef.id)
                     }
                 }, colors = SwitchDefaults.colors(
                     checkedThumbColor = tertiary,
@@ -119,10 +138,10 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                 )
                 Button(
                     onClick = {}, shape = RoundedCornerShape(8.dp), colors = ButtonColors(
-                        device.color,
-                        device.color,
-                        device.color.desaturate(0f),
-                        device.color.desaturate(0f)
+                        getValidDevice().color,
+                        getValidDevice().color,
+                        getValidDevice().color.desaturate(0f),
+                        getValidDevice().color.desaturate(0f)
                     ), border = BorderStroke(2.dp, primary)
                 ) {}
             }
@@ -137,7 +156,8 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                         HsvColorPicker(modifier = Modifier.padding(0.dp),
                             controller = colorController,
                             onColorChanged = {
-                                viewModel.setColor(device, it.color)
+                                viewModel.setColor(getValidDevice(), it.color)
+                                dViewModel.getDevice(deviceRef.id)
                             })
                     }
                 } else {
@@ -151,18 +171,19 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                         ) {
                             Button(
                                 onClick = {
-                                    viewModel.setColor(device, Color.Red)
+                                    viewModel.setColor(getValidDevice(), Color.Red)
+                                    dViewModel.getDevice(deviceRef.id)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Red,
                                     Color.Red,
-                                    device.color.desaturate(0f),
-                                    device.color.desaturate(0f)
+                                    getValidDevice().color.desaturate(0f),
+                                    getValidDevice().color.desaturate(0f)
                                 ),
                                 border = BorderStroke(
                                     2.dp,
-                                    if (device.color == Color.Red) {
+                                    if (getValidDevice().color == Color.Red) {
                                         tertiary
                                     } else {
                                         primary
@@ -171,18 +192,19 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                             ) {}
                             Button(
                                 onClick = {
-                                    viewModel.setColor(device, Color.Blue)
+                                    viewModel.setColor(getValidDevice(), Color.Blue)
+                                    dViewModel.getDevice(deviceRef.id)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Blue,
                                     Color.Blue,
-                                    device.color.desaturate(0f),
-                                    device.color.desaturate(0f)
+                                    getValidDevice().color.desaturate(0f),
+                                    getValidDevice().color.desaturate(0f)
                                 ),
                                 border = BorderStroke(
                                     2.dp,
-                                    if (device.color == Color.Blue) {
+                                    if (getValidDevice().color == Color.Blue) {
                                         tertiary
                                     } else {
                                         primary
@@ -191,18 +213,19 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                             ) {}
                             Button(
                                 onClick = {
-                                    viewModel.setColor(device, Color.Green)
+                                    viewModel.setColor(getValidDevice(), Color.Green)
+                                    dViewModel.getDevice(deviceRef.id)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Green,
                                     Color.Green,
-                                    device.color.desaturate(0f),
-                                    device.color.desaturate(0f)
+                                    getValidDevice().color.desaturate(0f),
+                                    getValidDevice().color.desaturate(0f)
                                 ),
                                 border = BorderStroke(
                                     2.dp,
-                                    if (device.color == Color.Green) {
+                                    if (getValidDevice().color == Color.Green) {
                                         tertiary
                                     } else {
                                         primary
@@ -216,18 +239,19 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                         ) {
                             Button(
                                 onClick = {
-                                    viewModel.setColor(device, Color.Yellow)
+                                    viewModel.setColor(getValidDevice(), Color.Yellow)
+                                    dViewModel.getDevice(deviceRef.id)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Yellow,
                                     Color.Yellow,
-                                    device.color.desaturate(0f),
-                                    device.color.desaturate(0f)
+                                    getValidDevice().color.desaturate(0f),
+                                    getValidDevice().color.desaturate(0f)
                                 ),
                                 border = BorderStroke(
                                     2.dp,
-                                    if (device.color == Color.Yellow) {
+                                    if (getValidDevice().color == Color.Yellow) {
                                         tertiary
                                     } else {
                                         primary
@@ -236,18 +260,19 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                             ) {}
                             Button(
                                 onClick = {
-                                    viewModel.setColor(device, Color.Cyan)
+                                    viewModel.setColor(getValidDevice(), Color.Cyan)
+                                    dViewModel.getDevice(deviceRef.id)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Cyan,
                                     Color.Cyan,
-                                    device.color.desaturate(0f),
-                                    device.color.desaturate(0f)
+                                    getValidDevice().color.desaturate(0f),
+                                    getValidDevice().color.desaturate(0f)
                                 ),
                                 border = BorderStroke(
                                     2.dp,
-                                    if (device.color == Color.Cyan) {
+                                    if (getValidDevice().color == Color.Cyan) {
                                         tertiary
                                     } else {
                                         primary
@@ -256,18 +281,19 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                             ) {}
                             Button(
                                 onClick = {
-                                    viewModel.setColor(device, Color.Magenta)
+                                    viewModel.setColor(getValidDevice(), Color.Magenta)
+                                    dViewModel.getDevice(deviceRef.id)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
                                     Color.Magenta,
                                     Color.Magenta,
-                                    device.color.desaturate(0f),
-                                    device.color.desaturate(0f)
+                                    getValidDevice().color.desaturate(0f),
+                                    getValidDevice().color.desaturate(0f)
                                 ),
                                 border = BorderStroke(
                                     2.dp,
-                                    if (device.color == Color.Magenta) {
+                                    if (getValidDevice().color == Color.Magenta) {
                                         tertiary
                                     } else {
                                         primary
@@ -297,9 +323,10 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                     onValueChange = { lightBrightness = it },
                     onValueChangeFinished = {
                         viewModel.setBrightness(
-                            device,
+                            getValidDevice(),
                             lightBrightness.toInt()
                         )
+                        dViewModel.getDevice(deviceRef.id)
                     },
                     valueRange = 0f..100f,
                     colors = SliderColors(
@@ -314,7 +341,7 @@ fun LightScreen(device: Lamp, onBackCalled: () -> Unit) {
                         disabled.darken(0.75f),
                         Color.Transparent
                     ),
-                    enabled = device.status == Status.ON
+                    enabled = getValidDevice().status == Status.ON
                 )
             }
         }
