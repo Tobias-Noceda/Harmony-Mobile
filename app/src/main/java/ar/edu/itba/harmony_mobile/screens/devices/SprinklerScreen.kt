@@ -74,12 +74,11 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
     }
     val viewModel: SprinklerViewModel = viewModel(factory = getViewModelFactory())
 
-    var isDispensing by rememberSaveable { mutableStateOf(false) }
-
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
     dViewModel.getDevice(deviceRef.id!!) // updates the current device
+    dViewModel.setCurrentDeviceId(deviceRef.id)
 
     fun getValidDevice(): Sprinkler {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Sprinkler) {
@@ -124,7 +123,7 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = getValidDevice().status != Status.OPEN,
+            enabled = getValidDevice().status == Status.CLOSED,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -148,7 +147,7 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = getValidDevice().status != Status.OPEN && !isDispensing,
+            enabled = getValidDevice().status == Status.OPENED,
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 5.dp,
                 disabledElevation = (-5).dp
@@ -251,7 +250,6 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
                                     selectedAmountToDispense
                                 )
                                 dViewModel.getDevice(deviceRef.id)
-                                isDispensing = true
                             },
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonColors(
@@ -260,7 +258,7 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
                                 tertiary.desaturate(0f),
                                 secondary.desaturate(0f)
                             ),
-                            enabled = !isDispensing,
+                            enabled = getValidDevice().status == Status.CLOSED,
                             elevation = ButtonDefaults.buttonElevation(
                                 defaultElevation = 5.dp,
                                 disabledElevation = (-5).dp
@@ -344,7 +342,6 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
                             selectedAmountToDispense
                         )
                         dViewModel.getDevice(deviceRef.id)
-                        isDispensing = true
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonColors(
@@ -353,7 +350,7 @@ fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
                         tertiary.desaturate(0f),
                         secondary.desaturate(0f)
                     ),
-                    enabled = !isDispensing,
+                    enabled = getValidDevice().status == Status.CLOSED,
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 5.dp,
                         disabledElevation = (-5).dp

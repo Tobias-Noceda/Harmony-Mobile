@@ -95,6 +95,6 @@ class ApiApplication : Application() {
 
     companion object {
         const val CHANNEL_ID = "device"
-        const val INTERVAL: Long = 1000 * 60
+        const val INTERVAL: Long = 1000 * 5
     }
 }

@@ -60,6 +60,7 @@ class DevicesViewModel(
         updating = runOnViewModelScope(
             {
                 while (true) {
+                    Log.i("HERE", delay.toString())
                     delay(delay)
                     if (currentDeviceId != null)
                         getDevice(currentDeviceId!!)

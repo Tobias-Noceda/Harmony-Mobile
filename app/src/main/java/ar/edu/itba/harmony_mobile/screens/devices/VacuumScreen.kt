@@ -73,7 +73,8 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
-    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+    dViewModel.getDevice(deviceRef.id!!)
+    dViewModel.setCurrentDeviceId(deviceRef.id)
 
     fun getValidDevice(): Vacuum {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Vacuum) {
@@ -218,10 +219,8 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
             onClick = {
                 if (getValidDevice().status == Status.ACTIVE || getValidDevice().status == Status.ON) {
                     viewModel.pause(getValidDevice())
-                    dViewModel.getDevice(deviceRef.id)
                 } else {
                     viewModel.start(getValidDevice())
-                    dViewModel.getDevice(deviceRef.id)
                 }
             },
             colors = IconButtonColors(
@@ -246,7 +245,6 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
         Button(
             onClick = {
                 viewModel.dock(getValidDevice())
-                dViewModel.getDevice(deviceRef.id)
             },
             colors = ButtonColors(
                 tertiary,

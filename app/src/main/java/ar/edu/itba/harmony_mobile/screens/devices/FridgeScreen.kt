@@ -71,7 +71,8 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
-    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+    dViewModel.getDevice(deviceRef.id!!)
+    dViewModel.setCurrentDeviceId(deviceRef.id)
 
     fun getValidDevice(): Refrigerator {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Refrigerator) {
@@ -137,7 +138,6 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
                         onClick = {
                             viewModel.setMode(getValidDevice(), item.apiText)
                             isExpanded = false
-                            dViewModel.getDevice(deviceRef.id)
                         },
                         text = {
                             Text(stringResource(item.textId), color = secondary)
@@ -154,7 +154,6 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
         IconButton(
             onClick = {
                 onClick.invoke()
-                dViewModel.getDevice(deviceRef.id)
             },
             colors = IconButtonColors(
                 tertiary,

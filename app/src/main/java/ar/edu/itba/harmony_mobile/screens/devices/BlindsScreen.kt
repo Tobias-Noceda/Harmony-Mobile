@@ -46,22 +46,20 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 @Composable
 fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
 
-    var blindsLimit by rememberSaveable { mutableFloatStateOf(deviceRef.level.toFloat()) }
 
     val viewModel: BlindsViewModel = viewModel(factory = getViewModelFactory())
-
-
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
-
-    dViewModel.getDevice(deviceRef.id!!) // updates the current device
-
     fun getValidDevice(): Blinds {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Blinds) {
             return deviceState.currentDevice as Blinds
         }
         return deviceRef
     }
+
+    dViewModel.getDevice(deviceRef.id!!)
+    dViewModel.setCurrentDeviceId(deviceRef.id)
+    var blindsLimit by rememberSaveable { mutableFloatStateOf(getValidDevice().level.toFloat()) }
 
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
@@ -71,7 +69,10 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
     @Composable
     fun blindsTitle() {
         Text(
-            text = getValidDevice().name, color = primary, fontSize = 30.sp, fontWeight = FontWeight.Bold
+            text = getValidDevice().name,
+            color = primary,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 
@@ -95,7 +96,6 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
         Button(
             onClick = {
                 viewModel.open(getValidDevice())
-                dViewModel.getDevice(deviceRef.id)
             },
             colors = ButtonColors(
                 tertiary,
@@ -103,7 +103,7 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = (getValidDevice().status == Status.OPENED || getValidDevice().status == Status.CLOSED)
+            enabled = (getValidDevice().status == Status.CLOSED)
                     && getValidDevice().currentLevel > 0,
         ) {
             Text(text = stringResource(id = R.string.open))
@@ -115,8 +115,6 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
         Button(
             onClick = {
                 viewModel.close(getValidDevice())
-                dViewModel.getDevice(deviceRef.id)
-
             },
             colors = ButtonColors(
                 tertiary,
@@ -124,7 +122,7 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = (getValidDevice().status == Status.OPENED || getValidDevice().status == Status.CLOSED)
+            enabled = (getValidDevice().status == Status.OPENED)
                     && getValidDevice().currentLevel < getValidDevice().level,
         ) {
             Text(text = stringResource(id = R.string.close))
