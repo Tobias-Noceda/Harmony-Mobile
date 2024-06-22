@@ -8,6 +8,8 @@ object RemoteStatus {
     const val OPEN = "open"
     const val OPENED = "opened"
     const val CLOSED = "closed"
+    const val OPENING = "opening"
+    const val CLOSING = "closing"
     const val DOCKED = "docked"
     const val ACTIVE = "active"
     const val INACTIVE = "inactive"
@@ -19,6 +21,8 @@ object RemoteStatus {
             OPEN -> Status.OPEN
             OPENED -> Status.OPENED
             CLOSED -> Status.CLOSED
+            OPENING -> Status.OPENING
+            CLOSING -> Status.CLOSING
             ACTIVE -> Status.ACTIVE
             INACTIVE -> Status.INACTIVE
             else -> Status.DOCKED

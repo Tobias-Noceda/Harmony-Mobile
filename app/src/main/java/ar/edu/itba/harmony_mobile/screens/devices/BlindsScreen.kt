@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,8 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Blinds
-import ar.edu.itba.harmony_mobile.model.Refrigerator
-import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.ui.devices.BlindsViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
@@ -44,16 +42,10 @@ import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
-enum class MoveState {
-    STILL, OPENING, CLOSING
-}
-
 @Composable
 fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
 
-    var isMoving by rememberSaveable { mutableStateOf(MoveState.STILL) }
-
-    var blindsLimit by rememberSaveable { mutableFloatStateOf(0f) }
+    var blindsLimit by rememberSaveable { mutableFloatStateOf(deviceRef.level.toFloat()) }
 
     val viewModel: BlindsViewModel = viewModel(factory = getViewModelFactory())
 
@@ -84,10 +76,10 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
     fun blindsStatusText() {
         Text(
             text = "${stringResource(id = R.string.status)} ${getValidDevice().currentLevel}% ${
-                when (isMoving) {
-                    MoveState.STILL -> ""
-                    MoveState.OPENING -> "- " + stringResource(id = R.string.opening)
-                    MoveState.CLOSING -> "- " + stringResource(id = R.string.closing)
+                when (getValidDevice().status) {
+                    Status.OPENING -> "- " + stringResource(id = R.string.opening)
+                    Status.CLOSING -> "- " + stringResource(id = R.string.closing)
+                    else -> ""
                 }
             }",
             fontSize = 20.sp,
@@ -101,7 +93,6 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
             onClick = {
                 viewModel.open(getValidDevice())
                 dViewModel.getDevice(deviceRef.id)
-                isMoving = MoveState.OPENING
             },
             colors = ButtonColors(
                 tertiary,
@@ -109,7 +100,8 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = isMoving == MoveState.STILL && getValidDevice().currentLevel > 0,
+            enabled = (getValidDevice().status == Status.OPENED || getValidDevice().status == Status.CLOSED)
+                    && getValidDevice().currentLevel > 0,
         ) {
             Text(text = stringResource(id = R.string.open))
         }
@@ -121,7 +113,6 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
             onClick = {
                 viewModel.close(getValidDevice())
                 dViewModel.getDevice(deviceRef.id)
-                isMoving = MoveState.CLOSING
 
             },
             colors = ButtonColors(
@@ -130,7 +121,8 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
                 tertiary.desaturate(0f),
                 secondary.desaturate(0f)
             ),
-            enabled = isMoving == MoveState.STILL && getValidDevice().currentLevel < getValidDevice().level,
+            enabled = (getValidDevice().status == Status.OPENED || getValidDevice().status == Status.CLOSED)
+                    && getValidDevice().currentLevel < getValidDevice().level,
         ) {
             Text(text = stringResource(id = R.string.close))
         }
