@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,7 +44,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
 @Composable
-fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
+fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
 
     var blindsLimit by rememberSaveable { mutableFloatStateOf(deviceRef.level.toFloat()) }
 
@@ -64,7 +65,9 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
 
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    BackHandler(onBack = onBackCalled)
+    if(onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
     @Composable
     fun blindsTitle() {
         Text(

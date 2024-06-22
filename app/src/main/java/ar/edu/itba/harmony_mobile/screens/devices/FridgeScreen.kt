@@ -57,12 +57,14 @@ enum class FridgeMode(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: () -> Unit) {
+fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
 
     val dropDownOptions = FridgeMode.entries.toList()
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    BackHandler(onBack = onBackCalled)
+    if (onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
     val viewModel: RefrigeratorViewModel = viewModel(factory = getViewModelFactory())
 
 
