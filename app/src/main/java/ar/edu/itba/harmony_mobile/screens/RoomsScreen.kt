@@ -83,6 +83,7 @@ fun RoomsScreen(
                 } else {
                     roomsState.getRoom(currentDestination)
                 },
+                currentHouse,
                 roomsState,
                 devicesState,
             ) { currentDestination = "" }

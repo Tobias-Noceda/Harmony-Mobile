@@ -35,6 +35,7 @@ import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Door
+import ar.edu.itba.harmony_mobile.model.Home
 import ar.edu.itba.harmony_mobile.model.Lamp
 import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Room
@@ -62,6 +63,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 @Composable
 fun RoomScreen(
     room: Room,
+    currentHome: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
     onBackCalled: () -> Unit
@@ -85,9 +87,12 @@ fun RoomScreen(
             DeviceTypes.LIGHTS -> LightScreen(devicesState.getDevice(currentDevice) as Lamp) { currentDevice = "" }
             DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentDevice) as Door) { currentDevice = "" }
             DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentDevice) as Refrigerator) { currentDevice = "" }
-            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentDevice) as Vacuum) { currentDevice = "" }
             DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentDevice) as Sprinkler) { currentDevice = "" }
-            else -> BlindsScreen(devicesState.getDevice(currentDevice) as Blinds) { currentDevice = "" }
+            DeviceTypes.BLINDS -> BlindsScreen(devicesState.getDevice(currentDevice) as Blinds) { currentDevice = "" }
+            else -> VacuumScreen(
+                devicesState.getDevice(currentDevice) as Vacuum,
+                roomsState.getHomeRooms(currentHome)
+            ) { currentDevice = "" }
         }
         BackHandler(onBack = { currentDevice = "" })
     }

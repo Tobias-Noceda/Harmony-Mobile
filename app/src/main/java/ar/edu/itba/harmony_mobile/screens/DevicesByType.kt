@@ -106,8 +106,11 @@ fun DevicesByType(
             DeviceTypes.DOORS -> DoorScreen(devicesState.getDevice(currentId) as Door) { currentId = "" }
             DeviceTypes.REFRIS -> FridgeScreen(devicesState.getDevice(currentId) as Refrigerator) { currentId = "" }
             DeviceTypes.SPRINKLERS -> SprinklerScreen(devicesState.getDevice(currentId) as Sprinkler) { currentId = "" }
-            DeviceTypes.VACUUMS -> VacuumScreen(devicesState.getDevice(currentId) as Vacuum) { currentId = "" }
-            else -> BlindsScreen(devicesState.getDevice(currentId) as Blinds) { currentId = "" }
+            DeviceTypes.BLINDS -> BlindsScreen(devicesState.getDevice(currentId) as Blinds) { currentId = "" }
+            else -> VacuumScreen(
+                devicesState.getDevice(currentId) as Vacuum,
+                roomsState.getHomeRooms(currentHouse)
+            ) { currentId = "" }
         }
         BackHandler(onBack = { currentId = "" })
     }

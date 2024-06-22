@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Room
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.ui.devices.VacuumViewModel
@@ -56,7 +57,7 @@ enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
+fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
     val roomDropDownOptions =
