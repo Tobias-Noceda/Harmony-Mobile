@@ -51,8 +51,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -73,7 +71,6 @@ import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsViewModel
-import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 
@@ -90,6 +87,7 @@ enum class AppDestinations(
 
 @Composable
 fun HarmonyApp(
+    deviceId: String?,
     hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory()),
     rViewModel: RoomsViewModel = viewModel(factory = getViewModelFactory()),
     dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
@@ -164,7 +162,19 @@ fun HarmonyApp(
             }
         }
     ) {
-        Router(navController, houseState.getHome(currentHouseId), roomsState, devicesState)
+        if(deviceId != null) {
+            val device = devicesState.getDevice(deviceId)
+            Log.i("Tobi", device!!.toString())
+            val room = device.room
+            Log.i("Tobi", room!!.toString())
+            val home = room.home
+            Log.i("Tobi", home!!.toString())
+            currentHouseId = home.id!!
+        }
+        var myDeviceId by rememberSaveable { mutableStateOf(deviceId) }
+        Router(myDeviceId, navController, houseState.getHome(currentHouseId), roomsState, devicesState) {
+            myDeviceId = null
+        }
 
         CustomTopSheet(
             visible = showBottomSheet,
@@ -307,10 +317,12 @@ private fun CustomTopSheet(
 @Composable
 @SuppressLint("StateFlowValueCalledInComposition")
 private fun Router(
+    deviceId: String?,
     navController: NavHostController,
     currentHome: Home,
     roomsState: RoomsUiState,
-    devicesState: DevicesUiState
+    devicesState: DevicesUiState,
+    deviceBack: () -> Unit
 ) {
 
     NavHost(
@@ -318,23 +330,23 @@ private fun Router(
     ) {
         val modifier = Modifier.fillMaxSize()
         composable(AppDestinations.ROOMS.route) {
-            RoomsScreen(modifier = modifier, currentHouse = currentHome, roomsState, devicesState)
+            RoomsScreen(modifier, currentHome, roomsState, devicesState, deviceId, deviceBack)
         }
 
         composable(AppDestinations.DEVICES.route) {
-            DevicesScreen(modifier = modifier, currentHouse = currentHome, roomsState, devicesState)
+            DevicesScreen(modifier, currentHome, roomsState, devicesState)
         }
 
         composable(AppDestinations.ROUTINES.route) {
-            RoutinesScreen(modifier = modifier, currentHouse = currentHome)
+            RoutinesScreen(modifier, currentHome)
         }
     }
 }
 
-@Preview(device = Devices.TABLET)
-@Composable
-fun TabletPreview() {
-    HarmonyTheme {
-        HarmonyApp()
-    }
-}
+// @Preview(device = Devices.TABLET)
+// @Composable
+// fun TabletPreview() {
+//     HarmonyTheme {
+//         HarmonyApp()
+//     }
+// }
