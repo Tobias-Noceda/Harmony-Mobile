@@ -21,9 +21,9 @@ import java.util.Locale
 
 class ShowNotificationReceiver : BroadcastReceiver() {
 
-    val camelRegex = "(?<=[a-zA-Z])[A-Z]".toRegex()
+    private val camelRegex = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
-    fun String.camelToNormalText(): String {
+    private fun String.camelToNormalText(): String {
         return camelRegex.replace(this) { " ${it.value}" }
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
     }
@@ -38,7 +38,7 @@ class ShowNotificationReceiver : BroadcastReceiver() {
         }
     }
 
-    var deviceService = RetrofitClient.deviceService
+    private var deviceService = RetrofitClient.deviceService
     private fun showNotification(context: Context, deviceId: String, eventName: String) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
