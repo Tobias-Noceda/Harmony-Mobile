@@ -1,6 +1,5 @@
 package ar.edu.itba.harmony_mobile.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -69,7 +68,10 @@ fun RoutinesScreen(
 
     Box(modifier = modifier) {
         if (inList) {
-            RoutineView(routine = routinesState.getRoutine(showingRoutine)!!) { inList = false }
+            RoutineView(
+                routine = routinesState.getRoutine(showingRoutine)!!,
+                rViewModel = rViewModel
+            ) { inList = false }
         } else {
             if (routinesState.getHomeRoutines(currentHouse).isEmpty()) {
                 val text =
@@ -78,6 +80,7 @@ fun RoutinesScreen(
             }
             RoutinesList(
                 routines = routinesState.getHomeRoutines(currentHouse),
+                rViewModel = rViewModel,
                 onNav = { routineId ->
                     showingRoutine = routineId
                     inList = true
@@ -89,8 +92,8 @@ fun RoutinesScreen(
 @Composable
 fun RoutinesList(
     routines: List<Routine>,
-    onNav: (String) -> Unit,
-    rViewModel: RoutinesViewModel = viewModel(factory = getViewModelFactory())
+    rViewModel: RoutinesViewModel,
+    onNav: (String) -> Unit
 ) {
 
     val scState = rememberScrollState(0)
@@ -194,6 +197,8 @@ fun RoutinesList(
                                     .wrapContentWidth(),
                                 shape = CircleShape,
                                 onClick = {
+                                    if (routine.id != null)
+                                        rViewModel.executeRoutine(routine.id!!)
                                     Toast.makeText(
                                         context,
                                         "$text ${routine.name}",
@@ -294,13 +299,13 @@ fun RoutinesList(
                                     .wrapContentWidth(),
                                 shape = CircleShape,
                                 onClick = {
+                                    if (routine.id != null)
+                                        rViewModel.executeRoutine(routine.id!!)
                                     Toast.makeText(
                                         context,
                                         "$text ${routine.name}",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    if (routine.id != null)
-                                        rViewModel.executeRoutine(routine.id!!)
                                 },
                                 colors = ButtonColors(primary, secondary, tertiary, tertiary)
                             ) {
@@ -362,6 +367,8 @@ fun RoutinesList(
                                     .wrapContentWidth(),
                                 shape = CircleShape,
                                 onClick = {
+                                    if (routine.id != null)
+                                        rViewModel.executeRoutine(routine.id!!)
                                     Toast.makeText(
                                         context,
                                         "$text ${routine.name}",

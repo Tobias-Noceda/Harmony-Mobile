@@ -28,12 +28,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Routine
+import ar.edu.itba.harmony_mobile.ui.rooms.RoutinesViewModel
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun RoutineView(routine: Routine, onBack: () -> Unit) {
+fun RoutineView(routine: Routine, rViewModel: RoutinesViewModel, onBack: () -> Unit) {
     val scState = rememberScrollState(0)
 
     BackHandler(onBack = onBack)
@@ -79,6 +80,8 @@ fun RoutineView(routine: Routine, onBack: () -> Unit) {
                         .wrapContentWidth(),
                     shape = CircleShape,
                     onClick = {
+                        if (routine.id != null)
+                            rViewModel.executeRoutine(routine.id!!)
                         Toast.makeText(
                             context,
                             "$running ${routine.name}",

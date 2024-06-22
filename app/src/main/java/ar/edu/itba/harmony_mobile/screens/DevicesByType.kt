@@ -78,10 +78,10 @@ fun DevicesByType(
     if (currentId == "") {
         val list = filterDevices(devicesState.getHomeDevices(currentHouse), type)
         var typeStr = stringResource(id = type.type)
-        if(typeStr[typeStr.length - 2] == 'e') {
-            typeStr = typeStr.toLowerCase(Locale.current).dropLast(2)
+        typeStr = if(typeStr[typeStr.length - 2] == 'e') {
+            typeStr.toLowerCase(Locale.current).dropLast(2)
         } else {
-            typeStr = typeStr.toLowerCase(Locale.current).dropLast(1)
+            typeStr.toLowerCase(Locale.current).dropLast(1)
         }
         if (list.isEmpty()) {
             val name = if(currentHouse.id == "0") stringResource(id = R.string.personal_devices) else currentHouse.name
@@ -103,8 +103,8 @@ fun DevicesByType(
         val device = devicesState.getDevice(currentId)
         setShowingDevice(device!!.id!!)
         val onLeave = {
-            currentId = ""
-            setShowingDevice("")
+            setShowingDevice("0")
+            currentId = "0"
         }
         when(type) {
             DeviceTypes.LIGHTS -> LightScreen(device as Lamp) { onLeave() }

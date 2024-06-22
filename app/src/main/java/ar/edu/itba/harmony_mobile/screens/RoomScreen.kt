@@ -88,8 +88,8 @@ fun RoomScreen(
         val device = devicesState.getDevice(currentDevice)
         setShowingDevice(device!!.id!!)
         val onLeave = {
+            setShowingDevice("0")
             currentDevice = ""
-            setShowingDevice("")
         }
         when(currentDeviceType) {
             DeviceTypes.LIGHTS -> LightScreen(device as Lamp) { onLeave() }
