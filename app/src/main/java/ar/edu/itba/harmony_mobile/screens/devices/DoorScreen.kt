@@ -86,7 +86,7 @@ fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
     @Composable
     fun openSwitch() {
         Switch(
-            checked = getValidDevice().status != Status.OPEN && getValidDevice().status != Status.OPENED,
+            checked = getValidDevice().status == Status.OPEN && getValidDevice().status == Status.OPENED,
             onCheckedChange = {
                 when (getValidDevice().status) {
                     Status.OPEN, Status.OPENED -> {

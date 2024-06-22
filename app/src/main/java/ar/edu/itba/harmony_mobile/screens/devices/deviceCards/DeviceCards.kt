@@ -129,6 +129,17 @@ fun LightCard(
     }
 }
 
+@Composable
+private fun getDoor(door: Device): Door {
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val devicesState by dViewModel.uiState.collectAsState()
+    return if(devicesState.getDevice(door.id!!) == null) {
+        door as Door
+    } else {
+        devicesState.getDevice(door.id) as Door
+    }
+}
+
 @SuppressLint("ModifierParameter")
 @Composable
 fun DoorCard(
@@ -138,9 +149,7 @@ fun DoorCard(
         .padding(4.dp),
     onClick: () -> Unit
 ) {
-    val actualDoor = door as Door
-    val status = actualDoor.status
-    var text = if(status == Status.OPEN) stringResource(R.string.open) else stringResource(R.string.closed)
+    val actualDoor = getDoor(door = door)
     MyCard(
         device = door,
         type = DeviceTypes.DOORS,
@@ -148,10 +157,10 @@ fun DoorCard(
         content = {
             Column {
                 Text(
-                    text = "${stringResource(id = R.string.status)} $text",
+                    text = "${stringResource(id = R.string.status)} ${if(actualDoor.status == Status.OPEN) stringResource(R.string.open) else stringResource(R.string.closed)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                if(status == Status.CLOSED) {
+                if(actualDoor.status == Status.CLOSED) {
                     val lock = if(actualDoor.lock) stringResource(R.string.locked) else stringResource(R.string.unlocked)
                     Text(
                         text = lock,
@@ -166,6 +175,17 @@ fun DoorCard(
     }
 }
 
+@Composable
+private fun getRefrigerator(refrigerator: Device): Refrigerator {
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val devicesState by dViewModel.uiState.collectAsState()
+    return if(devicesState.getDevice(refrigerator.id!!) == null) {
+        refrigerator as Refrigerator
+    } else {
+        devicesState.getDevice(refrigerator.id) as Refrigerator
+    }
+}
+
 @SuppressLint("ModifierParameter")
 @Composable
 fun RefrigeratorCard(
@@ -175,9 +195,7 @@ fun RefrigeratorCard(
         .padding(4.dp),
     onClick: () -> Unit
 ) {
-    val actualRefrigerator = refrigerator as Refrigerator
-    val fridgeTemp = actualRefrigerator.temperature
-    val freezerTemp = actualRefrigerator.freezerTemperature
+    val actualRefrigerator = getRefrigerator(refrigerator = refrigerator)
 
     MyCard(
         device = refrigerator,
@@ -186,11 +204,11 @@ fun RefrigeratorCard(
         content = {
             Column {
                 Text(
-                    text = "Fridge: $fridgeTemp°C",
+                    text = "Fridge: ${actualRefrigerator.temperature}°C",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Freezer: $freezerTemp°C",
+                    text = "Freezer: ${actualRefrigerator.freezerTemperature}°C",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -198,6 +216,17 @@ fun RefrigeratorCard(
         }
     ) {
         onClick()
+    }
+}
+
+@Composable
+private fun getVacuum(vacuum: Device): Vacuum {
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val devicesState by dViewModel.uiState.collectAsState()
+    return if(devicesState.getDevice(vacuum.id!!) == null) {
+        vacuum as Vacuum
+    } else {
+        devicesState.getDevice(vacuum.id) as Vacuum
     }
 }
 
@@ -210,14 +239,7 @@ fun VacuumCard(
         .padding(4.dp),
     onClick: () -> Unit
 ) {
-    val actualVacuum = vacuum as Vacuum
-    val status = when (actualVacuum.status)
-    {
-        Status.ON -> { stringResource(id = R.string.on) }
-        Status.DOCKED -> { stringResource(id = R.string.docked) }
-        else -> { stringResource(id = R.string.off) }
-    }
-    val battery = actualVacuum.battery
+    val actualVacuum = getVacuum(vacuum = vacuum)
     MyCard(
         device = vacuum,
         type = DeviceTypes.VACUUMS,
@@ -225,11 +247,15 @@ fun VacuumCard(
         content = {
             Column {
                 Text(
-                    text = "${stringResource(id = R.string.status)} $status",
+                    text = "${stringResource(id = R.string.status)} ${when(actualVacuum.status) {
+                        Status.ON -> { stringResource(id = R.string.on) }
+                        Status.DOCKED -> { stringResource(id = R.string.docked) }
+                        else -> { stringResource(id = R.string.off) }
+                    }}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Battery: $battery%",
+                    text = "Battery: ${actualVacuum.battery}%",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -237,6 +263,17 @@ fun VacuumCard(
         }
     ) {
         onClick()
+    }
+}
+
+@Composable
+private fun getSprinkler(sprinkler: Device): Sprinkler {
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val devicesState by dViewModel.uiState.collectAsState()
+    return if(devicesState.getDevice(sprinkler.id!!) == null) {
+        sprinkler as Sprinkler
+    } else {
+        devicesState.getDevice(sprinkler.id) as Sprinkler
     }
 }
 
@@ -249,12 +286,7 @@ fun SprinklerCard(
         .padding(4.dp),
     onClick: () -> Unit
 ) {
-    val actualSprinkler = sprinkler as Sprinkler
-    val status = if (actualSprinkler.status == Status.OPEN) {
-        stringResource(id = R.string.opened)
-    } else {
-        stringResource(id = R.string.closed)
-    }
+    val actualSprinkler = getSprinkler(sprinkler = sprinkler)
     MyCard(
         device = sprinkler,
         type = DeviceTypes.SPRINKLERS,
@@ -262,13 +294,24 @@ fun SprinklerCard(
         content = {
             Column {
                 Text(
-                    text = "Status: $status",
+                    text = "Status: ${if (actualSprinkler.status == Status.OPEN) stringResource(id = R.string.opened) else stringResource(id = R.string.closed)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
     ) {
         onClick()
+    }
+}
+
+@Composable
+private fun getBlinds(blinds: Device): Blinds {
+    val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
+    val devicesState by dViewModel.uiState.collectAsState()
+    return if(devicesState.getDevice(blinds.id!!) == null) {
+        blinds as Blinds
+    } else {
+        devicesState.getDevice(blinds.id) as Blinds
     }
 }
 
@@ -281,13 +324,7 @@ fun BlindsCard(
         .padding(4.dp),
     onClick: () -> Unit
 ) {
-    val actualBlinds = blinds as Blinds
-    val status = if (actualBlinds.status == Status.OPEN) {
-        stringResource(id = R.string.opened)
-    } else {
-        stringResource(id = R.string.closed)
-    }
-    val maxLevel = actualBlinds.level
+    val actualBlinds = getBlinds(blinds = blinds)
     MyCard(
         device = blinds,
         type = DeviceTypes.BLINDS,
@@ -295,11 +332,11 @@ fun BlindsCard(
         content = {
             Column {
                 Text(
-                    text = "${stringResource(id = R.string.status)} $status",
+                    text = "${stringResource(id = R.string.status)} ${if (actualBlinds.status == Status.OPEN) stringResource(id = R.string.opened) else stringResource(id = R.string.closed)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "${stringResource(id = R.string.limit)} $maxLevel%",
+                    text = "${stringResource(id = R.string.limit)} ${actualBlinds.level}%",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(top = 4.dp)
                 )

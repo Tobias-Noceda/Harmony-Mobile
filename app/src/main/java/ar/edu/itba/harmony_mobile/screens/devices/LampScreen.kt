@@ -109,8 +109,8 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                 }, color = primary, fontSize = 20.sp, fontWeight = FontWeight.Normal
             )
             Switch(
-                checked = getValidDevice().status != Status.ON, onCheckedChange = {
-                    if (getValidDevice().status != Status.ON) {
+                checked = getValidDevice().status == Status.ON, onCheckedChange = {
+                    if (getValidDevice().status == Status.ON) {
                         viewModel.turnOff(getValidDevice())
                         dViewModel.getDevice(deviceRef.id)
                     } else {
