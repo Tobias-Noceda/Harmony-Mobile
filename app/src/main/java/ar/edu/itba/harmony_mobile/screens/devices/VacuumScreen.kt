@@ -60,8 +60,6 @@ enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
 fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
-    val roomDropDownOptions =
-        arrayOf("asdasd", "jhsgghjkgkhjf") //TODO REEMPLAZAR CON FETCH A LA API
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
@@ -161,7 +159,7 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
-                device.targetRoom?.let { Text(it.name) }     //TODO REEMPLAZAR CON EL NOMBRE
+                device.targetRoom?.let { Text(it.name) }
                 Icon(
                     imageVector = when (isExpanded) {
                         false -> Icons.Default.KeyboardArrowDown
@@ -178,14 +176,14 @@ fun VacuumScreen(device: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.BottomEnd),
             ) {
-                roomDropDownOptions.forEach { item ->
+                rooms.forEach { item ->
                     DropdownMenuItem(
                         onClick = {
-                            //TODO device.targetRoom = item   //REEMPLAZAR CON OBTENER ID
+                            item.id?.let { viewModel.setLocation(device, it) }
                             isExpanded = false
                         },
                         text = {
-                            Text(item, color = secondary)
+                            Text(item.name, color = secondary)
                         },
                     )
                 }
