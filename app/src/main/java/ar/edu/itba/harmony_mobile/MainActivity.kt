@@ -22,8 +22,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         setContent {
             HarmonyTheme {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -36,12 +34,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                val deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
-                if (deviceId != null) {
-                    //Mostrar device
-                }
+                var deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
 
-                HarmonyApp()
+                HarmonyApp(deviceId)
             }
         }
     }

@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
-import ar.edu.itba.harmony_mobile.model.Blinds
 import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
@@ -43,10 +42,11 @@ import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 
 @Composable
-fun DoorScreen(deviceRef: Door, onBackCalled: () -> Unit) {
+fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    BackHandler(onBack = onBackCalled)
-
+    if (onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
 
     val viewModel: DoorViewModel = viewModel(factory = getViewModelFactory())
 

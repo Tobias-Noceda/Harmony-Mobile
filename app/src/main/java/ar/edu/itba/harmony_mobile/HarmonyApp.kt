@@ -1,7 +1,6 @@
 package ar.edu.itba.harmony_mobile
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -51,8 +50,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,20 +59,37 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
+import ar.edu.itba.harmony_mobile.model.Blinds
+import ar.edu.itba.harmony_mobile.model.Device
+import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.model.Home
+import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Refrigerator
+import ar.edu.itba.harmony_mobile.model.Sprinkler
+import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.persistent.HarmonyTopAppBar
+import ar.edu.itba.harmony_mobile.remote.api.RetrofitClient
 import ar.edu.itba.harmony_mobile.screens.DevicesScreen
 import ar.edu.itba.harmony_mobile.screens.RoomsScreen
 import ar.edu.itba.harmony_mobile.screens.RoutinesScreen
+import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
+import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
+import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
+import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
+import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
+import ar.edu.itba.harmony_mobile.screens.devices.VacuumScreen
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.homes.HomesViewModel
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsViewModel
-import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
 import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.secondary
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 
 enum class AppDestinations(
     @StringRes val label: Int,
@@ -90,6 +104,7 @@ enum class AppDestinations(
 
 @Composable
 fun HarmonyApp(
+    deviceId: String?,
     hViewModel: HomesViewModel = viewModel(factory = getViewModelFactory()),
     rViewModel: RoomsViewModel = viewModel(factory = getViewModelFactory()),
     dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
@@ -100,7 +115,6 @@ fun HarmonyApp(
     val houseState by hViewModel.uiState.collectAsState()
     val roomsState by rViewModel.uiState.collectAsState()
     val devicesState by dViewModel.uiState.collectAsState()
-    Log.i("Devices", devicesState.devices.toString())
 
     val navStack by navController.currentBackStackEntryAsState()
     val currentRoute = navStack?.destination?.route
@@ -164,8 +178,25 @@ fun HarmonyApp(
             }
         }
     ) {
-        Router(navController, houseState.getHome(currentHouseId), roomsState, devicesState)
-
+        var device: Device? = null
+        if(deviceId != null) {
+            val deviceService = RetrofitClient.deviceService
+            runBlocking {
+                val tasks = listOf(
+                    async(Dispatchers.IO) {
+                        device =
+                            deviceService.getDevices().body()?.result?.find { it.id == deviceId }
+                                ?.asModel()
+                    },
+                )
+                tasks.awaitAll()
+            }
+            val room = device!!.room
+            if (room != null) {
+                currentHouseId = room.home!!.id!!
+            }
+        }
+        Router(device, navController, houseState.getHome(currentHouseId), roomsState, devicesState)
         CustomTopSheet(
             visible = showBottomSheet,
             onDismiss = { showBottomSheet = false },
@@ -307,34 +338,45 @@ private fun CustomTopSheet(
 @Composable
 @SuppressLint("StateFlowValueCalledInComposition")
 private fun Router(
+    device: Device?,
     navController: NavHostController,
     currentHome: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState
 ) {
-
     NavHost(
         navController = navController, startDestination = AppDestinations.ROOMS.route
     ) {
         val modifier = Modifier.fillMaxSize()
         composable(AppDestinations.ROOMS.route) {
-            RoomsScreen(modifier = modifier, currentHouse = currentHome, roomsState, devicesState)
+            if (device == null)
+                RoomsScreen(modifier, currentHome, roomsState, devicesState)
+            else {
+                when(device.type) {
+                    DeviceTypes.LIGHTS -> LightScreen(device as Lamp)
+                    DeviceTypes.DOORS -> DoorScreen(device as Door)
+                    DeviceTypes.REFRIGERATORS -> FridgeScreen(device as Refrigerator)
+                    DeviceTypes.SPRINKLERS -> SprinklerScreen(device as Sprinkler)
+                    DeviceTypes.BLINDS -> BlindsScreen(device as Blinds)
+                    else -> VacuumScreen(device as Vacuum, roomsState.getHomeRooms(currentHome))
+                }
+            }
         }
 
         composable(AppDestinations.DEVICES.route) {
-            DevicesScreen(modifier = modifier, currentHouse = currentHome, roomsState, devicesState)
+            DevicesScreen(modifier, currentHome, roomsState, devicesState)
         }
 
         composable(AppDestinations.ROUTINES.route) {
-            RoutinesScreen(modifier = modifier, currentHouse = currentHome)
+            RoutinesScreen(modifier, currentHome)
         }
     }
 }
 
-@Preview(device = Devices.TABLET)
-@Composable
-fun TabletPreview() {
-    HarmonyTheme {
-        HarmonyApp()
-    }
-}
+// @Preview(device = Devices.TABLET)
+// @Composable
+// fun TabletPreview() {
+//     HarmonyTheme {
+//         HarmonyApp()
+//     }
+// }

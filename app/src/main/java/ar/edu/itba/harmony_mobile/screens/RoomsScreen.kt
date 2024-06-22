@@ -49,7 +49,6 @@ fun RoomsScreen(
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
-
     if (roomsState.getHomeRooms(currentHouse).size == 1) {
        currentDestination = roomsState.getHomeRooms(currentHouse)[0].id!!
     }
