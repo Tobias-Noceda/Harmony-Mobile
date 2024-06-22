@@ -53,7 +53,9 @@ class DevicesViewModel(
         updating = runOnViewModelScope(
             {
                 while (true) {
-                    delay(delay); getDevice(deviceId); }
+                    delay(delay)
+                    getDevice(deviceId)
+                }
             },
             { state, _ -> state.copy() }
         )
