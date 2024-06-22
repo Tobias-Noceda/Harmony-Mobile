@@ -41,7 +41,7 @@ class LampViewModel(
 
     fun setColor(lamp: Lamp, color: Color) = runOnViewModelScope(
         {
-            delay(1000)
+           // delay(1000)
             repository.executeDeviceAction(
                 lamp.id!!,
                 Lamp.SET_COLOR_ACTION,
