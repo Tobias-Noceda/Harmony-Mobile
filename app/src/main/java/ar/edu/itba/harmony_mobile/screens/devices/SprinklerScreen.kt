@@ -2,7 +2,13 @@ package ar.edu.itba.harmony_mobile.screens.devices
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,23 +24,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import ar.edu.itba.harmony_mobile.ui.theme.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
@@ -43,6 +48,10 @@ import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.SprinklerViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
+import ar.edu.itba.harmony_mobile.ui.theme.desaturate
+import ar.edu.itba.harmony_mobile.ui.theme.primary
+import ar.edu.itba.harmony_mobile.ui.theme.secondary
+import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 enum class UnitToDispense(@StringRes val textId: Int, val apiText: String) {
     MILLILITRES(R.string.mL, "ml"),
@@ -53,14 +62,16 @@ enum class UnitToDispense(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: () -> Unit) {
+fun SprinklerScreen(deviceRef: Sprinkler, onBackCalled: (() -> Unit)? = null) {
 
     val dropDownOptions = UnitToDispense.entries.toList()
     var selectedUnitToDispense by rememberSaveable { mutableStateOf(UnitToDispense.LITRES) }
     var selectedAmountToDispense by rememberSaveable { mutableIntStateOf(1) }
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    BackHandler(onBack = onBackCalled)
+    if (onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
     val viewModel: SprinklerViewModel = viewModel(factory = getViewModelFactory())
 
     var isDispensing by rememberSaveable { mutableStateOf(false) }

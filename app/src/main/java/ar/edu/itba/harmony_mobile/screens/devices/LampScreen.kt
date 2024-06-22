@@ -1,6 +1,5 @@
 package ar.edu.itba.harmony_mobile.screens.devices
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,12 +38,10 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Lamp
-import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
-import ar.edu.itba.harmony_mobile.ui.devices.LampUiState
 import ar.edu.itba.harmony_mobile.ui.devices.LampViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
 import ar.edu.itba.harmony_mobile.ui.theme.darken
@@ -55,7 +51,7 @@ import ar.edu.itba.harmony_mobile.ui.theme.primary
 import ar.edu.itba.harmony_mobile.ui.theme.tertiary
 
 @Composable
-fun LightScreen(deviceRef: Lamp, onBackCalled: () -> Unit) {
+fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
     val colorController = rememberColorPickerController()
     val scState = rememberScrollState(0)
     val adaptiveInfo = currentWindowAdaptiveInfo()
@@ -75,7 +71,9 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: () -> Unit) {
 
     var lightBrightness by rememberSaveable { mutableFloatStateOf(getValidDevice().brightness.toFloat()) }
 
-    BackHandler(onBack = onBackCalled)
+    if (onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
 
     @Composable
     fun lightTitle() {

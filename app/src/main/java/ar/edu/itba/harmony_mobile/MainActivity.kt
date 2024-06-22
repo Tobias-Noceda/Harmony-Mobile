@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                val deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
+                var deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
 
                 HarmonyApp(deviceId)
             }

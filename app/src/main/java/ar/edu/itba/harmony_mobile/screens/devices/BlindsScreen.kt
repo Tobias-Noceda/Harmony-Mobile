@@ -31,8 +31,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Blinds
-import ar.edu.itba.harmony_mobile.model.Refrigerator
-import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.ui.devices.BlindsViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.getViewModelFactory
@@ -49,7 +47,7 @@ enum class MoveState {
 }
 
 @Composable
-fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
+fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
 
     var isMoving by rememberSaveable { mutableStateOf(MoveState.STILL) }
 
@@ -72,7 +70,9 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: () -> Unit) {
 
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    BackHandler(onBack = onBackCalled)
+    if(onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
     @Composable
     fun blindsTitle() {
         Text(

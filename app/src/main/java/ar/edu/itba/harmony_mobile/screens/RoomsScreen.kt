@@ -30,22 +30,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
-import ar.edu.itba.harmony_mobile.DeviceTypes
 import ar.edu.itba.harmony_mobile.R
-import ar.edu.itba.harmony_mobile.model.Blinds
-import ar.edu.itba.harmony_mobile.model.Door
 import ar.edu.itba.harmony_mobile.model.Home
-import ar.edu.itba.harmony_mobile.model.Lamp
-import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Room
-import ar.edu.itba.harmony_mobile.model.Sprinkler
-import ar.edu.itba.harmony_mobile.model.Vacuum
-import ar.edu.itba.harmony_mobile.screens.devices.BlindsScreen
-import ar.edu.itba.harmony_mobile.screens.devices.DoorScreen
-import ar.edu.itba.harmony_mobile.screens.devices.FridgeScreen
-import ar.edu.itba.harmony_mobile.screens.devices.LightScreen
-import ar.edu.itba.harmony_mobile.screens.devices.SprinklerScreen
-import ar.edu.itba.harmony_mobile.screens.devices.VacuumScreen
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
 import ar.edu.itba.harmony_mobile.ui.rooms.RoomsUiState
 import ar.edu.itba.harmony_mobile.ui.theme.primary
@@ -58,23 +45,9 @@ fun RoomsScreen(
     currentHouse: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
-    deviceId: String?,
-    deviceBack: () -> Unit,
     state: String = ""
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
-
-    if(deviceId != null) {
-        val device = devicesState.getDevice(deviceId)
-        when(device!!.type) {
-            DeviceTypes.LIGHTS -> LightScreen(device as Lamp) { deviceBack() }
-            DeviceTypes.DOORS -> DoorScreen(device as Door) { deviceBack() }
-            DeviceTypes.REFRIS -> FridgeScreen(device as Refrigerator) { deviceBack() }
-            DeviceTypes.SPRINKLERS -> SprinklerScreen(device as Sprinkler) { deviceBack() }
-            DeviceTypes.BLINDS -> BlindsScreen(device as Blinds) { deviceBack() }
-            else -> VacuumScreen(device as Vacuum, roomsState.getHomeRooms(currentHouse)) { deviceBack() }
-        }
-    }
 
     if (roomsState.getHomeRooms(currentHouse).size == 1) {
        currentDestination = roomsState.getHomeRooms(currentHouse)[0].id!!

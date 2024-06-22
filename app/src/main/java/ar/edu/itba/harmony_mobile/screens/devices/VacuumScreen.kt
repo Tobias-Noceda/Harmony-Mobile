@@ -42,7 +42,6 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
 import ar.edu.itba.harmony_mobile.model.Room
-import ar.edu.itba.harmony_mobile.model.Sprinkler
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
@@ -60,12 +59,14 @@ enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
 }
 
 @Composable
-fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: () -> Unit) {
+fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit)? = null) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    BackHandler(onBack = onBackCalled)
+    if (onBackCalled != null) {
+        BackHandler(onBack = onBackCalled)
+    }
     val viewModel: VacuumViewModel = viewModel(factory = getViewModelFactory())
 
 
