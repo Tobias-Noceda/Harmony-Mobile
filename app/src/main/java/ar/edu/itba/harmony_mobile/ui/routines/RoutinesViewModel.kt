@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import ar.edu.itba.harmony_mobile.DataSourceException
 import ar.edu.itba.harmony_mobile.repository.RoutineRepository
 import ar.edu.itba.harmony_mobile.model.Error
+import ar.edu.itba.harmony_mobile.ui.devices.DevicesUiState
 import ar.edu.itba.harmony_mobile.ui.routines.RoutinesUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +29,13 @@ class RoutinesViewModel(
         ) { state, response -> state.copy(routines = response) }
     }
 
+    fun executeRoutine(routineId: String) {
+        runOnViewModelScope(
+            { repository.executeRoutine(routineId) },
+            { state, _ -> state.copy() }
+        )
+    }
+
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
         updateState: (RoutinesUiState, T) -> RoutinesUiState
@@ -35,6 +44,20 @@ class RoutinesViewModel(
             .distinctUntilChanged()
             .catch { e -> _uiState.update { it.copy(error = handleError(e)) } }
             .collect { response -> _uiState.update { updateState(it, response) } }
+    }
+
+    private fun <R> runOnViewModelScope(
+        block: suspend () -> R,
+        updateState: (RoutinesUiState, R) -> RoutinesUiState
+    ): Job = viewModelScope.launch {
+        _uiState.update { it.copy(loading = true, error = null) }
+        runCatching {
+            block()
+        }.onSuccess { response ->
+            _uiState.update { updateState(it, response).copy(loading = false) }
+        }.onFailure { e ->
+            _uiState.update { it.copy(loading = false, error = handleError(e)) }
+        }
     }
 
     private fun handleError(e: Throwable): Error {

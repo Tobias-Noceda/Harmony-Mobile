@@ -93,7 +93,6 @@ fun DoorScreen(deviceRef: Door, onBackCalled: () -> Unit) {
             onCheckedChange = {
                 when (getValidDevice().status) {
                     Status.OPEN, Status.OPENED -> {
-                        Log.i("Closing", "Closing")
                         viewModel.close(getValidDevice())
                         dViewModel.getDevice(deviceRef.id)
                     }
