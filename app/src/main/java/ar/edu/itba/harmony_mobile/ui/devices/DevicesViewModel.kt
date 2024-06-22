@@ -51,7 +51,10 @@ class DevicesViewModel(
     fun updateOnInterval(deviceId: String, delay: Long = 1000) {
         stopUpdating()
         updating = runOnViewModelScope(
-            { delay(delay); getDevice(deviceId); },
+            {
+                while (true) {
+                    delay(delay); getDevice(deviceId); }
+            },
             { state, _ -> state.copy() }
         )
     }
