@@ -59,17 +59,29 @@ enum class VacuumMode(@StringRes val textId: Int, val apiText: String) {
 fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
 
     val modeDropDownOptions = VacuumMode.entries.toList()
-    val roomDropDownOptions = arrayOf("asdasd", "jhsgghjkgkhjf") //TODO REEMPLAZAR CON FETCH A LA API
+    val roomDropDownOptions =
+        arrayOf("asdasd", "jhsgghjkgkhjf") //TODO REEMPLAZAR CON FETCH A LA API
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
     BackHandler(onBack = onBackCalled)
     val viewModel: VacuumViewModel = viewModel(factory = getViewModelFactory())
 
-    var mode by rememberSaveable { mutableStateOf(VacuumMode.VACUUM) }
-    if (device.mode == "mop") {
-        mode = VacuumMode.MOP
-    } else if(device.mode == "vacuum"){
-        mode = VacuumMode.VACUUM
+    var mode by rememberSaveable {
+        mutableStateOf(
+            if (device.mode == "mop") {
+                VacuumMode.MOP
+            } else {
+                VacuumMode.VACUUM
+            }
+        )
+    }
+
+    fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier {
+        return if (condition) {
+            then(modifier(Modifier))
+        } else {
+            this
+        }
     }
 
     @Composable
@@ -266,6 +278,13 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                     }
                 }
             ),
+            modifier = Modifier
+                .conditional(
+                    adaptiveInfo.windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.EXPANDED
+                            || adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
+                ) {
+                    fillMaxSize(0.5f)
+                },
             contentDescription = ""
         )
     }
@@ -313,29 +332,33 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    30.dp,
-                                    Alignment.CenterHorizontally
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                onButton()
-                                sendToBaseButton()
-                            }
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(0.5f)
+                            Column(verticalArrangement = Arrangement.spacedBy(25.dp)) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(
+                                        30.dp,
+                                        Alignment.CenterHorizontally
+                                    ),
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    modeSelector()
+                                    onButton()
+                                    sendToBaseButton()
                                 }
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(0.5f)
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    roomSelector()
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(0.5f),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        modeSelector()
+                                    }
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        roomSelector()
+                                    }
                                 }
                             }
                             Column(
@@ -347,7 +370,47 @@ fun VacuumScreen(device: Vacuum, onBackCalled: () -> Unit) {
                             }
                         }
                     } else if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
-
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Column(verticalArrangement = Arrangement.spacedBy(25.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth(0.5f)) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(
+                                        30.dp,
+                                        Alignment.CenterHorizontally
+                                    ),
+                                ) {
+                                    onButton()
+                                    sendToBaseButton()
+                                }
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        modeSelector()
+                                    }
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        roomSelector()
+                                    }
+                                }
+                            }
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                statusText()
+                                batteryIndicator()
+                            }
+                        }
                     } else {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
