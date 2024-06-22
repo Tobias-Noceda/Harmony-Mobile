@@ -8,6 +8,7 @@ import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.repository.DeviceRepository
 import ar.edu.itba.harmony_mobile.model.Error
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +45,19 @@ class DevicesViewModel(
             { repository.getDevice(deviceId) },
             { state, response -> state.copy(currentDevice = response) }
         )
+    }
+
+    private var updating: Job? = null;
+    fun updateOnInterval(deviceId: String, delay: Long = 1000) {
+        stopUpdating()
+        updating = runOnViewModelScope(
+            { delay(delay); getDevice(deviceId); },
+            { state, _ -> state.copy() }
+        )
+    }
+
+    fun stopUpdating() {
+        updating?.cancel()
     }
 
     private fun <R> runOnViewModelScope(
