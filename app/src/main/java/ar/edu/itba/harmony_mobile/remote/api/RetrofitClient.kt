@@ -1,6 +1,6 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,11 +8,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
 
-private val API_URL = "http://10.0.2.2:8080/api/" // if you are using an emulator
-// private val API_URL = http://localhost:8080/api/ // if you are not using an emulator
+const val API_URL = GlobalAPIData.API_URL
 
 private val httpLoggingInterceptor = HttpLoggingInterceptor()
-    .setLevel(HttpLoggingInterceptor.Level.BODY)
+    .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
 private val okHttpClient = OkHttpClient.Builder()
     .addInterceptor(httpLoggingInterceptor)
@@ -38,7 +37,7 @@ object RetrofitClient {
         retrofit.create(RoomService::class.java)
     }
 
-    val deviceService : DeviceService by lazy {
+    val deviceService: DeviceService by lazy {
         retrofit.create(DeviceService::class.java)
     }
 

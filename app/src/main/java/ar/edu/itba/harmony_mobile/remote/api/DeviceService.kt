@@ -1,6 +1,6 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import ar.edu.itba.harmony_mobile.remote.model.RemoteResult
 import retrofit2.Response
 import retrofit2.http.Body

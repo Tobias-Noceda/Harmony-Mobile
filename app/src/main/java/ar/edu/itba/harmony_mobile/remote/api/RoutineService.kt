@@ -1,10 +1,8 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
 import ar.edu.itba.harmony_mobile.remote.model.RemoteResult
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRoutine
+import ar.edu.itba.harmony_mobile.remote.model.routines.RemoteRoutine
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -18,6 +16,6 @@ interface RoutineService {
     @GET("routine/{routineId}")
     suspend fun getRoutine(@Path("routineId") routineId: String): Response<RemoteResult<RemoteRoutine>>
 
-    @POST("routines/{routineId}/execute")
+    @PUT("routines/{routineId}/execute")
     suspend fun executeRoutine(@Path("routineId") routineId: String): Response<RemoteResult<Boolean>>
 }

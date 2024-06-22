@@ -1,22 +1,25 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteLamp
-import ar.edu.itba.harmony_mobile.remote.model.RemoteLampState
+import androidx.compose.ui.graphics.Color
+import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLamp
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLampState
+import okhttp3.internal.toHexString
 
 class Lamp(
     id: String?,
     name: String,
     room: Room?,
     val status: Status,
-    val color: String,
+    val color: Color,
     val brightness: Int
-) : Device(id, name, room,DeviceType.LAMP) {
+) : Device(id, name, room, DeviceTypes.LIGHTS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteLampState> {
         val state = RemoteLampState()
         state.status = Status.asRemoteModel(status)
-        state.color = color
+        state.color = colorToString(color)
         state.brightness = brightness
 
         val model = RemoteLamp()
@@ -27,8 +30,26 @@ class Lamp(
         return model
     }
 
+    override fun toString(): String {
+        return "{Lamp;id:${id};name:${name};Room:${room?.name};Status:${status};color:${colorToString(color)};verboseColor:${color},brightness:${brightness}}"
+    }
+
     companion object {
         const val TURN_ON_ACTION = "turnOn"
         const val TURN_OFF_ACTION = "turnOff"
+        const val SET_COLOR_ACTION = "setColor"
+        const val SET_BRIGHTNESS_ACTION = "setBrightness"
+        fun colorToString(color: Color): String {
+            var red = ((255 * color.red).toInt()).toHexString()
+            if(red.length<2)
+                red = "0${red}"
+            var blue = ((255 * color.blue).toInt()).toHexString()
+            if(blue.length<2)
+                blue = "0${blue}"
+            var green = ((255 * color.green).toInt()).toHexString()
+            if(green.length<2)
+                green = "0${green}"
+            return "${red}${green}${blue}"
+        }
     }
 }

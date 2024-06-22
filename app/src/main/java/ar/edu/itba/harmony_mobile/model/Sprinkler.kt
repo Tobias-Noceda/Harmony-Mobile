@@ -1,19 +1,28 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteSprinklerState
-import ar.edu.itba.harmony_mobile.remote.model.RemoteSprinkler
+import android.util.Log
+import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Lamp.Companion.colorToString
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinkler
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinklerState
 
 class Sprinkler(
     id: String?,
     name: String,
     room: Room?,
     val status: Status,
-) : Device(id, name, room,DeviceType.SPRINKLER) {
+    val quantity: Int = 0,
+    val dispensedQuantity: Int = 0,
+    val unit: String
+) : Device(id, name, room, DeviceTypes.SPRINKLERS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteSprinklerState> {
         val state = RemoteSprinklerState()
         state.status = Status.asRemoteModel(status)
+        state.quantity = quantity
+        state.dispensedQuantity = dispensedQuantity
+        state.unit = unit
 
         val model = RemoteSprinkler()
         model.id = id
@@ -23,9 +32,13 @@ class Sprinkler(
         return model
     }
 
+    override fun toString(): String {
+        return "{Sprinkler;id:${id};name:${name};Room:${room?.name};Status:${status};quantity:${quantity},dQuantity:${dispensedQuantity};unit:${unit}}"
+    }
+
     companion object {
-        const val TURN_ON_ACTION = "turnOn"
-        const val TURN_OFF_ACTION = "turnOff"
+        const val OPEN_ACTION = "open"
+        const val CLOSE_ACTION = "close"
         const val DISPENSE_ACTION = "dispense"
     }
 }

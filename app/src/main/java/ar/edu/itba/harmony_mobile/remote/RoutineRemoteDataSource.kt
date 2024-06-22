@@ -1,7 +1,7 @@
 package ar.edu.itba.harmony_mobile.remote
 
 import ar.edu.itba.harmony_mobile.remote.api.RoutineService
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRoutine
+import ar.edu.itba.harmony_mobile.remote.model.routines.RemoteRoutine
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

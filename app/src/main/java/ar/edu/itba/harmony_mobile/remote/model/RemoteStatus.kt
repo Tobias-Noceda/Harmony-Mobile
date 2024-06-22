@@ -6,14 +6,26 @@ object RemoteStatus {
     const val ON = "on"
     const val OFF = "off"
     const val OPEN = "open"
+    const val OPENED = "opened"
     const val CLOSED = "closed"
+    const val OPENING = "opening"
+    const val CLOSING = "closing"
+    const val DOCKED = "docked"
+    const val ACTIVE = "active"
+    const val INACTIVE = "inactive"
 
     fun asModel(status: String): Status {
         return when (status) {
             ON -> Status.ON
             OFF -> Status.OFF
             OPEN -> Status.OPEN
-            else -> Status.CLOSED
+            OPENED -> Status.OPENED
+            CLOSED -> Status.CLOSED
+            OPENING -> Status.OPENING
+            CLOSING -> Status.CLOSING
+            ACTIVE -> Status.ACTIVE
+            INACTIVE -> Status.INACTIVE
+            else -> Status.DOCKED
         }
     }
 }

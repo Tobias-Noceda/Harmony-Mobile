@@ -1,13 +1,13 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteHome
-import ar.edu.itba.harmony_mobile.remote.model.RemoteHomeMeta
+import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHome
+import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHomeMeta
 
 class Home(
-        var id: String? = null,
-        var name: String,
-        var size: String,
-        var color: String
+    var id: String? = null,
+    var name: String,
+    var size: String? = null,
+    var color: String? = null
 ) {
 
     fun asRemoteModel(): RemoteHome {
@@ -21,5 +21,22 @@ class Home(
         model.meta = meta
 
         return model
+    }
+
+    override fun toString(): String {
+        return "{Home;id:${id};name:${name}}"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Home
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
     }
 }

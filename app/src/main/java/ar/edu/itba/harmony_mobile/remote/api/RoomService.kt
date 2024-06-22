@@ -1,7 +1,7 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
 import ar.edu.itba.harmony_mobile.remote.model.RemoteResult
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRoom
+import ar.edu.itba.harmony_mobile.remote.model.rooms.RemoteRoom
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

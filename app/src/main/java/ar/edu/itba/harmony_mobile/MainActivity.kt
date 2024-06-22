@@ -1,60 +1,72 @@
 package ar.edu.itba.harmony_mobile
 
+import android.Manifest
+import android.content.Context
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import com.example.harmony_mobile.R
-import com.example.harmony_mobile.databinding.ActivityMainBinding
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.LaunchedEffect
+import ar.edu.itba.harmony_mobile.receivers.SkipNotificationReceiver
+import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
+    private lateinit var receiver: SkipNotificationReceiver
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private var showingDeviceId = ""
 
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent {
+            HarmonyTheme {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    val permissionState =
+                        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+                    if (!permissionState.status.isGranted) {
+                        LaunchedEffect(true) {
+                            permissionState.launchPermissionRequest()
+                        }
+                    }
+                }
 
-        setSupportActionBar(binding.toolbar)
+                val deviceId = intent?.getStringExtra(MyIntent.DEVICE_ID)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .setAnchorView(R.id.fab).show()
+                HarmonyApp(deviceId) { id ->
+                    showingDeviceId = id
+                    Log.i("Tobi", "New id: $id")
+                }
+            }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onStart() {
+        super.onStart()
+
+        receiver = SkipNotificationReceiver("0")      //TODO Agregar logica de currentDevice
+        IntentFilter(MyIntent.SHOW_NOTIFICATION)
+            .apply { priority = 1 }
+            .also {
+                var flags = 0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    flags = Context.RECEIVER_NOT_EXPORTED
+
+                registerReceiver(receiver, it, flags)
+            }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onStop() {
+        super.onStop()
+
+        unregisterReceiver(receiver)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
 }

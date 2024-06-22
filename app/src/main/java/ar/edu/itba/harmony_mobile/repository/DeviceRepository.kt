@@ -3,6 +3,7 @@ package ar.edu.itba.harmony_mobile.repository
 import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Lamp
 import ar.edu.itba.harmony_mobile.remote.DeviceRemoteDataSource
+import ar.edu.itba.harmony_mobile.remote.model.homes.RemoteHome
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -13,7 +14,6 @@ class DeviceRepository(
         remoteDataSource.devices
             .map { it.map { jt -> jt.asModel() } }
 
-    val currentDevice = devices.map { it.firstOrNull { jt -> jt is Lamp } }
 
     suspend fun getDevice(deviceId: String): Device {
         return remoteDataSource.getDevice(deviceId).asModel()

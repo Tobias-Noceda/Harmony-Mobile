@@ -1,13 +1,13 @@
 package ar.edu.itba.harmony_mobile.remote.api
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteBlinds
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDeviceType
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDoor
-import ar.edu.itba.harmony_mobile.remote.model.RemoteLamp
-import ar.edu.itba.harmony_mobile.remote.model.RemoteRefrigerator
-import ar.edu.itba.harmony_mobile.remote.model.RemoteSprinkler
-import ar.edu.itba.harmony_mobile.remote.model.RemoteVacuum
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlinds
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDeviceType
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDoor
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteLamp
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteRefrigerator
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteSprinkler
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteVacuum
 import com.google.gson.Gson
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer

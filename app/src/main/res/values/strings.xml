@@ -1,44 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Harmony</string>
-    <string name="rooms">Rooms</string>
-    <string name="devices">Devices</string>
+    <string name="rooms">By rooms</string>
+    <string name="devices">Device types</string>
     <string name="routines">Routines</string>
+    <string name="houses">Houses</string>
+    <string name="personal_devices">Personal Devices</string>
 
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
-        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
-        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
-        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
-        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
-        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
-        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
-        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
-        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
-        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
-        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
-        bibendum, vel congue leo egestas.\n\n
-        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
-        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
-        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
-        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
-        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
-        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
-        est.\n\n
-        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
-        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
-        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
-        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
-        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
-        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
-        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
-        convallis.\n\n
-        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
-        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
-        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
-        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
-        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
-        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
-    </string>
+    <string name="api_lamp">lamp</string>
+    <string name="lamps">Lamps</string>
+    <string name="api_door">door</string>
+    <string name="doors">Doors</string>
+    <string name="api_refrigerator">refrigerator</string>
+    <string name="refrigerators">Refrigerators</string>
+    <string name="api_vacuum">vacuum</string>
+    <string name="vacuums">Vacuums</string>
+    <string name="api_sprinkler">faucet</string>
+    <string name="sprinklers">Sprinklers</string>
+    <string name="api_blinds">blinds</string>
+    <string name="blinds">Blinds</string>
+
+    <string name="status">Status:</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="color_mode">Color mode:</string>
+    <string name="color">Color:</string>
+    <string name="brightness">Brightness:</string>
+    <string name="limit">Limit:</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="opening">Opening</string>
+    <string name="closing">Closing</string>
+    <string name="amount">Amount:</string>
+    <string name="dispense">Dispense</string>
+    <string name="opened">Open</string>
+    <string name="closed">Closed</string>
+    <string name="docked">Docked</string>
+    <string name="locked">Locked</string>
+    <string name="unlocked">Unlocked</string>
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
+    <string name="default_mode">Normal</string>
+    <string name="vacation_mode">Vacation</string>
+    <string name="party_mode">Party</string>
+    <string name="mL">Millilitres</string>
+    <string name="dL">Decilitres</string>
+    <string name="L">Litres</string>
+    <string name="hL">Hectrolitres</string>
+    <string name="kL">Kilolitres</string>
+    <string name="fridge">Refrigerator</string>
+    <string name="freezer">Freezer</string>
+    <string name="run">Run</string>
+    <string name="running">Running routine:</string>
+    <string name="mop">Mop</string>
+    <string name="vacuum">Vacuum</string>
+    <string name="mode">Mode</string>
+    <string name="target_room">Target room:</string>
+    <string name="send_to_base">Send to base</string>
+    <string name="charging">Charging</string>
+    <string name="empty_house">No devices in house:</string>
+    <string name="no_routines">No routines in house:</string>
+    <string name="no_devices1">No devices of type</string>
+    <string name="no_devices2">in house:</string>
+    <string name="expand">Expand</string>
+
+    <!-- routines -->
+    <string name="turn_on">Turn On</string>
+    <string name="turn_off">Turn Off</string>
+    <string name="set_level">Set level</string>
+    <string name="set_color">Set color</string>
+    <string name="set_brightness">Set brightness</string>
+    <string name="set_fridge_temperature">Set fridge temperature</string>
+    <string name="set_freezer_temperature">Set freezer temperature</string>
+    <string name="set_mode">Set mode</string>
+    <string name="set_location">Set target location</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="dock">Send to base</string>
 </resources>

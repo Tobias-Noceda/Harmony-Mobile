@@ -1,0 +1,171 @@
+Index: app/src/main/java/ar/edu/itba/harmony_mobile/HarmonyApp.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ar.edu.itba.harmony_mobile\r\n\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.material3.Scaffold\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.compose.runtime.remember\r\nimport androidx.compose.runtime.rememberCoroutineScope\r\nimport androidx.compose.ui.Modifier\r\nimport ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme\r\nimport kotlinx.coroutines.launch\r\n\r\n@Composable\r\nfun HarmonyApp() {\r\n    val coroutineScope = rememberCoroutineScope()\r\n    val sheetVisible by remember { mutableStateOf(false) }\r\n\r\n    HarmonyTheme {\r\n        Scaffold(\r\n            topBar = { HarmonyTopAppBar(onButtonClick = {\r\n                coroutineScope.launch {\r\n                    sheetVisible.not()\r\n                }\r\n            }) },\r\n            bottomBar = { HarmonyNavigationBar() }\r\n        ) { padding ->\r\n            RoomsScreen(Modifier.padding(padding))\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ar/edu/itba/harmony_mobile/HarmonyApp.kt b/app/src/main/java/ar/edu/itba/harmony_mobile/HarmonyApp.kt
+--- a/app/src/main/java/ar/edu/itba/harmony_mobile/HarmonyApp.kt	(revision c25b1830bd7b32b9c173af5ede27d78f30900390)
++++ b/app/src/main/java/ar/edu/itba/harmony_mobile/HarmonyApp.kt	(date 1718378128032)
+@@ -1,31 +1,74 @@
+ package ar.edu.itba.harmony_mobile
+ 
++import androidx.compose.animation.AnimatedVisibility
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.heightIn
+ import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.MaterialTheme
+ import androidx.compose.material3.Scaffold
++import androidx.compose.material3.Surface
++import androidx.compose.material3.Text
++import androidx.compose.material3.rememberModalBottomSheetState
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.unit.dp
+ import ar.edu.itba.harmony_mobile.ui.theme.HarmonyTheme
+-import kotlinx.coroutines.launch
+ 
++@OptIn(ExperimentalMaterial3Api::class)
+ @Composable
+ fun HarmonyApp() {
+-    val coroutineScope = rememberCoroutineScope()
+-    val sheetVisible by remember { mutableStateOf(false) }
++    val sheetState = rememberModalBottomSheetState()
++    val scope = rememberCoroutineScope()
++    var showBottomSheet by remember { mutableStateOf(false) }
+ 
+     HarmonyTheme {
+         Scaffold(
+             topBar = { HarmonyTopAppBar(onButtonClick = {
+-                coroutineScope.launch {
+-                    sheetVisible.not()
+-                }
++                showBottomSheet = !showBottomSheet
+             }) },
+             bottomBar = { HarmonyNavigationBar() }
+         ) { padding ->
+             RoomsScreen(Modifier.padding(padding))
++
++            CustomTopSheet(visible = showBottomSheet, houses = listOf("House 1", "House 2"))
++        }
++    }
++}
++
++
++@Composable
++fun CustomTopSheet(visible: Boolean, houses: List<String>) {
++    AnimatedVisibility(
++        visible = visible,
++        modifier = Modifier.fillMaxSize()
++    ) {
++        Box(
++            modifier = Modifier
++                .fillMaxWidth()
++                .heightIn(max = 50.dp)
++        ) {
++            Surface(
++                modifier = Modifier.fillMaxSize(),
++                shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
++                color = MaterialTheme.colorScheme.primary,
++                content = {
++                    Row {
++                        for (house in houses) {
++                            Text(text = house)
++                        }
++                    }
++                }
++            )
+         }
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/java/ar/edu/itba/harmony_mobile/TopAppBar.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ar.edu.itba.harmony_mobile\r\n\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.filled.KeyboardArrowDown\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.unit.dp\r\n\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun HarmonyTopAppBar(onButtonClick: () -> Unit) {\r\n    TopAppBar(\r\n        colors = TopAppBarDefaults.topAppBarColors(\r\n            containerColor = MaterialTheme.colorScheme.secondary\r\n        ),\r\n        title = {\r\n            Box(\r\n                modifier = Modifier.fillMaxWidth(),\r\n                contentAlignment = Alignment.Center\r\n            ) {\r\n                Row(\r\n                    modifier = Modifier.fillMaxWidth(),\r\n                    verticalAlignment = Alignment.CenterVertically,\r\n                    horizontalArrangement = Arrangement.SpaceBetween\r\n                ) {\r\n                    Button(\r\n                        onClick = onButtonClick,\r\n                        modifier = Modifier.padding(end = 16.dp)\r\n                    ) {\r\n                        Icon(\r\n                            Icons.Default.KeyboardArrowDown,\r\n                            contentDescription = null\r\n                        )\r\n                        Spacer(modifier = Modifier.width(8.dp))\r\n                        Text(\"Button Text\")\r\n                    }\r\n\r\n                    Box(\r\n                        modifier = Modifier\r\n                            .weight(1f)\r\n                            .fillMaxHeight(),\r\n                        contentAlignment = Alignment.Center\r\n                    ) {\r\n                        Image(\r\n                            painter = painterResource(id = R.drawable.logo),\r\n                            contentDescription = \"Harmony Logo\",\r\n                            modifier = Modifier\r\n                                .fillMaxHeight()\r\n                                .padding(horizontal = 4.dp, vertical = 2.dp)\r\n                        )\r\n                    }\r\n\r\n                    Box(\r\n                        modifier = Modifier\r\n                            .weight(1f)\r\n                            .fillMaxHeight(),\r\n                        contentAlignment = Alignment.CenterEnd\r\n                    ) {\r\n                        // Esto es un espacio invisible para mantener la alineación\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    )\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ar/edu/itba/harmony_mobile/TopAppBar.kt b/app/src/main/java/ar/edu/itba/harmony_mobile/TopAppBar.kt
+--- a/app/src/main/java/ar/edu/itba/harmony_mobile/TopAppBar.kt	(revision c25b1830bd7b32b9c173af5ede27d78f30900390)
++++ b/app/src/main/java/ar/edu/itba/harmony_mobile/TopAppBar.kt	(date 1718374582077)
+@@ -1,10 +1,23 @@
+ package ar.edu.itba.harmony_mobile
+ 
+ import androidx.compose.foundation.Image
+-import androidx.compose.foundation.layout.*
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.width
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.filled.KeyboardArrowDown
+-import androidx.compose.material3.*
++import androidx.compose.material3.Button
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.Icon
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.material3.Text
++import androidx.compose.material3.TopAppBar
++import androidx.compose.material3.TopAppBarDefaults
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+Index: .idea/inspectionProfiles/Project_Default.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/inspectionProfiles/Project_Default.xml b/.idea/inspectionProfiles/Project_Default.xml
+new file mode 100644
+--- /dev/null	(date 1718372882862)
++++ b/.idea/inspectionProfiles/Project_Default.xml	(date 1718372882862)
+@@ -0,0 +1,32 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="PreviewAnnotationInFunctionWithParameters" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewApiLevelMustBeValid" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewDimensionRespectsLimit" enabled="true" level="WARNING" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewFontScaleMustBeGreaterThanZero" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewMultipleParameterProviders" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewMustBeTopLevelFunction" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewNeedsComposableAnnotation" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewNotSupportedInUnitTestFiles" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++    <inspection_tool class="PreviewPickerAnnotation" enabled="true" level="ERROR" enabled_by_default="true">
++      <option name="composableFile" value="true" />
++    </inspection_tool>
++  </profile>
++</component>
+\ No newline at end of file

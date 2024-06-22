@@ -1,8 +1,10 @@
 package ar.edu.itba.harmony_mobile.model
 
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
-import ar.edu.itba.harmony_mobile.remote.model.RemoteBlinds
-import ar.edu.itba.harmony_mobile.remote.model.RemoteBlindsState
+import ar.edu.itba.harmony_mobile.DeviceTypes
+import ar.edu.itba.harmony_mobile.model.Lamp.Companion.colorToString
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlinds
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteBlindsState
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 
 class Blinds(
     id: String?,
@@ -10,12 +12,14 @@ class Blinds(
     room: Room?,
     val status: Status,
     val currentLevel: Int,
-) : Device(id, name, room,DeviceType.BLINDS) {
+    val level: Int,
+) : Device(id, name, room, DeviceTypes.BLINDS) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteBlindsState> {
         val state = RemoteBlindsState()
         state.status = Status.asRemoteModel(status)
         state.currentLevel = currentLevel
+        state.level = level
 
         val model = RemoteBlinds()
         model.id = id
@@ -25,8 +29,13 @@ class Blinds(
         return model
     }
 
+    override fun toString(): String {
+        return "{Blinds;id:${id};name:${name};Room:${room?.name};Status:${status};currentLevel:${currentLevel},level:${level}}"
+    }
+
     companion object {
         const val OPEN_ACTION = "open"
         const val CLOSE_ACTION = "close"
+        const val SET_LEVEL_ACTION = "setLevel"
     }
 }

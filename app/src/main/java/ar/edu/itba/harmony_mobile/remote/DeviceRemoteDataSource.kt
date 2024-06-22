@@ -1,7 +1,7 @@
 package ar.edu.itba.harmony_mobile.remote
 
 import ar.edu.itba.harmony_mobile.remote.api.DeviceService
-import ar.edu.itba.harmony_mobile.remote.model.RemoteDevice
+import ar.edu.itba.harmony_mobile.remote.model.devices.RemoteDevice
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,10 +15,33 @@ class DeviceRemoteDataSource(
             val devices = handleApiResponse {
                 deviceService.getDevices()
             }
+           // updateDevicesByRoomByHome(devices) // this does not work, and I am tired of fixing it
             emit(devices)
             delay(DELAY)
         }
     }
+
+  /*  private val devicesByRoomByHome: MutableSet<RemoteHome> = HashSet();
+
+    private suspend fun updateDevicesByRoomByHome(devices: List<RemoteDevice<*>>) {
+        devicesByRoomByHome.removeIf { true }
+        devices.forEach {
+            val h: RemoteHome;
+            val r: RemoteRoom;
+            if (it.room?.home == null) {
+                it.room = GlobalDataHomes.personalDevicesRoom
+                h = GlobalDataHomes.personalDevicesHome
+                r = GlobalDataHomes.personalDevicesRoom
+            } else {
+                h = it.room!!.home!!
+                r = it.room!!
+            }
+            devicesByRoomByHome.add(h) // won't add if already present
+            h.rooms.add(r) // won't add if already present
+            r.devices.add(it) // by definition, will not be present
+        }
+    }
+*/
 
     suspend fun getDevice(deviceId: String): RemoteDevice<*> {
         return handleApiResponse {
@@ -55,6 +78,6 @@ class DeviceRemoteDataSource(
     }
 
     companion object {
-        const val DELAY: Long = 10000
+        const val DELAY: Long = 2000
     }
 }
