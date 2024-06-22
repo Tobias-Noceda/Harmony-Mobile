@@ -67,6 +67,7 @@ fun RoomScreen(
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
     setShowingDevice: (String) -> Unit,
+    onDeviceBack: () -> Unit,
     onBackCalled: () -> Unit
 ) {
     var currentDevice by rememberSaveable { mutableStateOf("") }
@@ -89,6 +90,7 @@ fun RoomScreen(
         setShowingDevice(device!!.id!!)
         val onLeave = {
             setShowingDevice("")
+            onDeviceBack()
             currentDevice = ""
         }
         when(currentDeviceType) {

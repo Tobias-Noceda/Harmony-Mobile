@@ -119,6 +119,7 @@ fun HarmonyApp(
 
     val navStack by navController.currentBackStackEntryAsState()
     val currentRoute = navStack?.destination?.route
+    var state by rememberSaveable { mutableStateOf("") }
 
     var currentHouseId by rememberSaveable { mutableStateOf("0") }
 
@@ -174,7 +175,10 @@ fun HarmonyApp(
                     label = { Text(stringResource(it.label)) },
                     selected = it.route == currentRoute,
                     colors = myNavigationSuiteItemColors,
-                    onClick = { navController.navigate(it.route) }
+                    onClick = {
+                        state = ""
+                        navController.navigate(it.route)
+                    }
                 )
             }
         }
@@ -202,8 +206,9 @@ fun HarmonyApp(
             currentHome = houseState.getHome(currentHouseId),
             roomsState = roomsState,
             devicesState = devicesState,
-            setShowingDevice = setShowingDevice
-        )
+            setShowingDevice = setShowingDevice,
+            state = state,
+        ) { newState -> state = newState }
 
         CustomTopSheet(
             visible = showBottomSheet,
@@ -351,7 +356,9 @@ private fun Router(
     currentHome: Home,
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
-    setShowingDevice: (String) -> Unit
+    setShowingDevice: (String) -> Unit,
+    state: String,
+    stateUpdate: (String) -> Unit
 ) {
     NavHost(
         navController = navController, startDestination = AppDestinations.ROOMS.route
@@ -359,7 +366,10 @@ private fun Router(
         val modifier = Modifier.fillMaxSize()
         composable(AppDestinations.ROOMS.route) {
             if (device == null)
-                RoomsScreen(modifier, currentHome, roomsState, devicesState, setShowingDevice)
+                RoomsScreen(modifier, currentHome, roomsState, devicesState, setShowingDevice, state) { route ->
+                    stateUpdate(route)
+                    navController.navigate(AppDestinations.ROOMS.route)
+                }
             else {
                 setShowingDevice(device.id!!)
                 when(device.type) {
@@ -374,7 +384,10 @@ private fun Router(
         }
 
         composable(AppDestinations.DEVICES.route) {
-            DevicesScreen(modifier, currentHome, roomsState, devicesState, setShowingDevice)
+            DevicesScreen(modifier, currentHome, roomsState, devicesState, setShowingDevice, state) { route ->
+                stateUpdate(route)
+                navController.navigate(AppDestinations.DEVICES.route)
+            }
         }
 
         composable(AppDestinations.ROUTINES.route) {
