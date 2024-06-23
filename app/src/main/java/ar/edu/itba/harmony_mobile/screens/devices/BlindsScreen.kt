@@ -57,8 +57,7 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
         return deviceRef
     }
 
-    dViewModel.getDevice(deviceRef.id!!)
-    dViewModel.setCurrentDeviceId(deviceRef.id)
+    dViewModel.setCurrentDeviceId(deviceRef.id!!)
     var blindsLimit by rememberSaveable { mutableFloatStateOf(getValidDevice().level.toFloat()) }
 
 

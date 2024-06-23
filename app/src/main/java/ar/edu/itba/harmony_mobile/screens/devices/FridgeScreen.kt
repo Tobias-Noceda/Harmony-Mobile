@@ -71,8 +71,7 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
-    dViewModel.getDevice(deviceRef.id!!)
-    dViewModel.setCurrentDeviceId(deviceRef.id)
+    dViewModel.setCurrentDeviceId(deviceRef.id!!)
 
     fun getValidDevice(): Refrigerator {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Refrigerator) {

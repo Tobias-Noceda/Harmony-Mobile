@@ -73,8 +73,7 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
-    dViewModel.getDevice(deviceRef.id!!)
-    dViewModel.setCurrentDeviceId(deviceRef.id)
+    dViewModel.setCurrentDeviceId(deviceRef.id!!)
 
     fun getValidDevice(): Vacuum {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Vacuum) {

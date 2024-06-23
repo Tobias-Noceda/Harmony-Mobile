@@ -65,8 +65,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
 
     var first = true
 
-    dViewModel.getDevice(deviceRef.id!!)
-    dViewModel.setCurrentDeviceId(deviceRef.id)
+    dViewModel.setCurrentDeviceId(deviceRef.id!!)
 
     fun getValidDevice(): Lamp {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Lamp) {
@@ -182,6 +181,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                             Button(
                                 onClick = {
                                     viewModel.setColor(getValidDevice(), Color.Red)
+                                    colorString = Lamp.colorToString(Color.Red)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
@@ -202,6 +202,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                             Button(
                                 onClick = {
                                     viewModel.setColor(getValidDevice(), Color.Blue)
+                                    colorString = Lamp.colorToString(Color.Blue)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
@@ -222,6 +223,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                             Button(
                                 onClick = {
                                     viewModel.setColor(getValidDevice(), Color.Green)
+                                    colorString = Lamp.colorToString(Color.Green)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
@@ -247,6 +249,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                             Button(
                                 onClick = {
                                     viewModel.setColor(getValidDevice(), Color.Yellow)
+                                    colorString = Lamp.colorToString(Color.Yellow)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
@@ -267,6 +270,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                             Button(
                                 onClick = {
                                     viewModel.setColor(getValidDevice(), Color.Cyan)
+                                    colorString = Lamp.colorToString(Color.Cyan)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
@@ -287,6 +291,7 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
                             Button(
                                 onClick = {
                                     viewModel.setColor(getValidDevice(), Color.Magenta)
+                                    colorString = Lamp.colorToString(Color.Magenta)
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonColors(
