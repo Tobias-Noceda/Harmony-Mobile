@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Door
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DoorViewModel
@@ -57,6 +59,10 @@ fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
     fun getValidDevice(): Door {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Door) {
             return deviceState.currentDevice as Door
+        }
+        val aux: Device? = deviceState.devices.find { it.id == deviceRef.id }
+        if (aux != null && aux is Door) {
+            return aux
         }
         return deviceRef
     }

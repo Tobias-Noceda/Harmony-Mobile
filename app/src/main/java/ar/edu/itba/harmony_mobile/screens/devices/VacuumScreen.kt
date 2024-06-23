@@ -41,6 +41,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Device
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Room
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
@@ -78,6 +80,10 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
     fun getValidDevice(): Vacuum {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Vacuum) {
             return deviceState.currentDevice as Vacuum
+        }
+        val aux: Device? = deviceState.devices.find { it.id == deviceRef.id }
+        if (aux != null && aux is Vacuum) {
+            return aux
         }
         return deviceRef
     }

@@ -40,7 +40,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Lamp
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.tools.HsvColorPicker
 import ar.edu.itba.harmony_mobile.tools.rememberColorPickerController
@@ -71,8 +73,11 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Lamp) {
             return deviceState.currentDevice as Lamp
         }
-        return deviceRef
-    }
+        val aux: Device? = deviceState.devices.find { it.id == deviceRef.id }
+        if (aux != null && aux is Lamp) {
+            return aux
+        }
+        return deviceRef    }
 
     var colorString by rememberSaveable { mutableStateOf(Lamp.colorToString(getValidDevice().color)) }
 

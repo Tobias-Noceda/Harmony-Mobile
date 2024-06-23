@@ -11,7 +11,8 @@ class SkipNotificationReceiver(private val deviceId: String) : BroadcastReceiver
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action.equals(MyIntent.SHOW_NOTIFICATION) &&
-            intent.getStringExtra(MyIntent.DEVICE_ID).equals("0")
+            (intent.getStringExtra(MyIntent.DEVICE_ID)
+                .equals(MainActivity.showingDeviceId) && MainActivity.showingDeviceId != "")
         ) {
             Log.d(TAG, "Skipping notification send (${MainActivity.showingDeviceId})")
             abortBroadcast()

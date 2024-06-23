@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.RefrigeratorViewModel
@@ -76,6 +77,10 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
     fun getValidDevice(): Refrigerator {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Refrigerator) {
             return deviceState.currentDevice as Refrigerator
+        }
+        val aux: Device? = deviceState.devices.find { it.id == deviceRef.id }
+        if (aux != null && aux is Refrigerator) {
+            return aux
         }
         return deviceRef
     }
@@ -270,9 +275,11 @@ fun FridgeScreen(deviceRef: Refrigerator, onBackCalled: (() -> Unit)? = null) {
                                 }
                             }
                         } else if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
-                            Row (horizontalArrangement = Arrangement.SpaceEvenly,
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceEvenly,
                                 modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically){
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
