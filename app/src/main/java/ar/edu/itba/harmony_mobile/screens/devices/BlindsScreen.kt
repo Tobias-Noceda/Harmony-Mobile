@@ -139,13 +139,13 @@ fun BlindsScreen(deviceRef: Blinds, onBackCalled: (() -> Unit)? = null) {
         Box(contentAlignment = Alignment.Center) {
             Column {
                 Text(
-                    text = stringResource(R.string.limit) + " " + "${blindsLimit.toInt()}",
+                    text = stringResource(R.string.limit) + " " + "${getValidDevice().level}",
                     color = primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
                 )
                 Slider(
-                    value = blindsLimit,
+                    value = getValidDevice().level.toFloat(),
                     onValueChange = { blindsLimit = it },
                     onValueChangeFinished = {
                         viewModel.setLevel(getValidDevice(), blindsLimit.toInt())

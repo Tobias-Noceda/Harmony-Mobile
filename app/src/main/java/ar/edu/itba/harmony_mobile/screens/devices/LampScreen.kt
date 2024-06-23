@@ -327,13 +327,13 @@ fun LightScreen(deviceRef: Lamp, onBackCalled: (() -> Unit)? = null) {
         Box(contentAlignment = Alignment.Center) {
             Column {
                 Text(
-                    text = stringResource(R.string.brightness) + " " + "${lightBrightness.toInt()}",
+                    text = stringResource(R.string.brightness) + " " + "${getValidDevice().brightness}",
                     color = primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
                 )
                 Slider(
-                    value = lightBrightness,
+                    value = getValidDevice().brightness.toFloat(),
                     onValueChange = { lightBrightness = it },
                     onValueChangeFinished = {
                         viewModel.setBrightness(
