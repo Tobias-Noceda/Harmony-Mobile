@@ -69,6 +69,7 @@ fun DevicesByType(
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
     setShowingDevice: (String) -> Unit,
+    onDeviceBack: () -> Unit,
     onBackCalled: () -> Unit
 ) {
     var currentId by rememberSaveable { mutableStateOf("") }
@@ -104,6 +105,7 @@ fun DevicesByType(
         setShowingDevice(device!!.id!!)
         val onLeave = {
             setShowingDevice("")
+            onDeviceBack()
             currentId = ""
         }
         when(type) {

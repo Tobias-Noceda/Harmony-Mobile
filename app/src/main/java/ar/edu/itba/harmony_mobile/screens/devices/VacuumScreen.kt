@@ -41,6 +41,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Device
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Room
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.model.Vacuum
@@ -73,11 +75,15 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
-    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+    dViewModel.setCurrentDeviceId(deviceRef.id!!)
 
     fun getValidDevice(): Vacuum {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Vacuum) {
             return deviceState.currentDevice as Vacuum
+        }
+        val aux: Device? = deviceState.devices.find { it.id == deviceRef.id }
+        if (aux != null && aux is Vacuum) {
+            return aux
         }
         return deviceRef
     }
@@ -218,10 +224,8 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
             onClick = {
                 if (getValidDevice().status == Status.ACTIVE || getValidDevice().status == Status.ON) {
                     viewModel.pause(getValidDevice())
-                    dViewModel.getDevice(deviceRef.id)
                 } else {
                     viewModel.start(getValidDevice())
-                    dViewModel.getDevice(deviceRef.id)
                 }
             },
             colors = IconButtonColors(
@@ -246,7 +250,6 @@ fun VacuumScreen(deviceRef: Vacuum, rooms: List<Room>, onBackCalled: (() -> Unit
         Button(
             onClick = {
                 viewModel.dock(getValidDevice())
-                dViewModel.getDevice(deviceRef.id)
             },
             colors = ButtonColors(
                 tertiary,

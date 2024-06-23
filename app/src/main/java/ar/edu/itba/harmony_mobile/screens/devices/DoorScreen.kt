@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import ar.edu.itba.harmony_mobile.R
+import ar.edu.itba.harmony_mobile.model.Device
 import ar.edu.itba.harmony_mobile.model.Door
+import ar.edu.itba.harmony_mobile.model.Refrigerator
 import ar.edu.itba.harmony_mobile.model.Status
 import ar.edu.itba.harmony_mobile.ui.devices.DevicesViewModel
 import ar.edu.itba.harmony_mobile.ui.devices.DoorViewModel
@@ -52,11 +54,15 @@ fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
     val dViewModel: DevicesViewModel = viewModel(factory = getViewModelFactory())
     val deviceState by dViewModel.uiState.collectAsState()
 
-    dViewModel.getDevice(deviceRef.id!!) // updates the current device
+    dViewModel.setCurrentDeviceId(deviceRef.id!!)
 
     fun getValidDevice(): Door {
         if (deviceState.currentDevice != null && deviceState.currentDevice is Door) {
             return deviceState.currentDevice as Door
+        }
+        val aux: Device? = deviceState.devices.find { it.id == deviceRef.id }
+        if (aux != null && aux is Door) {
+            return aux
         }
         return deviceRef
     }
@@ -86,17 +92,15 @@ fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
     @Composable
     fun openSwitch() {
         Switch(
-            checked = getValidDevice().status == Status.OPEN && getValidDevice().status == Status.OPENED,
+            checked = getValidDevice().status == Status.OPEN || getValidDevice().status == Status.OPENED,
             onCheckedChange = {
                 when (getValidDevice().status) {
                     Status.OPEN, Status.OPENED -> {
                         viewModel.close(getValidDevice())
-                        dViewModel.getDevice(deviceRef.id)
                     }
 
                     else -> {
                         viewModel.open(getValidDevice())
-                        dViewModel.getDevice(deviceRef.id)
                     }
                 }
             },
@@ -118,12 +122,10 @@ fun DoorScreen(deviceRef: Door, onBackCalled: (() -> Unit)? = null) {
                 when (getValidDevice().lock) {
                     true -> {
                         viewModel.unlock(getValidDevice())
-                        dViewModel.getDevice(deviceRef.id)
                     }
 
                     false -> {
                         viewModel.lock(getValidDevice())
-                        dViewModel.getDevice(deviceRef.id)
                     }
                 }
             },

@@ -19,8 +19,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 class MainActivity : ComponentActivity() {
     private lateinit var receiver: SkipNotificationReceiver
 
-    private var showingDeviceId = ""
-
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +49,7 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
 
-        receiver = SkipNotificationReceiver("0")      //TODO Agregar logica de currentDevice
+        receiver = SkipNotificationReceiver(showingDeviceId)
         IntentFilter(MyIntent.SHOW_NOTIFICATION)
             .apply { priority = 1 }
             .also {
@@ -69,4 +67,7 @@ class MainActivity : ComponentActivity() {
         unregisterReceiver(receiver)
     }
 
+    companion object{
+        var showingDeviceId = ""
+    }
 }

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.lang.reflect.Executable
 
 class DevicesViewModel(
     private val repository: DeviceRepository
@@ -28,6 +29,7 @@ class DevicesViewModel(
         collectOnViewModelScope(
             repository.devices
         ) { state, response -> state.copy(devices = response) }
+        updateOnInterval();
     }
 
     private fun <T> collectOnViewModelScope(
@@ -47,22 +49,46 @@ class DevicesViewModel(
         )
     }
 
-    private var updating: Job? = null;
-    fun updateOnInterval(deviceId: String, delay: Long = 1000) {
+    private var updating: Job? = null
+    private var currentDeviceId: String? = null;
+    fun setCurrentDeviceId(deviceId: String) {
+        currentDeviceId = deviceId;
+    }
+
+    private fun updateOnInterval(delay: Long = 1000) {
         stopUpdating()
         updating = runOnViewModelScope(
             {
                 while (true) {
+                    if (currentDeviceId != null)
+                        getDevice(currentDeviceId!!)
                     delay(delay)
-                    getDevice(deviceId)
                 }
             },
             { state, _ -> state.copy() }
         )
     }
 
-    fun stopUpdating() {
+    private fun stopUpdating() {
         updating?.cancel()
+    }
+
+    private var executing: Job? = null
+    fun executeOnInterval(executable: () -> Unit, delay: Long = 1000) {
+        stopExecuting()
+        updating = runOnViewModelScope(
+            {
+                while (true) {
+                    delay(delay)
+                    executable()
+                }
+            },
+            { state, _ -> state.copy() }
+        )
+    }
+
+    fun stopExecuting() {
+        executing?.cancel()
     }
 
     private fun <R> runOnViewModelScope(

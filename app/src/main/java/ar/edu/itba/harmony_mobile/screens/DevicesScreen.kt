@@ -48,25 +48,28 @@ fun DevicesScreen(
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
     setShowingDevice: (String) -> Unit,
-    state: DeviceTypes? = null
+    state: String,
+    onDeviceBack: (String) -> Unit
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
     Box(modifier = modifier) {
-        if (currentDestination == null) {
+        if (currentDestination == "") {
             DevicesList(
                 onDeviceClick = { deviceType ->
-                    currentDestination = deviceType
+                    currentDestination = deviceType.apiName
                 }
             )
         } else {
+            val execute = { onDeviceBack(currentDestination) }
             DevicesByType(
-                type = currentDestination!!,
+                type = getType(currentDestination),
                 currentHouse = currentHouse,
                 roomsState = roomsState,
                 devicesState = devicesState,
-                setShowingDevice = setShowingDevice
-            ) { currentDestination = null }
+                setShowingDevice = setShowingDevice,
+                onDeviceBack = execute
+            ) { currentDestination = "" }
         }
     }
 }
@@ -172,5 +175,16 @@ fun DevicesList(onDeviceClick: (DeviceTypes) -> Unit) {
                 }
             }
         }
+    }
+}
+
+private fun getType(typeName: String): DeviceTypes {
+    return when(typeName) {
+        DeviceTypes.LIGHTS.apiName -> DeviceTypes.LIGHTS
+        DeviceTypes.DOORS.apiName -> DeviceTypes.DOORS
+        DeviceTypes.REFRIGERATORS.apiName -> DeviceTypes.REFRIGERATORS
+        DeviceTypes.VACUUMS.apiName -> DeviceTypes.VACUUMS
+        DeviceTypes.SPRINKLERS.apiName -> DeviceTypes.SPRINKLERS
+        else -> DeviceTypes.BLINDS
     }
 }

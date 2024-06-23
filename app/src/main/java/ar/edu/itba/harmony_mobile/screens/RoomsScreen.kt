@@ -46,7 +46,8 @@ fun RoomsScreen(
     roomsState: RoomsUiState,
     devicesState: DevicesUiState,
     setShowingDevice: (String) -> Unit,
-    state: String = ""
+    state: String,
+    onDeviceBack: (String) -> Unit
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(state) }
 
@@ -75,16 +76,18 @@ fun RoomsScreen(
             if (currentHouse.id == "0" && devicesState.getHomeDevices(currentHouse).isEmpty()) {
                 EmptyScreen("${stringResource(id = R.string.empty_house)} ${stringResource(id = R.string.personal_devices)}")
             }
+            val executeBack = { onDeviceBack(currentDestination) }
             RoomScreen(
-                if (currentHouse.id == "0") {
+                room = if (currentHouse.id == "0") {
                     Room("0", stringResource(id = R.string.personal_devices), currentHouse)
                 } else {
                     roomsState.getRoom(currentDestination)
                 },
-                currentHouse,
-                roomsState,
-                devicesState,
-                setShowingDevice
+                currentHome = currentHouse,
+                roomsState = roomsState,
+                devicesState = devicesState,
+                setShowingDevice = setShowingDevice,
+                onDeviceBack = executeBack
             ) { currentDestination = "" }
         }
     }
